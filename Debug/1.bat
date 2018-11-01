@@ -1,0 +1,1 @@
+windbg ¨Cremote tcp:port=5005,server=10.6.20.51

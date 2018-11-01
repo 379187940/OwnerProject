@@ -1,0 +1,9 @@
+﻿  stdafx.cpp
+  Test.cpp
+C:\Program Files (x86)\Windows Kits\8.1\Include\um\DbgHelp.h(1544): warning C4091: “typedef ”: 没有声明变量时忽略“”的左侧
+C:\Program Files (x86)\Windows Kits\8.1\Include\um\DbgHelp.h(3190): warning C4091: “typedef ”: 没有声明变量时忽略“”的左侧
+  正在生成代码
+  All 78 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+  Test.vcxproj -> C:\Users\PWRD\Documents\Visual Studio 2015\Projects\Test\Release\Test.exe
+  Test.vcxproj -> C:\Users\PWRD\Documents\Visual Studio 2015\Projects\Test\Release\Test.pdb (Full PDB)
