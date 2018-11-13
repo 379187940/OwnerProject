@@ -66,7 +66,7 @@ public:
 		m_CondNotify.Notify();
 	}
 
-	void SetRunning()
+	void SetRunning() aaaa
 	{
 		m_nFinished = 0;
 	}
