@@ -53,20 +53,24 @@ public:
 	friend class CryConditionVariable;
 public:
 	CryLock_SRWLOCK() = default;
-
+	/*CryLock_SRWLOCK()
+	{
+		InitializeCriticalSection(&m_cs);
+	}
+	~CryLock_SRWLOCK()
+	{
+		DeleteCriticalSection(&m_cs);
+	}*/
 	void Lock();
 	void Unlock();
-	bool TryLock();
 
-	void LockShared();
-	void UnlockShared();
-	bool TryLockShared();
 
 private:
 	CryLock_SRWLOCK(const CryLock_SRWLOCK&) = delete;
 	CryLock_SRWLOCK& operator=(const CryLock_SRWLOCK&) = delete;
 
 private:
+	//CRITICAL_SECTION m_cs;
 	CRY_SRWLOCK m_win32_lock_type;
 };
 
@@ -85,7 +89,6 @@ public:
 
 	void Lock();
 	void Unlock();
-	bool TryLock();
 
 	// Deprecated
 #ifndef _RELEASE
@@ -124,7 +127,6 @@ public:
 
 	void Lock();
 	void Unlock();
-	bool TryLock();
 
 	//! Deprecated: do not use this function - its return value might already be wrong the moment it is returned.
 #ifndef _RELEASE
@@ -142,43 +144,6 @@ private:
 	CRY_CRITICAL_SECTION m_win32_lock_type;
 };
 
-//////////////////////////////////////////////////////////////////////////
-// WinMutex: (slow)
-// Calls into kernel even when not contended.
-// A named mutex can be shared between different processes.
-class CryLock_WinMutex
-{
-public:
-	static const eLOCK_TYPE s_value = eLockType_MUTEX;
-
-	CryLock_WinMutex();
-	~CryLock_WinMutex();
-
-	void Lock();
-	void Unlock();
-	bool TryLock();
-#ifndef _RELEASE
-	//! Deprecated: do not use this function - its return value might already be wrong the moment it is returned.
-	bool IsLocked()
-	{
-		if (TryLock())
-		{
-			Unlock();
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-#endif
-private:
-	CryLock_WinMutex(const CryLock_WinMutex&) = delete;
-	CryLock_WinMutex& operator=(const CryLock_WinMutex&) = delete;
-
-private:
-	void* m_win32_lock_type;
-};
 } // detail
 } // CryMT
 
@@ -277,29 +242,4 @@ public:
 private:
 	CrySemaphore   m_Semaphore;
 	volatile int m_nCounter;
-};
-
-//////////////////////////////////////////////////////////////////////////
-class CryRWLock
-{
-public:
-	CryRWLock() = default;
-
-	void RLock();
-	void RUnlock();
-
-	void WLock();
-	void WUnlock();
-
-	void Lock();
-	void Unlock();
-
-	bool TryRLock();
-	bool TryWLock();
-	bool TryLock();
-private:
-	CryMT::detail::CryLock_SRWLOCK m_srw;
-
-	CryRWLock(const CryRWLock&) = delete;
-	CryRWLock& operator=(const CryRWLock&) = delete;
 };

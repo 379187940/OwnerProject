@@ -6,6 +6,8 @@
 #include "MSVCspecific.h"
 #include "Win32specific.h"
 #include "IJobManager.h"
+#include "IThreadManager.h"
+#include "IJobManager_JobDelegator.h"
 #define MAX_LOADSTRING 100
 
 // 全局变量: 
@@ -18,13 +20,93 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-
+//CRITICAL_SECTION cs1;
+//CRITICAL_SECTION cs2;
+//class CWindowsConsoleInputThread : public IThread
+//{
+//public:
+//	CWindowsConsoleInputThread(){}
+//
+//	~CWindowsConsoleInputThread(){}
+//
+//	// Start accepting work on thread
+//	void ThreadEntry()
+//	{
+//		EnterCriticalSection(&cs1);
+//		Sleep(2000);
+//		EnterCriticalSection(&cs2);
+//		OutputDebugStringA("Thread1 end \n");
+//	}
+//
+//	// Signals the thread that it should not accept anymore work and exit
+//	void SignalStopWork()
+//	{
+//
+//	}
+//
+//	void Interrupt()
+//	{
+//
+//	}
+//
+//};
+//class CWindowsConsoleInputThread2 : public IThread
+//{
+//public:
+//	CWindowsConsoleInputThread2() {}
+//
+//	~CWindowsConsoleInputThread2() {}
+//
+//	// Start accepting work on thread
+//	void ThreadEntry()
+//	{
+//		EnterCriticalSection(&cs2);
+//		Sleep(2000);
+//		EnterCriticalSection(&cs1);
+//		OutputDebugStringA("Thread2 end \n");
+//	}
+//
+//	// Signals the thread that it should not accept anymore work and exit
+//	void SignalStopWork()
+//	{
+//
+//	}
+//
+//	void Interrupt()
+//	{
+//
+//	}
+//
+//};
+class CTest
+{
+public:
+	void Print()
+	{
+		while (true)
+		{
+			Sleep(10);
+			OutputDebugStringA("perfect world!!!!\n"); 
+			if (GetAsyncKeyState(VK_SPACE) && 0x8000)
+				break;
+		}
+	}
+	
+};
+static JobManager::SJobState g_JobState;
+DECLARE_JOB("Test", TTestJob, CTest::Print);
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
 	GetJobManagerInterface()->Init(4);
+	CTest a;
+	TTestJob job;
+	job.SetClassInstance(&a);
+	job.RegisterJobState(&g_JobState);
+	job.Run();
+	GetJobManagerInterface()->WaitForJob(g_JobState);
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 

@@ -9,7 +9,6 @@ typedef const char*            cstr;
 class CryConditionVariable;
 class CrySemaphore;
 class CryFastSemaphore;
-class CryRWLock;
 
 #define THREAD_NAME_LENGTH_MAX 64
 
@@ -174,96 +173,8 @@ namespace CryMT {
 	#include <CryThreading/CryThread_dummy.h>
 #endif
 
-//! Sync primitive for multiple reads and exclusive locking change access.
-//! Useful in case if you have rarely modified object that needs
-//! to be read quite often from different threads but still
-//! need to be exclusively modified sometimes.
-//! Debug functionality:.
-//! Can be used for debug-only lock calls, which verify that no
-//! simultaneous access is attempted.
-//! Use the bDebug argument of LockRead or LockModify,
-//! or use the DEBUG_READLOCK or DEBUG_MODIFYLOCK macros.
-//! There is no overhead in release builds, if you use the macros,
-//! and the lock definition is inside #ifdef _DEBUG.
-class CryReadModifyLock
-{
-public:
-	CryReadModifyLock()
-		: m_modifyCount(0), m_readCount(0)
-	{
-		SetDebugLocked(false);
-	}
 
-	bool LockRead(bool bTry = false, cstr strDebug = 0, bool bDebug = false) const
-	{
-		if (!WriteLock(bTry, bDebug, strDebug))     // wait until write unlocked
-			return false;
-		CryInterlockedIncrement(&m_readCount);      // increment read counter
-		m_writeLock.Unlock();
-		return true;
-	}
-	void UnlockRead() const
-	{
-		SetDebugLocked(false);
-		const int counter = CryInterlockedDecrement(&m_readCount);     // release read
-		assert(counter >= 0);
-		if (m_writeLock.TryLock())
-			m_writeLock.Unlock();
-		else if (counter == 0 && m_modifyCount)
-			m_ReadReleased.Set();                     // signal the final read released
-	}
-	bool LockModify(bool bTry = false, cstr strDebug = 0, bool bDebug = false) const
-	{
-		if (!WriteLock(bTry, bDebug, strDebug))
-			return false;
-		CryInterlockedIncrement(&m_modifyCount);    // increment write counter (counter is for nested cases)
-		while (m_readCount)
-			m_ReadReleased.Wait();                    // wait for all threads finish read operation
-		return true;
-	}
-	void UnlockModify() const
-	{
-		SetDebugLocked(false);
-		int counter = CryInterlockedDecrement(&m_modifyCount);    // decrement write counter
-		assert(counter >= 0);
-		m_writeLock.Unlock();                       // release exclusive lock
-	}
 
-protected:
-	mutable volatile int       m_readCount;
-	mutable volatile int       m_modifyCount;
-	mutable CryEvent           m_ReadReleased;
-	mutable CryCriticalSection m_writeLock;
-	mutable bool               m_debugLocked;
-	mutable const char*        m_debugLockStr;
-
-	void SetDebugLocked(bool b, const char* str = 0) const
-	{
-#ifdef _DEBUG
-		m_debugLocked = b;
-		m_debugLockStr = str;
-#endif
-	}
-
-	bool WriteLock(bool bTry, bool bDebug, const char* strDebug) const
-	{
-		if (!m_writeLock.TryLock())
-		{
-#ifdef _DEBUG
-			assert(!m_debugLocked);
-			assert(!bDebug);
-#endif
-			if (bTry)
-				return false;
-			m_writeLock.Lock();
-		}
-#ifdef _DEBUG
-		if (!m_readCount && !m_modifyCount)         // not yet locked
-			SetDebugLocked(bDebug, strDebug);
-#endif
-		return true;
-	}
-};
 
 //! Auto-locking classes.
 template<class T, bool bDEBUG = false>
@@ -290,17 +201,6 @@ public:
 	{ m_lock.UnlockModify(); }
 };
 
-#define AUTO_READLOCK(p)      PREFAST_SUPPRESS_WARNING(6246) AutoLockRead<CryReadModifyLock> __readlock ## __LINE__(p, __FUNC__)
-#define AUTO_READLOCK_PROT(p) PREFAST_SUPPRESS_WARNING(6246) AutoLockRead<CryReadModifyLock> __readlock_prot ## __LINE__(p, __FUNC__)
-#define AUTO_MODIFYLOCK(p)    PREFAST_SUPPRESS_WARNING(6246) AutoLockModify<CryReadModifyLock> __modifylock ## __LINE__(p, __FUNC__)
-
-#if defined(_DEBUG)
-	#define DEBUG_READLOCK(p)   AutoLockRead<CryReadModifyLock> __readlock ## __LINE__(p, __FUNC__)
-	#define DEBUG_MODIFYLOCK(p) AutoLockModify<CryReadModifyLock> __modifylock ## __LINE__(p, __FUNC__)
-#else
-	#define DEBUG_READLOCK(p)
-	#define DEBUG_MODIFYLOCK(p)
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 //! Base class for lockless Producer/Consumer queue, due platforms specific they are implemented in CryThead_platform.h.

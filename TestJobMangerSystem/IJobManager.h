@@ -1122,51 +1122,51 @@ inline INT_PTR MarkPullPtrThatWeAreWaitingOnASemaphore(INT_PTR nOrgValue) { asse
 inline bool    IsPullPtrMarked(INT_PTR nOrgValue)                         { return (nOrgValue & 1) == 1; }
 }
 
-template<class TJobType, unsigned int Size>
-class _declspec(align(128)) CProdConsQueue: public SProdConsQueueBase
-{
-public:
-	CProdConsQueue();
-	~CProdConsQueue();
-
-	//! Add a new parameter packet with different job type (job invocation).
-	template<class TAnotherJobType>
-	void AddPacket
-	(
-	  const typename TJobType::packet & crPacket,
-	  JobManager::TPriorityLevel nPriorityLevel,
-	  TAnotherJobType * pJobParam,
-	  bool differentJob = true
-	);
-
-	//! Adds a new parameter packet (job invocation).
-	void AddPacket
-	(
-	  const typename TJobType::packet & crPacket,
-	  JobManager::TPriorityLevel nPriorityLevel = JobManager::eRegularPriority
-	);
-
-	//! Wait til all current jobs have been finished and been processed.
-	void WaitFinished();
-
-	//! Returns true if queue is empty.
-	bool IsEmpty();
-
-private:
-	//! Initializes queue.
-	void Init(const unsigned int cPacketSize);
-
-	//! Get incremented pointer, takes care of wrapping.
-	void* const GetIncrementedPointer();
-
-	//! The ring buffer.
-	_declspec(align(128)) void* m_pRingBuffer;
-
-	//! Job instance.
-	TJobType m_JobInstance;
-	int m_Initialized;
-
-};
+//template<class TJobType, unsigned int Size>
+//class _declspec(align(128)) CProdConsQueue: public SProdConsQueueBase
+//{
+//public:
+//	CProdConsQueue();
+//	~CProdConsQueue();
+//
+//	//! Add a new parameter packet with different job type (job invocation).
+//	template<class TAnotherJobType>
+//	void AddPacket
+//	(
+//	  const typename TJobType::packet & crPacket,
+//	  JobManager::TPriorityLevel nPriorityLevel,
+//	  TAnotherJobType * pJobParam,
+//	  bool differentJob = true
+//	);
+//
+//	//! Adds a new parameter packet (job invocation).
+//	void AddPacket
+//	(
+//	  const typename TJobType::packet & crPacket,
+//	  JobManager::TPriorityLevel nPriorityLevel = JobManager::eRegularPriority
+//	);
+//
+//	//! Wait til all current jobs have been finished and been processed.
+//	void WaitFinished();
+//
+//	//! Returns true if queue is empty.
+//	bool IsEmpty();
+//
+//private:
+//	//! Initializes queue.
+//	void Init(const unsigned int cPacketSize);
+//
+//	//! Get incremented pointer, takes care of wrapping.
+//	void* const GetIncrementedPointer();
+//
+//	//! The ring buffer.
+//	_declspec(align(128)) void* m_pRingBuffer;
+//
+//	//! Job instance.
+//	TJobType m_JobInstance;
+//	int m_Initialized;
+//
+//};
 
 //! Interface to track BackEnd worker utilisation and job execution timings.
 class IWorkerBackEndProfiler
@@ -1234,12 +1234,12 @@ extern "C"
 
 //! Implementation of Producer Consumer functions.
 //! Currently adding jobs to a producer/consumer queue is not supported.
-template<class TJobType, unsigned int Size>
-inline JobManager::CProdConsQueue<TJobType, Size>::~CProdConsQueue()
-{
-	if (m_pRingBuffer)
-		_aligned_free(m_pRingBuffer);
-}
+//template<class TJobType, unsigned int Size>
+//inline JobManager::CProdConsQueue<TJobType, Size>::~CProdConsQueue()
+//{
+//	if (m_pRingBuffer)
+//		_aligned_free(m_pRingBuffer);
+//}
 
 ///////////////////////////////////////////////////////////////////////////////
 inline JobManager::SProdConsQueueBase::SProdConsQueueBase() :
@@ -1250,243 +1250,243 @@ inline JobManager::SProdConsQueueBase::SProdConsQueueBase() :
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-template<class TJobType, unsigned int Size>
-inline JobManager::CProdConsQueue<TJobType, Size>::CProdConsQueue() : m_Initialized(0), m_pRingBuffer(NULL)
-{
-	assert(Size > 2);
-	m_JobInstance.RegisterQueue(this);
-}
+//template<class TJobType, unsigned int Size>
+//inline JobManager::CProdConsQueue<TJobType, Size>::CProdConsQueue() : m_Initialized(0), m_pRingBuffer(NULL)
+//{
+//	assert(Size > 2);
+//	m_JobInstance.RegisterQueue(this);
+//}
 
 ///////////////////////////////////////////////////////////////////////////////
-template<class TJobType, unsigned int Size>
-inline void JobManager::CProdConsQueue<TJobType, Size >::Init(const unsigned int cPacketSize)
-{
-	assert((cPacketSize & 15) == 0);
-	m_AddPacketDataOffset = cPacketSize;
-	m_PullIncrement = m_AddPacketDataOffset + sizeof(SAddPacketData);
-	m_pRingBuffer = _aligned_malloc(Size * m_PullIncrement, 128);
-
-	assert(m_pRingBuffer);
-	m_pPush = m_pRingBuffer;
-	m_pPull = m_pRingBuffer;
-	m_RingBufferStart = (INT_PTR)m_pRingBuffer;
-	m_RingBufferEnd = m_RingBufferStart + Size * m_PullIncrement;
-	m_Initialized = 1;
-	((TJobType*)&m_JobInstance)->SetParamDataSize(cPacketSize);
-	m_pQueueFullSemaphore = NULL;
-}
+//template<class TJobType, unsigned int Size>
+//inline void JobManager::CProdConsQueue<TJobType, Size >::Init(const unsigned int cPacketSize)
+//{
+//	assert((cPacketSize & 15) == 0);
+//	m_AddPacketDataOffset = cPacketSize;
+//	m_PullIncrement = m_AddPacketDataOffset + sizeof(SAddPacketData);
+//	m_pRingBuffer = _aligned_malloc(Size * m_PullIncrement, 128);
+//
+//	assert(m_pRingBuffer);
+//	m_pPush = m_pRingBuffer;
+//	m_pPull = m_pRingBuffer;
+//	m_RingBufferStart = (INT_PTR)m_pRingBuffer;
+//	m_RingBufferEnd = m_RingBufferStart + Size * m_PullIncrement;
+//	m_Initialized = 1;
+//	((TJobType*)&m_JobInstance)->SetParamDataSize(cPacketSize);
+//	m_pQueueFullSemaphore = NULL;
+//}
+//
+/////////////////////////////////////////////////////////////////////////////////
+//template<class TJobType, unsigned int Size>
+//inline void JobManager::CProdConsQueue<TJobType, Size >::WaitFinished()
+//{
+//	m_QueueRunningState.Wait();
+//	// ensure that the pull ptr is set right
+//	assert(m_pPull == m_pPush);
+//
+//}
+//
+/////////////////////////////////////////////////////////////////////////////////
+//template<class TJobType, unsigned int Size>
+//inline bool JobManager::CProdConsQueue<TJobType, Size >::IsEmpty()
+//{
+//	return (INT_PTR)m_pPush == (INT_PTR)m_pPull;
+//}
+//
+/////////////////////////////////////////////////////////////////////////////////
+//template<class TJobType, unsigned int Size>
+//inline void* const JobManager::CProdConsQueue<TJobType, Size >::GetIncrementedPointer()
+//{
+//	//returns branch free the incremented wrapped aware param pointer
+//	INT_PTR cNextPtr = (INT_PTR)m_pPush + m_PullIncrement;
+//#if CRY_PLATFORM_64BIT
+//	if ((INT_PTR)cNextPtr >= (INT_PTR)m_RingBufferEnd) cNextPtr = (INT_PTR)m_RingBufferStart;
+//	return (void*)cNextPtr;
+//#else
+//	const unsigned int cNextPtrMask = (unsigned int)(((int)(cNextPtr - m_RingBufferEnd)) >> 31);
+//	return (void*)(cNextPtr & cNextPtrMask | m_RingBufferStart & ~cNextPtrMask);
+//#endif
+//}
+//
+/////////////////////////////////////////////////////////////////////////////////
+//template<class TJobType, unsigned int Size>
+//inline void JobManager::CProdConsQueue<TJobType, Size >::AddPacket
+//(
+//  const typename TJobType::packet& crPacket,
+//  JobManager::TPriorityLevel nPriorityLevel
+//)
+//{
+//	AddPacket<TJobType>(crPacket, nPriorityLevel, (TJobType*)&m_JobInstance, false);
+//}
 
 ///////////////////////////////////////////////////////////////////////////////
-template<class TJobType, unsigned int Size>
-inline void JobManager::CProdConsQueue<TJobType, Size >::WaitFinished()
-{
-	m_QueueRunningState.Wait();
-	// ensure that the pull ptr is set right
-	assert(m_pPull == m_pPush);
-
-}
-
-///////////////////////////////////////////////////////////////////////////////
-template<class TJobType, unsigned int Size>
-inline bool JobManager::CProdConsQueue<TJobType, Size >::IsEmpty()
-{
-	return (INT_PTR)m_pPush == (INT_PTR)m_pPull;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-template<class TJobType, unsigned int Size>
-inline void* const JobManager::CProdConsQueue<TJobType, Size >::GetIncrementedPointer()
-{
-	//returns branch free the incremented wrapped aware param pointer
-	INT_PTR cNextPtr = (INT_PTR)m_pPush + m_PullIncrement;
-#if CRY_PLATFORM_64BIT
-	if ((INT_PTR)cNextPtr >= (INT_PTR)m_RingBufferEnd) cNextPtr = (INT_PTR)m_RingBufferStart;
-	return (void*)cNextPtr;
-#else
-	const unsigned int cNextPtrMask = (unsigned int)(((int)(cNextPtr - m_RingBufferEnd)) >> 31);
-	return (void*)(cNextPtr & cNextPtrMask | m_RingBufferStart & ~cNextPtrMask);
-#endif
-}
-
-///////////////////////////////////////////////////////////////////////////////
-template<class TJobType, unsigned int Size>
-inline void JobManager::CProdConsQueue<TJobType, Size >::AddPacket
-(
-  const typename TJobType::packet& crPacket,
-  JobManager::TPriorityLevel nPriorityLevel
-)
-{
-	AddPacket<TJobType>(crPacket, nPriorityLevel, (TJobType*)&m_JobInstance, false);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-template<class TJobType, unsigned int Size>
-template<class TAnotherJobType>
-inline void JobManager::CProdConsQueue<TJobType, Size >::AddPacket
-(
-  const typename TJobType::packet& crPacket,
-  JobManager::TPriorityLevel nPriorityLevel,
-  TAnotherJobType* pJobParam,
-  bool differentJob
-)
-{
-	const unsigned int cPacketSize = crPacket.GetPacketSize();
-	IF (m_Initialized == 0,0)
-		Init(cPacketSize);
-
-	assert(m_RingBufferEnd == m_RingBufferStart + Size * (cPacketSize + sizeof(SAddPacketData)));
-
-	const void* const cpCurPush = m_pPush;
-
-	// don't overtake the pull ptr
-
-	SJobSyncVariable curQueueRunningState = m_QueueRunningState;
-	IF ((cpCurPush == m_pPull) && (curQueueRunningState.IsRunning()), 0)
-	{
-
-		INT_PTR nPushPtr = (INT_PTR)cpCurPush;
-		INT_PTR markedPushPtr = JobManager::ProdConsQueueBase::MarkPullPtrThatWeAreWaitingOnASemaphore(nPushPtr);
-		TSemaphoreHandle nSemaphoreHandle = GetJobManagerInterface()->AllocateSemaphore(this);
-		m_pQueueFullSemaphore = GetJobManagerInterface()->GetSemaphore(nSemaphoreHandle, this);
-
-		bool bNeedSemaphoreWait = false;
-#if CRY_PLATFORM_64BIT // for 64 bit, we need to atomicly swap 128 bit
-		long long compareValue[2] = { *alias_cast<long long*>(&curQueueRunningState), (long long)nPushPtr };
-		CryInterlockedCompareExchange128((volatile long long*)this, (long long)markedPushPtr, *alias_cast<long long*>(&curQueueRunningState), compareValue);
-		// make sure nobody set the state to stopped in the meantime
-		bNeedSemaphoreWait = (compareValue[0] == *alias_cast<long long*>(&curQueueRunningState) && compareValue[1] == (long long)nPushPtr);
-#else
-		// union used to construct 64 bit value for atomic updates
-		union T64BitValue
-		{
-			long long doubleWord;
-			struct
-			{
-				unsigned int word0;
-				unsigned int word1;
-			};
-		};
-
-		// job system is process the queue right now, we need an atomic update
-		T64BitValue compareValue;
-		compareValue.word0 = *alias_cast<unsigned int*>(&curQueueRunningState);
-		compareValue.word1 = (unsigned int)nPushPtr;
-
-		T64BitValue exchangeValue;
-		exchangeValue.word0 = *alias_cast<unsigned int*>(&curQueueRunningState);
-		exchangeValue.word1 = (unsigned int)markedPushPtr;
-
-		T64BitValue resultValue;
-		resultValue.doubleWord = CryInterlockedCompareExchange64((volatile long long*)this, exchangeValue.doubleWord, compareValue.doubleWord);
-
-		bNeedSemaphoreWait = (resultValue.word0 == *alias_cast<unsigned int*>(&curQueueRunningState) && resultValue.word1 == nPushPtr);
-#endif
-
-		// C-A-S successful, now we need to do a yield-wait
-		IF (bNeedSemaphoreWait, 0)
-			m_pQueueFullSemaphore->Acquire();
-		else
-			m_pQueueFullSemaphore->SetStopped();
-
-		GetJobManagerInterface()->DeallocateSemaphore(nSemaphoreHandle, this);
-		m_pQueueFullSemaphore = NULL;
-	}
-
-	if (crPacket.GetJobStateAddress())
-	{
-		JobManager::SJobState* pJobState = reinterpret_cast<JobManager::SJobState*>(crPacket.GetJobStateAddress());
-		pJobState->SetRunning();
-	}
-
-	//get incremented push pointer and check if there is a slot to push it into
-	void* const cpNextPushPtr = GetIncrementedPointer();
-
-	const SVEC4_UINT* __restrict pPacketCont = crPacket.GetPacketCont();
-	SVEC4_UINT* __restrict pPushCont = (SVEC4_UINT*)cpCurPush;
-
-	//copy packet data
-	const unsigned int cIters = cPacketSize >> 4;
-	for (unsigned int i = 0; i < cIters; ++i)
-		pPushCont[i] = pPacketCont[i];
-
-	// setup addpacket data for Jobs
-	SAddPacketData* const __restrict pAddPacketData = (SAddPacketData*)((unsigned char*)cpCurPush + m_AddPacketDataOffset);
-	pAddPacketData->pJobState = crPacket.GetJobStateAddress();
-
-#if defined(JOBMANAGER_SUPPORT_PROFILING)
-	SJobProfilingData* pJobProfilingData = GetJobManagerInterface()->GetProfilingData(crPacket.GetProfilerIndex());
-	pJobProfilingData->jobHandle = pJobParam->GetJobProgramData();
-	pAddPacketData->profilerIndex = crPacket.GetProfilerIndex();
-	if (pAddPacketData->pJobState) // also store profilerindex in syncvar, so be able to record wait times
-	{
-		pAddPacketData->pJobState->nProfilerIndex = pAddPacketData->profilerIndex;
-	}
-#endif
-
-	// set invoker, for the case the the job changes within the queue
-	pAddPacketData->nInvokerIndex = pJobParam->GetProgramHandle()->nJobInvokerIdx;
-
-	// new job queue, or empty job queue
-	if (!m_QueueRunningState.IsRunning())
-	{
-		m_pPush = cpNextPushPtr;//make visible
-		m_QueueRunningState.SetRunning();
-
-		pJobParam->RegisterQueue(this);
-		pJobParam->SetParamDataSize(((TJobType*)&m_JobInstance)->GetParamDataSize());
-		pJobParam->SetPriorityLevel(nPriorityLevel);
-		pJobParam->Run();
-
-		return;
-	}
-
-	bool bAtomicSwapSuccessfull = false;
-	JobManager::SJobSyncVariable newSyncVar;
-	newSyncVar.SetRunning();
-#if CRY_PLATFORM_64BIT // for 64 bit, we need to atomicly swap 128 bit
-	long long compareValue[2] = { *alias_cast<long long*>(&newSyncVar), (long long)cpCurPush };
-	CryInterlockedCompareExchange128((volatile long long*)this, (long long)cpNextPushPtr, *alias_cast<long long*>(&newSyncVar), compareValue);
-	// make sure nobody set the state to stopped in the meantime
-	bAtomicSwapSuccessfull = (compareValue[0] > 0);
-#else
-	// union used to construct 64 bit value for atomic updates
-	union T64BitValue
-	{
-		long long doubleWord;
-		struct
-		{
-			unsigned int word0;
-			unsigned int word1;
-		};
-	};
-
-	// job system is process the queue right now, we need an atomic update
-	T64BitValue compareValue;
-	compareValue.word0 = *alias_cast<unsigned int*>(&newSyncVar);
-	compareValue.word1 = (unsigned int)(TRUNCATE_PTR)cpCurPush;
-
-	T64BitValue exchangeValue;
-	exchangeValue.word0 = *alias_cast<unsigned int*>(&newSyncVar);
-	exchangeValue.word1 = (unsigned int)(TRUNCATE_PTR)cpNextPushPtr;
-
-	T64BitValue resultValue;
-	resultValue.doubleWord = CryInterlockedCompareExchange64((volatile long long*)this, exchangeValue.doubleWord, compareValue.doubleWord);
-
-	bAtomicSwapSuccessfull = (resultValue.word0 > 0);
-#endif
-
-	// job system finished in the meantime, next to issue a new job
-	if (!bAtomicSwapSuccessfull)
-	{
-		m_pPush = cpNextPushPtr;//make visible
-		m_QueueRunningState.SetRunning();
-
-		pJobParam->RegisterQueue(this);
-		pJobParam->SetParamDataSize(((TJobType*)&m_JobInstance)->GetParamDataSize());
-		pJobParam->SetPriorityLevel(nPriorityLevel);
-		pJobParam->Run();
-	}
-}
+//template<class TJobType, unsigned int Size>
+//template<class TAnotherJobType>
+//inline void JobManager::CProdConsQueue<TJobType, Size >::AddPacket
+//(
+//  const typename TJobType::packet& crPacket,
+//  JobManager::TPriorityLevel nPriorityLevel,
+//  TAnotherJobType* pJobParam,
+//  bool differentJob
+//)
+//{
+//	const unsigned int cPacketSize = crPacket.GetPacketSize();
+//	IF (m_Initialized == 0,0)
+//		Init(cPacketSize);
+//
+//	assert(m_RingBufferEnd == m_RingBufferStart + Size * (cPacketSize + sizeof(SAddPacketData)));
+//
+//	const void* const cpCurPush = m_pPush;
+//
+//	// don't overtake the pull ptr
+//
+//	SJobSyncVariable curQueueRunningState = m_QueueRunningState;
+//	IF ((cpCurPush == m_pPull) && (curQueueRunningState.IsRunning()), 0)
+//	{
+//
+//		INT_PTR nPushPtr = (INT_PTR)cpCurPush;
+//		INT_PTR markedPushPtr = JobManager::ProdConsQueueBase::MarkPullPtrThatWeAreWaitingOnASemaphore(nPushPtr);
+//		TSemaphoreHandle nSemaphoreHandle = GetJobManagerInterface()->AllocateSemaphore(this);
+//		m_pQueueFullSemaphore = GetJobManagerInterface()->GetSemaphore(nSemaphoreHandle, this);
+//
+//		bool bNeedSemaphoreWait = false;
+//#if CRY_PLATFORM_64BIT // for 64 bit, we need to atomicly swap 128 bit
+//		long long compareValue[2] = { *alias_cast<long long*>(&curQueueRunningState), (long long)nPushPtr };
+//		CryInterlockedCompareExchange128((volatile long long*)this, (long long)markedPushPtr, *alias_cast<long long*>(&curQueueRunningState), compareValue);
+//		// make sure nobody set the state to stopped in the meantime
+//		bNeedSemaphoreWait = (compareValue[0] == *alias_cast<long long*>(&curQueueRunningState) && compareValue[1] == (long long)nPushPtr);
+//#else
+//		// union used to construct 64 bit value for atomic updates
+//		union T64BitValue
+//		{
+//			long long doubleWord;
+//			struct
+//			{
+//				unsigned int word0;
+//				unsigned int word1;
+//			};
+//		};
+//
+//		// job system is process the queue right now, we need an atomic update
+//		T64BitValue compareValue;
+//		compareValue.word0 = *alias_cast<unsigned int*>(&curQueueRunningState);
+//		compareValue.word1 = (unsigned int)nPushPtr;
+//
+//		T64BitValue exchangeValue;
+//		exchangeValue.word0 = *alias_cast<unsigned int*>(&curQueueRunningState);
+//		exchangeValue.word1 = (unsigned int)markedPushPtr;
+//
+//		T64BitValue resultValue;
+//		resultValue.doubleWord = CryInterlockedCompareExchange64((volatile long long*)this, exchangeValue.doubleWord, compareValue.doubleWord);
+//
+//		bNeedSemaphoreWait = (resultValue.word0 == *alias_cast<unsigned int*>(&curQueueRunningState) && resultValue.word1 == nPushPtr);
+//#endif
+//
+//		// C-A-S successful, now we need to do a yield-wait
+//		IF (bNeedSemaphoreWait, 0)
+//			m_pQueueFullSemaphore->Acquire();
+//		else
+//			m_pQueueFullSemaphore->SetStopped();
+//
+//		GetJobManagerInterface()->DeallocateSemaphore(nSemaphoreHandle, this);
+//		m_pQueueFullSemaphore = NULL;
+//	}
+//
+//	if (crPacket.GetJobStateAddress())
+//	{
+//		JobManager::SJobState* pJobState = reinterpret_cast<JobManager::SJobState*>(crPacket.GetJobStateAddress());
+//		pJobState->SetRunning();
+//	}
+//
+//	//get incremented push pointer and check if there is a slot to push it into
+//	void* const cpNextPushPtr = GetIncrementedPointer();
+//
+//	const SVEC4_UINT* __restrict pPacketCont = crPacket.GetPacketCont();
+//	SVEC4_UINT* __restrict pPushCont = (SVEC4_UINT*)cpCurPush;
+//
+//	//copy packet data
+//	const unsigned int cIters = cPacketSize >> 4;
+//	for (unsigned int i = 0; i < cIters; ++i)
+//		pPushCont[i] = pPacketCont[i];
+//
+//	// setup addpacket data for Jobs
+//	SAddPacketData* const __restrict pAddPacketData = (SAddPacketData*)((unsigned char*)cpCurPush + m_AddPacketDataOffset);
+//	pAddPacketData->pJobState = crPacket.GetJobStateAddress();
+//
+//#if defined(JOBMANAGER_SUPPORT_PROFILING)
+//	SJobProfilingData* pJobProfilingData = GetJobManagerInterface()->GetProfilingData(crPacket.GetProfilerIndex());
+//	pJobProfilingData->jobHandle = pJobParam->GetJobProgramData();
+//	pAddPacketData->profilerIndex = crPacket.GetProfilerIndex();
+//	if (pAddPacketData->pJobState) // also store profilerindex in syncvar, so be able to record wait times
+//	{
+//		pAddPacketData->pJobState->nProfilerIndex = pAddPacketData->profilerIndex;
+//	}
+//#endif
+//
+//	// set invoker, for the case the the job changes within the queue
+//	pAddPacketData->nInvokerIndex = pJobParam->GetProgramHandle()->nJobInvokerIdx;
+//
+//	// new job queue, or empty job queue
+//	if (!m_QueueRunningState.IsRunning())
+//	{
+//		m_pPush = cpNextPushPtr;//make visible
+//		m_QueueRunningState.SetRunning();
+//
+//		pJobParam->RegisterQueue(this);
+//		pJobParam->SetParamDataSize(((TJobType*)&m_JobInstance)->GetParamDataSize());
+//		pJobParam->SetPriorityLevel(nPriorityLevel);
+//		pJobParam->Run();
+//
+//		return;
+//	}
+//
+//	bool bAtomicSwapSuccessfull = false;
+//	JobManager::SJobSyncVariable newSyncVar;
+//	newSyncVar.SetRunning();
+//#if CRY_PLATFORM_64BIT // for 64 bit, we need to atomicly swap 128 bit
+//	long long compareValue[2] = { *alias_cast<long long*>(&newSyncVar), (long long)cpCurPush };
+//	CryInterlockedCompareExchange128((volatile long long*)this, (long long)cpNextPushPtr, *alias_cast<long long*>(&newSyncVar), compareValue);
+//	// make sure nobody set the state to stopped in the meantime
+//	bAtomicSwapSuccessfull = (compareValue[0] > 0);
+//#else
+//	// union used to construct 64 bit value for atomic updates
+//	union T64BitValue
+//	{
+//		long long doubleWord;
+//		struct
+//		{
+//			unsigned int word0;
+//			unsigned int word1;
+//		};
+//	};
+//
+//	// job system is process the queue right now, we need an atomic update
+//	T64BitValue compareValue;
+//	compareValue.word0 = *alias_cast<unsigned int*>(&newSyncVar);
+//	compareValue.word1 = (unsigned int)(TRUNCATE_PTR)cpCurPush;
+//
+//	T64BitValue exchangeValue;
+//	exchangeValue.word0 = *alias_cast<unsigned int*>(&newSyncVar);
+//	exchangeValue.word1 = (unsigned int)(TRUNCATE_PTR)cpNextPushPtr;
+//
+//	T64BitValue resultValue;
+//	resultValue.doubleWord = CryInterlockedCompareExchange64((volatile long long*)this, exchangeValue.doubleWord, compareValue.doubleWord);
+//
+//	bAtomicSwapSuccessfull = (resultValue.word0 > 0);
+//#endif
+//
+//	// job system finished in the meantime, next to issue a new job
+//	if (!bAtomicSwapSuccessfull)
+//	{
+//		m_pPush = cpNextPushPtr;//make visible
+//		m_QueueRunningState.SetRunning();
+//
+//		pJobParam->RegisterQueue(this);
+//		pJobParam->SetParamDataSize(((TJobType*)&m_JobInstance)->GetParamDataSize());
+//		pJobParam->SetPriorityLevel(nPriorityLevel);
+//		pJobParam->Run();
+//	}
+//}
 
 //! CCommonDMABase Function implementations.
 inline JobManager::CCommonDMABase::CCommonDMABase()

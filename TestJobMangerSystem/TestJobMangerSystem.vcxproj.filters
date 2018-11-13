@@ -51,19 +51,10 @@
     <ClInclude Include="CryThread.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CryThread_dummy.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CryThread_posix.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CryThread_win32.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CryThreadImpl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CryThreadImpl_posix.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CryThreadImpl_win32.h">

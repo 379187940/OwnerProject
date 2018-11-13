@@ -13,7 +13,7 @@
 #ifndef IJOBMANAGER_JOBDELEGATOR_H_
 #define IJOBMANAGER_JOBDELEGATOR_H_
 
-#include <CryThreading/IJobManager.h>
+#include "IJobManager.h"
 
 //! Macro to assit generating the required functions for the JobDelegator.
 //! Was split into it's own header since this code is very template heavy.
