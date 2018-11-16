@@ -3,22 +3,21 @@
 #include "StdAfx.h"
 //#include "System.h"
 #include "ThreadConfigManager.h"
-#include "CryAtomics.h"
+#include "AngelicaAtomics.h"
 #include "Win32specific.h"
 #include <atlstr.h>
 #include "IThreadManager.h"
 #include "IThreadConfigManager.h"
 #include "MSVCspecific.h"
-#include "CryThread.h"
-#include "CryThread_win32.h"
+#include "AngelicaThread.h"
+#include "AngelicaThread_win32.h"
 #include <map>
 #include "smartptr.h"
-#include "CryThreadImpl.h"
-//#include <CryCore/CryCustomTypes.h>
+#include "AngelicaThreadImpl.h"
 
 #define INCLUDED_FROM_SYSTEM_THREADING_CPP
 
-#include "CryThreadUtil_win32.h"
+#include "AngelicaThreadUtil_win32.h"
 #include "FairMonitor.h"
 #undef INCLUDED_FROM_SYSTEM_THREADING_CPP
 

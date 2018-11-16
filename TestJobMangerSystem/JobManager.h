@@ -11,11 +11,6 @@
 
 #define JOBSYSTEM_INVOKER_COUNT (128)
 
-//#include <CryCore/Platform/platform.h>
-//#include <CryThreading/CryAtomics.h>
-//
-//#include <CryThreading/IJobManager.h>
-//#include "JobStructs.h"
 
 #include <map>
 #include<windows.h>

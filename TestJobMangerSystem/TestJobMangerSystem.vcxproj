@@ -151,15 +151,15 @@
   <ItemGroup>
     <ClInclude Include="BitFiddling.h" />
     <ClInclude Include="BlockingBackend\BlockingBackEnd.h" />
-    <ClInclude Include="CryAtomics.h" />
-    <ClInclude Include="CryAtomics_impl_win32.h" />
-    <ClInclude Include="CryAtomics_win32.h" />
-    <ClInclude Include="CryThread.h" />
-    <ClInclude Include="CryThreadImpl.h" />
-    <ClInclude Include="CryThreadImpl_win32.h" />
-    <ClInclude Include="CryThreadSafeRendererContainer.h" />
-    <ClInclude Include="CryThreadSafeWorkerContainer.h" />
-    <ClInclude Include="CryThread_win32.h" />
+    <ClInclude Include="AngelicaAtomics.h" />
+    <ClInclude Include="AngelicaAtomics_impl_win32.h" />
+    <ClInclude Include="AngelicaAtomics_win32.h" />
+    <ClInclude Include="AngelicaThread.h" />
+    <ClInclude Include="AngelicaThreadImpl.h" />
+    <ClInclude Include="AngelicaThreadImpl_win32.h" />
+    <ClInclude Include="AngelicaThreadSafeRendererContainer.h" />
+    <ClInclude Include="AngelicaThreadSafeWorkerContainer.h" />
+    <ClInclude Include="AngelicaThread_win32.h" />
     <ClInclude Include="FairMonitor.h" />
     <ClInclude Include="FallbackBackend\FallBackBackend.h" />
     <ClInclude Include="IJobManager.h" />

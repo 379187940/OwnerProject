@@ -17,7 +17,7 @@
 //
 //---------------------------------------------------------------------------
 
-#include "CryThread.h"
+#include "AngelicaThread.h"
 
 namespace stl
 {

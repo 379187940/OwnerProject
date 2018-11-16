@@ -1,5 +1,3 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
-
 // -------------------------------------------------------------------------
 //  File name:   MultiThread_Containers.h
 //  Version:     v1.00
@@ -14,9 +12,6 @@
 #define __MultiThread_Containters_h__
 #pragma once
 
-//#include <CrySystem/Pipe.h>
-//#include <CryCore/StlUtils.h>
-//#include <CryCore/BitFiddling.h>
 
 #include <queue>
 #include <set>

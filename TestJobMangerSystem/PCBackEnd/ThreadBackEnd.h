@@ -17,10 +17,7 @@
 
 #include "../IThreadManager.h"
 
-#if CRY_PLATFORM_DURANGO
-	#include <CryCore/Platform/CryWindows.h>
-	#define JOB_SPIN_DURING_IDLE
-#endif
+
 
 namespace JobManager
 {

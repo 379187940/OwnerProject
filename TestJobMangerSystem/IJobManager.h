@@ -12,13 +12,10 @@
 
 #pragma once
 #include<windows.h>
-#include "CryThread.h"
+#include "AngelicaThread.h"
 #include "timevalue.h"
 #include <functional>
 #include "FairMonitor.h"
-//#include <CrySystem/ISystem.h>
-//#include <CrySystem/ITimer.h>
-//#include <CryCore/Containers/CryArray.h>
 
 // Job manager settings
 

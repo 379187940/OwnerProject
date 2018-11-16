@@ -9,8 +9,8 @@
 #include <functional>
 #include "Win32specific.h"
 #include "MSVCspecific.h"
-#include "CryAtomics.h"
-#include "CryThread.h"
+#include "AngelicaAtomics.h"
+#include "AngelicaThread.h"
 #include "JobManager.h"
 #include "BlockingBackend\BlockingBackEnd.h"
 #include "FallbackBackend\FallBackBackend.h"
@@ -21,15 +21,6 @@
 #include <iosfwd>
 #include <atlstr.h>
 using namespace std;
-//#include <CryRenderer/IRenderAuxGeom.h>
-//#include <CryThreading/IJobManager.h>
-//
-//#include "FallbackBackend/FallBackBackend.h"
-//#include "PCBackEnd/ThreadBackEnd.h"
-//#include "BlockingBackend/BlockingBackEnd.h"
-//
-//#include "../System.h"
-//#include "../CPUDetect.h"
 
 namespace JobManager {
 namespace Detail {
