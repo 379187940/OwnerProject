@@ -305,8 +305,6 @@ private:
 	unsigned int m_nRegularWorkerThreads;
 
 	bool m_bSuspendWorkerForMP;
-	CryMutex m_SuspendWorkerForMPLock;
-	CryConditionVariable m_SuspendWorkerForMPCondion;
 #if defined(JOBMANAGER_SUPPORT_PROFILING)
 	SJobProfilingDataContainer m_profilingData;
 	std::map<JobManager::SJobStringHandle, ColorB> m_JobColors;

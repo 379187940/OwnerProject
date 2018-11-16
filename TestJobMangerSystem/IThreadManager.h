@@ -57,7 +57,7 @@ public:
 	//! Register 3rd party thread with the thread manager.
 	//! Applies thread config for thread if found.
 	//! \param pThreadHandle If NULL, the current thread handle will be used.
-	virtual bool RegisterThirdPartyThread(void* pThreadHandle, const char* sThreadName, ...) = 0;
+	//virtual bool RegisterThirdPartyThread(void* pThreadHandle, const char* sThreadName, ...) = 0;
 
 	//! Unregister 3rd party thread with the thread manager.
 	virtual bool UnRegisterThirdPartyThread(const char* sThreadName, ...) = 0;

@@ -102,13 +102,13 @@ unsigned long CryGetCurrentThreadId()
 }
 
 //////////////////////////////////////////////////////////////////////////
-unsigned long CryGetThreadId(TThreadHandle hThreadHandle)
-{
-	return GetThreadId(hThreadHandle);
-}
+//unsigned long CryGetThreadId(TThreadHandle hThreadHandle)
+//{
+//	return GetThreadId(hThreadHandle);
+//}
 
 //////////////////////////////////////////////////////////////////////////
-void CrySetThreadName(TThreadHandle pThreadHandle, const char* sThreadName)
+void CrySetThreadName(unsigned long threadId, const char* sThreadName)
 {
 	const DWORD MS_VC_EXCEPTION = 0x406D1388;
 
@@ -123,7 +123,7 @@ void CrySetThreadName(TThreadHandle pThreadHandle, const char* sThreadName)
 	SThreadNameDesc info;
 	info.dwType = 0x1000;
 	info.szName = sThreadName;
-	info.dwThreadID = GetThreadId(pThreadHandle);
+	info.dwThreadID = threadId;
 	info.dwFlags = 0;
 #pragma warning(push)
 #pragma warning(disable : 6312 6322)

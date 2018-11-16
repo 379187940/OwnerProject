@@ -102,6 +102,9 @@
     <ClInclude Include="BitFiddling.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FairMonitor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -126,6 +129,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ThreadConfigManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FairMonitor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

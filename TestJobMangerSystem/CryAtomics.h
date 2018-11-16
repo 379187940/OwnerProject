@@ -100,7 +100,7 @@ struct SLockFreeSingleLinkedListHeader
 
 	//! Retrieves a pointer to the first item on a single-linked list.
 	//! \note This does not remove the item from the list, and it's unsafe to inspect anything but the returned address.
-	friend void* CryRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list);
+	//friend void* CryRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list);
 
 	//! Pops one element atomically from the front of a single-linked list, and returns a pointer to the item.
 	//! \note If the list was empty, nullptr is returned instead.

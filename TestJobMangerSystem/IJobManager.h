@@ -15,6 +15,7 @@
 #include "CryThread.h"
 #include "timevalue.h"
 #include <functional>
+#include "FairMonitor.h"
 //#include <CrySystem/ISystem.h>
 //#include <CrySystem/ITimer.h>
 //#include <CryCore/Containers/CryArray.h>
@@ -52,21 +53,22 @@ public:
 	void Acquire()
 	{
 		//wait for completion of the condition
-		m_Notify.Lock();
+		m_CondNotify.BeginSynchronized();
 		while (m_nFinished == 0)
-			m_CondNotify.Wait(m_Notify);
-		m_Notify.Unlock();
+			m_CondNotify.Wait(INFINITE);
+		m_CondNotify.EndSynchronized();
 	}
 
 	void Release()
 	{
-		m_Notify.Lock();
+		m_CondNotify.BeginSynchronized();
 		m_nFinished = 1;
-		m_Notify.Unlock();	
-		m_CondNotify.Notify();
+		m_CondNotify.NotifyAll();
+		m_CondNotify.EndSynchronized();
+		
 	}
 
-	void SetRunning() aaaa
+	void SetRunning()
 	{
 		m_nFinished = 0;
 	}
@@ -115,8 +117,9 @@ public:
 	bool HasOwner() const { return m_pOwner != NULL; }
 
 private:
-	CryMutex             m_Notify;
-	CryConditionVariable m_CondNotify;
+	/*CryMutex             m_Notify;
+	CryConditionVariable m_CondNotify;*/
+	FairMonitor m_CondNotify;
 	volatile unsigned int      m_nFinished;
 	volatile unsigned int      m_nRefCounter;
 	volatile const void* m_pOwner;

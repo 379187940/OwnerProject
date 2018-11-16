@@ -22,62 +22,59 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 //CRITICAL_SECTION cs1;
 //CRITICAL_SECTION cs2;
-//class CWindowsConsoleInputThread : public IThread
-//{
-//public:
-//	CWindowsConsoleInputThread(){}
-//
-//	~CWindowsConsoleInputThread(){}
-//
-//	// Start accepting work on thread
-//	void ThreadEntry()
-//	{
-//		EnterCriticalSection(&cs1);
-//		Sleep(2000);
-//		EnterCriticalSection(&cs2);
-//		OutputDebugStringA("Thread1 end \n");
-//	}
-//
-//	// Signals the thread that it should not accept anymore work and exit
-//	void SignalStopWork()
-//	{
-//
-//	}
-//
-//	void Interrupt()
-//	{
-//
-//	}
-//
-//};
-//class CWindowsConsoleInputThread2 : public IThread
-//{
-//public:
-//	CWindowsConsoleInputThread2() {}
-//
-//	~CWindowsConsoleInputThread2() {}
-//
-//	// Start accepting work on thread
-//	void ThreadEntry()
-//	{
-//		EnterCriticalSection(&cs2);
-//		Sleep(2000);
-//		EnterCriticalSection(&cs1);
-//		OutputDebugStringA("Thread2 end \n");
-//	}
-//
-//	// Signals the thread that it should not accept anymore work and exit
-//	void SignalStopWork()
-//	{
-//
-//	}
-//
-//	void Interrupt()
-//	{
-//
-//	}
-//
-//};
+static JobManager::SJobState g_JobState;
+class CWindowsConsoleInputThread : public IThread
+{
+public:
+	CWindowsConsoleInputThread(){}
+
+	~CWindowsConsoleInputThread(){}
+
+	// Start accepting work on thread
+	void ThreadEntry()
+	{
+		GetJobManagerInterface()->WaitForJob(g_JobState);
+		OutputDebugStringA("CWindowsConsoleInputThread end!!!!\n");
+	}
+
+	// Signals the thread that it should not accept anymore work and exit
+	void SignalStopWork()
+	{
+
+	}
+
+	void Interrupt()
+	{
+
+	}
+
+};
+class CWindowsConsoleInputThread2 : public IThread
+{
+public:
+	CWindowsConsoleInputThread2() {}
+
+	~CWindowsConsoleInputThread2() {}
+
+	// Start accepting work on thread
+	void ThreadEntry()
+	{
+		GetJobManagerInterface()->WaitForJob(g_JobState);
+		OutputDebugStringA("CWindowsConsoleInputThread2 end!!!!\n");
+	}
+
+	// Signals the thread that it should not accept anymore work and exit
+	void SignalStopWork()
+	{
+
+	}
+
+	void Interrupt()
+	{
+
+	}
+
+};
 class CTest
 {
 public:
@@ -93,7 +90,7 @@ public:
 	}
 	
 };
-static JobManager::SJobState g_JobState;
+
 DECLARE_JOB("Test", TTestJob, CTest::Print);
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -106,7 +103,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	job.SetClassInstance(&a);
 	job.RegisterJobState(&g_JobState);
 	job.Run();
-	GetJobManagerInterface()->WaitForJob(g_JobState);
+	CWindowsConsoleInputThread th1;
+	CWindowsConsoleInputThread2 th2;
+	GetGlobalThreadManager()->SpawnThread(&th1, "thread1");
+	GetGlobalThreadManager()->SpawnThread(&th2, "thread2");
+	//GetJobManagerInterface()->WaitForJob(g_JobState);
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 

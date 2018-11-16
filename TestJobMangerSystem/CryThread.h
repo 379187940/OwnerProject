@@ -6,7 +6,7 @@
 #include "CryAtomics.h"
 //#include <CryCore/BitFiddling.h>
 typedef const char*            cstr;
-class CryConditionVariable;
+//class CryConditionVariable;
 class CrySemaphore;
 class CryFastSemaphore;
 

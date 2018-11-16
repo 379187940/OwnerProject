@@ -41,21 +41,21 @@ void* CryInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
 	return reinterpret_cast<void*>(InterlockedPopEntrySList(alias_cast<PSLIST_HEADER>(&list)));
 }
 
-//////////////////////////////////////////////////////////////////////////
-void* CryRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list)
-{
-	static_assert(sizeof(SLockFreeSingleLinkedListHeader) == sizeof(SLIST_HEADER), "CRY_INTERLOCKED_SLIST_HEADER_HAS_WRONG_SIZE");
-	static_assert(sizeof(SLockFreeSingleLinkedListEntry) >= sizeof(SLIST_ENTRY), "CRY_INTERLOCKED_SLIST_ENTRY_HAS_WRONG_SIZE");
-
-	//CRY_ASSERT_MESSAGE(IsAligned(&list, MEMORY_ALLOCATION_ALIGNMENT), "LockFree SingleLink List Header has wrong Alignment");
-#if CRY_PLATFORM_DURANGO
-	// This is normally implemented in NTDLL, but that can't be linked on Durango
-	// However, we know that the X64 version of the header is used, so just access it directly
-	return (void*)(((PSLIST_HEADER)&list)->HeaderX64.NextEntry << 4);
-#else
-	return reinterpret_cast<void*>(RtlFirstEntrySList(alias_cast<PSLIST_HEADER>(&list)));
-#endif
-}
+////////////////////////////////////////////////////////////////////////////
+//void* CryRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list)
+//{
+//	static_assert(sizeof(SLockFreeSingleLinkedListHeader) == sizeof(SLIST_HEADER), "CRY_INTERLOCKED_SLIST_HEADER_HAS_WRONG_SIZE");
+//	static_assert(sizeof(SLockFreeSingleLinkedListEntry) >= sizeof(SLIST_ENTRY), "CRY_INTERLOCKED_SLIST_ENTRY_HAS_WRONG_SIZE");
+//
+//	//CRY_ASSERT_MESSAGE(IsAligned(&list, MEMORY_ALLOCATION_ALIGNMENT), "LockFree SingleLink List Header has wrong Alignment");
+//#if CRY_PLATFORM_DURANGO
+//	// This is normally implemented in NTDLL, but that can't be linked on Durango
+//	// However, we know that the X64 version of the header is used, so just access it directly
+//	return (void*)(((PSLIST_HEADER)&list)->HeaderX64.NextEntry << 4);
+//#else
+//	return reinterpret_cast<void*>(RtlFirstEntrySList(alias_cast<PSLIST_HEADER>(&list)));
+//#endif
+//}
 
 //////////////////////////////////////////////////////////////////////////
 void CryInitializeSListHead(SLockFreeSingleLinkedListHeader& list)

@@ -19,16 +19,16 @@
 #define INCLUDED_FROM_SYSTEM_THREADING_CPP
 
 #include "CryThreadUtil_win32.h"
-
+#include "FairMonitor.h"
 #undef INCLUDED_FROM_SYSTEM_THREADING_CPP
 
 //////////////////////////////////////////////////////////////////////////
-static void ApplyThreadConfig(CryThreadUtil::TThreadHandle pThreadHandle, const SThreadConfig& rThreadDesc)
+static void ApplyThreadConfig(unsigned long threadId, CryThreadUtil::TThreadHandle pThreadHandle, const SThreadConfig& rThreadDesc)
 {
 	// Apply config
 	if (rThreadDesc.paramActivityFlag & SThreadConfig::eThreadParamFlag_ThreadName)
 	{
-		CryThreadUtil::CrySetThreadName(pThreadHandle, rThreadDesc.szThreadName);
+		CryThreadUtil::CrySetThreadName(threadId, rThreadDesc.szThreadName);
 	}
 	if (rThreadDesc.paramActivityFlag & SThreadConfig::eThreadParamFlag_Affinity)
 	{
@@ -68,9 +68,9 @@ struct SThreadMetaData : public CMultiThreadRefCount
 
 	CryThreadUtil::TThreadHandle            m_threadHandle; // Thread handle
 	unsigned long                                m_threadId;     // The active threadId, 0 = Invalid Id
-
-	CryMutex                                m_threadExitMutex;     // Mutex used to safeguard thread exit condition signaling
-	CryConditionVariable                    m_threadExitCondition; // Signaled when the thread is about to exit
+	FairMonitor								m_threadExitMonitor;
+	//CryMutex                                m_threadExitMutex;     // Mutex used to safeguard thread exit condition signaling
+	//CryConditionVariable                    m_threadExitCondition; // Signaled when the thread is about to exit
 
 	CStringA m_threadName; // Thread name
 	volatile bool                           m_isRunning;  // Indicates the thread is not ready to exit yet
@@ -88,7 +88,7 @@ public:
 	virtual bool          SpawnThread(IThread* pThread, const char* sThreadName, ...) override;
 	virtual bool          JoinThread(IThread* pThreadTask, EJoinMode eJoinMode) override;
 
-	virtual bool          RegisterThirdPartyThread(void* pThreadHandle, const char* sThreadName, ...) override;
+	//virtual bool          RegisterThirdPartyThread(void* pThreadHandle, const char* sThreadName, ...) override;
 	virtual bool          UnRegisterThirdPartyThread(const char* sThreadName, ...) override;
 
 	virtual const char*   GetThreadName(unsigned long nThreadId) override;
@@ -116,7 +116,7 @@ private:
 
 	bool     SpawnThreadImpl(IThread* pThread, const char* sThreadName);
 
-	bool     RegisterThirdPartyThreadImpl(CryThreadUtil::TThreadHandle pThreadHandle, const char* sThreadName);
+	//bool     RegisterThirdPartyThreadImpl(CryThreadUtil::TThreadHandle pThreadHandle, const char* sThreadName);
 	bool     UnRegisterThirdPartyThreadImpl(const char* sThreadName);
 
 	unsigned long GetThreadIdImpl(const char* sThreadName);
@@ -166,7 +166,7 @@ unsigned __stdcall CThreadManager::RunThread(void* thisPtr)
 
 	// Apply config
 	const SThreadConfig* pThreadConfig = g_ThreadManager.GetThreadConfigManager()->GetDefaultThreadConfig();
-	ApplyThreadConfig(pThreadData->m_threadHandle, *pThreadConfig);
+	ApplyThreadConfig(pThreadData->m_threadId , pThreadData->m_threadHandle, *pThreadConfig);
 
 	//CRY_PROFILE_THREADNAME(pThreadData->m_threadName.GetBuffer(0));
 
@@ -179,7 +179,7 @@ unsigned __stdcall CThreadManager::RunThread(void* thisPtr)
 
 
 	// Rename Thread
-	CryThreadUtil::CrySetThreadName(pThreadData->m_threadHandle, tmpString.GetBuffer(0));
+	CryThreadUtil::CrySetThreadName(pThreadData->m_threadId, tmpString.GetBuffer(0));
 	//CRY_PROFILE_THREADNAME(tmpString.GetBuffer(0));
 	
 
@@ -193,10 +193,10 @@ unsigned __stdcall CThreadManager::RunThread(void* thisPtr)
 	g_ThreadManager.EnableFloatExceptions(eFPE_None);
 
 	// Signal imminent thread end
-	pThreadData->m_threadExitMutex.Lock();
+	pThreadData->m_threadExitMonitor.BeginSynchronized();
 	pThreadData->m_isRunning = false;
-	pThreadData->m_threadExitCondition.Notify();
-	pThreadData->m_threadExitMutex.Unlock();
+	pThreadData->m_threadExitMonitor.NotifyAll();
+	pThreadData->m_threadExitMonitor.EndSynchronized();
 
 	// Unregister thread
 	// Note: Unregister after m_threadExitCondition.Notify() to ensure pThreadData is still valid
@@ -235,12 +235,12 @@ bool CThreadManager::JoinThread(IThread* pThreadTask, EJoinMode eJoinMode)
 	}
 
 	// Wait for completion of the target thread exit condition
-	pThreadImpl->m_threadExitMutex.Lock();
+	pThreadImpl->m_threadExitMonitor.BeginSynchronized();
 	while (pThreadImpl->m_isRunning)
 	{
-		pThreadImpl->m_threadExitCondition.Wait(pThreadImpl->m_threadExitMutex);
+		pThreadImpl->m_threadExitMonitor.Wait(INFINITE);
 	}
-	pThreadImpl->m_threadExitMutex.Unlock();
+	pThreadImpl->m_threadExitMonitor.EndSynchronized();
 
 	return true;
 }
@@ -417,82 +417,82 @@ bool CThreadManager::SpawnThreadImpl(IThread* pThreadTask, const char* sThreadNa
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CThreadManager::RegisterThirdPartyThread(void* pThreadHandle, const char* sThreadName, ...)
-{
-	if (!pThreadHandle)
-	{
-		pThreadHandle = reinterpret_cast<void*>(CryThreadUtil::CryGetCurrentThreadHandle());
-	}
-
-	va_list args;
-	va_start(args, sThreadName);
-
-	// Format thread name
-	char strThreadName[THREAD_NAME_LENGTH_MAX];
-	if (!sprintf_s(strThreadName, sThreadName, args))
-	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: ThreadName \"%s\" has been truncated to \"%s\". Max characters allowed: %i.", sThreadName, strThreadName, (int)sizeof(strThreadName) - 1);
-	}
-
-	// Register 3rd party thread
-	bool ret = RegisterThirdPartyThreadImpl(reinterpret_cast<CryThreadUtil::TThreadHandle>(pThreadHandle), strThreadName);
-
-	va_end(args);
-	return ret;
-}
+//bool CThreadManager::RegisterThirdPartyThread(void* pThreadHandle, const char* sThreadName, ...)
+//{
+//	if (!pThreadHandle)
+//	{
+//		pThreadHandle = reinterpret_cast<void*>(CryThreadUtil::CryGetCurrentThreadHandle());
+//	}
+//
+//	va_list args;
+//	va_start(args, sThreadName);
+//
+//	// Format thread name
+//	char strThreadName[THREAD_NAME_LENGTH_MAX];
+//	if (!sprintf_s(strThreadName, sThreadName, args))
+//	{
+//		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: ThreadName \"%s\" has been truncated to \"%s\". Max characters allowed: %i.", sThreadName, strThreadName, (int)sizeof(strThreadName) - 1);
+//	}
+//
+//	// Register 3rd party thread
+//	bool ret = RegisterThirdPartyThreadImpl(reinterpret_cast<CryThreadUtil::TThreadHandle>(pThreadHandle), strThreadName);
+//
+//	va_end(args);
+//	return ret;
+//}
 
 //////////////////////////////////////////////////////////////////////////
-bool CThreadManager::RegisterThirdPartyThreadImpl(CryThreadUtil::TThreadHandle threadHandle, const char* sThreadName)
-{
-	if (strcmp(sThreadName, "") == 0)
-	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: CThreadManager::RegisterThirdPartyThread error registering third party thread. No name provided.");
-		return false;
-	}
-	// Init thread meta data
-	SThreadMetaData* pThreadMetaData = new SThreadMetaData();
-	pThreadMetaData->m_pThreadTask = 0;
-	pThreadMetaData->m_pThreadMngr = this;
-	pThreadMetaData->m_threadName = sThreadName;
-	pThreadMetaData->m_threadHandle = CryThreadUtil::CryDuplicateThreadHandle(threadHandle); // Ensure that we are not storing a pseudo handle
-	pThreadMetaData->m_threadId = CryThreadUtil::CryGetThreadId(pThreadMetaData->m_threadHandle);
-
-	{
-		AUTO_LOCK(m_spawnedThirdPartyThreadsLock);
-
-		// Check for duplicate
-		SpawnedThirdPartyThreadMapConstIter res = m_spawnedThirdPartyThread.find(sThreadName);
-		if (res != m_spawnedThirdPartyThread.end())
-		{
-			/*CryFatalError("CThreadManager::RegisterThirdPartyThread - Unable to register thread \"%s\""
-			              "because another third party thread with the same name \"%s\" has already been registered with ThreadHandle: %p",
-			              sThreadName, res->second->m_threadName.GetBuffer(0), reinterpret_cast<void*>(threadHandle));*/
-
-			delete pThreadMetaData;
-			return false;
-		}
-
-		// Insert thread data
-		m_spawnedThirdPartyThread.insert(ThirdPartyThreadMapPair(pThreadMetaData->m_threadName.GetBuffer(0), pThreadMetaData));
-	}
-
-	// Get thread config
-	const SThreadConfig* pThreadConfig = g_ThreadManager.GetThreadConfigManager()->GetThreadConfig(sThreadName);
-
-	// Apply config (if not default config)
-	if (strcmp(pThreadConfig->szThreadName, sThreadName) == 0)
-	{
-		ApplyThreadConfig(threadHandle, *pThreadConfig);
-	}
-
-	// Update FP exception mask for 3rd party thread
-	if (pThreadMetaData->m_threadId)
-	{
-		CryThreadUtil::EnableFloatExceptions(pThreadMetaData->m_threadId, (EFPE_Severity)0);
-	}
-
-	return true;
-}
+//bool CThreadManager::RegisterThirdPartyThreadImpl(CryThreadUtil::TThreadHandle threadHandle, const char* sThreadName)
+//{
+//	if (strcmp(sThreadName, "") == 0)
+//	{
+//		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: CThreadManager::RegisterThirdPartyThread error registering third party thread. No name provided.");
+//		return false;
+//	}
+//	// Init thread meta data
+//	SThreadMetaData* pThreadMetaData = new SThreadMetaData();
+//	pThreadMetaData->m_pThreadTask = 0;
+//	pThreadMetaData->m_pThreadMngr = this;
+//	pThreadMetaData->m_threadName = sThreadName;
+//	pThreadMetaData->m_threadHandle = CryThreadUtil::CryDuplicateThreadHandle(threadHandle); // Ensure that we are not storing a pseudo handle
+//	pThreadMetaData->m_threadId = CryThreadUtil::CryGetThreadId(pThreadMetaData->m_threadHandle);
+//
+//	{
+//		AUTO_LOCK(m_spawnedThirdPartyThreadsLock);
+//
+//		// Check for duplicate
+//		SpawnedThirdPartyThreadMapConstIter res = m_spawnedThirdPartyThread.find(sThreadName);
+//		if (res != m_spawnedThirdPartyThread.end())
+//		{
+//			/*CryFatalError("CThreadManager::RegisterThirdPartyThread - Unable to register thread \"%s\""
+//			              "because another third party thread with the same name \"%s\" has already been registered with ThreadHandle: %p",
+//			              sThreadName, res->second->m_threadName.GetBuffer(0), reinterpret_cast<void*>(threadHandle));*/
+//
+//			delete pThreadMetaData;
+//			return false;
+//		}
+//
+//		// Insert thread data
+//		m_spawnedThirdPartyThread.insert(ThirdPartyThreadMapPair(pThreadMetaData->m_threadName.GetBuffer(0), pThreadMetaData));
+//	}
+//
+//	// Get thread config
+//	const SThreadConfig* pThreadConfig = g_ThreadManager.GetThreadConfigManager()->GetThreadConfig(sThreadName);
+//
+//	// Apply config (if not default config)
+//	if (strcmp(pThreadConfig->szThreadName, sThreadName) == 0)
+//	{
+//		ApplyThreadConfig(threadHandle, *pThreadConfig);
+//	}
+//
+//	// Update FP exception mask for 3rd party thread
+//	if (pThreadMetaData->m_threadId)
+//	{
+//		CryThreadUtil::EnableFloatExceptions(pThreadMetaData->m_threadId, (EFPE_Severity)0);
+//	}
+//
+//	return true;
+//}
 
 //////////////////////////////////////////////////////////////////////////
 bool CThreadManager::UnRegisterThirdPartyThread(const char* sThreadName, ...)

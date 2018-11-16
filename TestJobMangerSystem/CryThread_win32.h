@@ -31,11 +31,11 @@ struct CRY_CRITICAL_SECTION // From winnt.h
 };
 
 //////////////////////////////////////////////////////////////////////////
-struct CRY_SRWLOCK // From winnt.h
-{
-	CRY_SRWLOCK();
-	void* SRWLock_;
-};
+//struct CRY_SRWLOCK // From winnt.h
+//{
+//	CRY_SRWLOCK();
+//	void* SRWLock_;
+//};
 
 //////////////////////////////////////////////////////////////////////////
 struct CRY_CONDITION_VARIABLE // From winnt.h
@@ -52,15 +52,15 @@ public:
 	static const eLOCK_TYPE s_value = eLockType_SRW;
 	friend class CryConditionVariable;
 public:
-	CryLock_SRWLOCK() = default;
-	/*CryLock_SRWLOCK()
+	//CryLock_SRWLOCK() = default;
+	CryLock_SRWLOCK()
 	{
 		InitializeCriticalSection(&m_cs);
 	}
 	~CryLock_SRWLOCK()
 	{
 		DeleteCriticalSection(&m_cs);
-	}*/
+	}
 	void Lock();
 	void Unlock();
 
@@ -70,8 +70,8 @@ private:
 	CryLock_SRWLOCK& operator=(const CryLock_SRWLOCK&) = delete;
 
 private:
-	//CRITICAL_SECTION m_cs;
-	CRY_SRWLOCK m_win32_lock_type;
+	CRITICAL_SECTION m_cs;
+	//CRY_SRWLOCK m_win32_lock_type;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -198,10 +198,10 @@ class CryConditionVariable
 {
 public:
 	CryConditionVariable() = default;
-	void Wait(CryMutex& lock);
+	/*void Wait(CryMutex& lock);
 	void Wait(CryMutexFast& lock);
 	bool TimedWait(CryMutex& lock, unsigned int millis);
-	bool TimedWait(CryMutexFast& lock, unsigned int millis);
+	bool TimedWait(CryMutexFast& lock, unsigned int millis);*/
 	void NotifySingle();
 	void Notify();
 

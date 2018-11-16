@@ -1,67 +1,14 @@
-﻿  SystemThreading.cpp
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\systemthreading.cpp(196): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\systemthreading.cpp(199): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\systemthreading.cpp(238): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\systemthreading.cpp(243): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-  正在生成代码...
-  正在编译...
-  BlockingBackEnd.cpp
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(55): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(58): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(63): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(65): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-  正在生成代码...
-  正在编译...
-  FallbackBackend.cpp
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(55): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(58): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(63): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(65): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-  正在生成代码...
-  正在编译...
+﻿  stdafx.cpp
+  ThreadConfigManager.cpp
+  TestJobMangerSystem.cpp
+  SystemThreading.cpp
+  ThreadBackEnd.cpp
   JobManager.cpp
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(55): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(58): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(63): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(65): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
 c:\program files (x86)\windows kits\8.1\include\um\dbghelp.h(1544): warning C4091: “typedef ”: 没有声明变量时忽略“”的左侧
 c:\program files (x86)\windows kits\8.1\include\um\dbghelp.h(3190): warning C4091: “typedef ”: 没有声明变量时忽略“”的左侧
+  FallbackBackend.cpp
+  FairMonitor.cpp
+  BlockingBackEnd.cpp
   正在生成代码...
-  正在编译...
-  ThreadBackEnd.cpp
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(55): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(58): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(63): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(65): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-  正在生成代码...
-  正在编译...
-  TestJobMangerSystem.cpp
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(55): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(58): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(63): error C2039: “Lock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\ijobmanager.h(65): error C2039: “Unlock”: 不是“CryMT::detail::CryLock_SRWLOCK_Recursive”的成员
-  c:\users\pwrd\documents\visual studio 2015\projects\test\testjobmangersystem\crythread_win32.h(82): note: 参见“CryMT::detail::CryLock_SRWLOCK_Recursive”的声明
-  正在生成代码...
+  TestJobMangerSystem.vcxproj -> C:\Users\PWRD\Documents\Visual Studio 2015\Projects\Test\Debug\TestJobMangerSystem.exe
+  TestJobMangerSystem.vcxproj -> C:\Users\PWRD\Documents\Visual Studio 2015\Projects\Test\Debug\TestJobMangerSystem.pdb (Full PDB)
