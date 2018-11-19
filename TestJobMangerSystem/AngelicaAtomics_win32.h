@@ -5,7 +5,6 @@
 #include <intsafe.h>
 #include <intrin.h>
 #include <assert.h>
-//#include <CryCore/Assert/CryAssert.h>
 
 //////////////////////////////////////////////////////////////////////////
 // Interlocked API

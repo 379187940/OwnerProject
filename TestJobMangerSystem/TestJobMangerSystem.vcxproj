@@ -158,7 +158,6 @@
     <ClInclude Include="AngelicaThreadImpl.h" />
     <ClInclude Include="AngelicaThreadImpl_win32.h" />
     <ClInclude Include="AngelicaThreadSafeRendererContainer.h" />
-    <ClInclude Include="AngelicaThreadSafeWorkerContainer.h" />
     <ClInclude Include="AngelicaThread_win32.h" />
     <ClInclude Include="FairMonitor.h" />
     <ClInclude Include="FallbackBackend\FallBackBackend.h" />

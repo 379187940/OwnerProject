@@ -4,7 +4,6 @@
 
 // Include basic multithread primitives.
 #include "AngelicaAtomics.h"
-//#include <CryCore/BitFiddling.h>
 typedef const char*            cstr;
 //class CryConditionVariable;
 class CrySemaphore;
@@ -166,11 +165,6 @@ namespace CryMT {
 // Include architecture specific code.
 #if _WIN32
 	#include "AngelicaThread_win32.h"
-#elif CRY_PLATFORM_POSIX
-	#include <CryThreading/CryThread_posix.h>
-#else
-// Put other platform specific includes here!
-	#include <CryThreading/CryThread_dummy.h>
 #endif
 
 

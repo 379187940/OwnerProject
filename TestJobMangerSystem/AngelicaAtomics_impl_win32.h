@@ -1,7 +1,5 @@
 // Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
 
-//#include <CryCore/Platform/CryWindows.h>
-//#include <CryCore/Assert/CryAssert.h>
 
 #if !(defined(NTDDI_VERSION) && defined(NTDDI_WIN8) && (NTDDI_VERSION >= NTDDI_WIN8))
 // This declaration is missing from older Windows SDKs

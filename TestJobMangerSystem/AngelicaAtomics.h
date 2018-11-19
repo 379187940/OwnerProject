@@ -129,10 +129,6 @@ static_assert(std::alignment_of<SLockFreeSingleLinkedListHeader>::value == sizeo
 
 #if _WIN32
 	#include "AngelicaAtomics_win32.h"
-#elif CRY_PLATFORM_ORBIS
-	#include "CryAtomics_sce.h"
-#elif CRY_PLATFORM_POSIX
-	#include "CryAtomics_posix.h"
 #endif
 
 #define WRITE_LOCK_VAL (1 << 16)

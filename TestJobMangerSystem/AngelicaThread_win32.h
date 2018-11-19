@@ -3,7 +3,6 @@
 #pragma once
 
 #include <process.h>
-//#include "CryThread.h"
 namespace CryMT {
 namespace detail {
 enum eLOCK_TYPE

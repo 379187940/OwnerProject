@@ -8,12 +8,6 @@
 #if _WIN32
 	#include "AngelicaAtomics_impl_win32.h"
 	#include "AngelicaThreadImpl_win32.h"
-#elif CRY_PLATFORM_ORBIS
-	#include <CryThreading/CryThreadImpl_sce.h>
-#elif CRY_PLATFORM_POSIX
-	#include <CryThreading/CryThreadImpl_posix.h>
-#else
-// Put other platform specific includes here!
 #endif
 
 // vim:ts=2

@@ -39,33 +39,6 @@
     <ClInclude Include="JobManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CryAtomics.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CryAtomics_impl_win32.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CryAtomics_win32.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CryThread.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CryThread_win32.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CryThreadImpl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CryThreadImpl_win32.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CryThreadSafeRendererContainer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CryThreadSafeWorkerContainer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="IThreadConfigManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -103,6 +76,30 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="FairMonitor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AngelicaAtomics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AngelicaAtomics_impl_win32.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AngelicaAtomics_win32.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AngelicaThread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AngelicaThreadImpl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AngelicaThreadImpl_win32.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AngelicaThreadSafeRendererContainer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AngelicaThread_win32.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

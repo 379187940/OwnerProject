@@ -2,9 +2,7 @@
 
 #pragma once
 
-//#include <CryCore/Platform/platform.h>
 #include "AngelicaThread_win32.h"
-//#include <CryCore/Platform/CryWindows.h>
 #include "Win32specific.h"
 namespace CryMT
 {
