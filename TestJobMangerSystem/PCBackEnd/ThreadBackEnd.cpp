@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 // -------------------------------------------------------------------------
 //  File name:   ThreadBackEnd.h
@@ -69,7 +69,7 @@ bool JobManager::ThreadBackEnd::CThreadBackEnd::Init(unsigned int nSysMaxWorker)
 
 		if (!GetGlobalThreadManager()->SpawnThread(m_arrWorkerThreads[i], "JobSystem_Worker_%u", i))
 		{
-			//CryFatalError("Error spawning \"JobSystem_Worker_%u\" thread.", i);
+			//AngelicaFatalError("Error spawning \"JobSystem_Worker_%u\" thread.", i);
 		}
 	}
 #if defined(JOBMANAGER_SUPPORT_FRAMEPROFILER)
@@ -227,7 +227,7 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::SignalStopWork()
 //inline CFrameProfiler* GetFrameProfilerForName(const char* name)
 //{
 //	static std::vector<std::pair<const char*, CFrameProfiler*>> s_profilers;
-//	static CryRWLock s_profilersLock;
+//	static AngelicaRWLock s_profilersLock;
 //
 //	s_profilersLock.RLock();
 //	for (auto& p : s_profilers)
@@ -334,8 +334,8 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::ThreadEntry()
 			{
 				// volatile load
 #if ANGELICA_PLATFORM_WINDOWS || ANGELICA_PLATFORM_APPLE || ANGELICA_PLATFORM_LINUX || ANGELICA_PLATFORM_ANDROID// emulate a 64bit atomic read on PC platfom
-				currentPullIndex = CryInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.pull.index), 0, 0);
-				currentPushIndex = CryInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.push.index), 0, 0);
+				currentPullIndex = AngelicaInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.pull.index), 0, 0);
+				currentPushIndex = AngelicaInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.push.index), 0, 0);
 #else
 				currentPullIndex = *const_cast<volatile unsigned long long*>(&m_rJobQueue.pull.index);
 				currentPushIndex = *const_cast<volatile unsigned long long*>(&m_rJobQueue.push.index);
@@ -350,7 +350,7 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::ThreadEntry()
 					continue;
 
 				// stop spinning when we succesfull got the index
-				if (CryInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.pull.index), newPullIndex, currentPullIndex) == currentPullIndex)
+				if (AngelicaInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.pull.index), newPullIndex, currentPullIndex) == currentPullIndex)
 					break;
 
 			}
@@ -592,7 +592,7 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::DoWorkProducerConsum
 		{
 			resultValue[0] = compareValue[0];
 			resultValue[1] = compareValue[1];
-			unsigned char ret = CryInterlockedCompareExchange128((volatile signed long long*)pQueue, exchangeValue[1], exchangeValue[0], resultValue);
+			unsigned char ret = AngelicaInterlockedCompareExchange128((volatile signed long long*)pQueue, exchangeValue[1], exchangeValue[0], resultValue);
 
 			bNewJobFound = ((resultValue[1] & ~1) != curPushPtr);
 			bStopLoop = bNewJobFound || (resultValue[0] == compareValue[0] && resultValue[1] == compareValue[1]);
@@ -644,7 +644,7 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::DoWorkProducerConsum
 		do
 		{
 
-			resultValue.doubleWord = CryInterlockedCompareExchange64((volatile signed long long*)pQueue, exchangeValue.doubleWord, compareValue.doubleWord);
+			resultValue.doubleWord = AngelicaInterlockedCompareExchange64((volatile signed long long*)pQueue, exchangeValue.doubleWord, compareValue.doubleWord);
 
 			bNewJobFound = ((resultValue.word1 & ~1) != curPushPtr);
 			bStopLoop = bNewJobFound || resultValue.doubleWord == compareValue.doubleWord;

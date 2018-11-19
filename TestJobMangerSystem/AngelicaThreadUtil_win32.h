@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 //////////////////////////////////////////////////////////////////////////
 // NOTE: INTERNAL HEADER NOT FOR PUBLIC USE
@@ -41,7 +41,7 @@ static CStringA GetLastErrorAsString()
 //////////////////////////////////////////////////////////////////////////
 // THREAD CREATION AND MANAGMENT
 //////////////////////////////////////////////////////////////////////////
-namespace CryThreadUtil
+namespace AngelicaThreadUtil
 {
 // Define type for platform specific thread handle
 typedef THREAD_HANDLE TThreadHandle;
@@ -58,14 +58,14 @@ struct SThreadCreationDesc
 };
 
 //////////////////////////////////////////////////////////////////////////
-TThreadHandle CryGetCurrentThreadHandle()
+TThreadHandle AngelicaGetCurrentThreadHandle()
 {
 	return GetCurrentThread();   // most likely returns pseudo handle (0xfffffffe)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Note: Handle must be closed lated via CryCloseThreadHandle()
-TThreadHandle CryDuplicateThreadHandle(const TThreadHandle& hThreadHandle)
+// Note: Handle must be closed lated via AngelicaCloseThreadHandle()
+TThreadHandle AngelicaDuplicateThreadHandle(const TThreadHandle& hThreadHandle)
 {
 	// NOTES:
 	// GetCurrentThread() may return a psydo handle to the current thread
@@ -87,7 +87,7 @@ TThreadHandle CryDuplicateThreadHandle(const TThreadHandle& hThreadHandle)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryCloseThreadHandle(TThreadHandle& hThreadHandle)
+void AngelicaCloseThreadHandle(TThreadHandle& hThreadHandle)
 {
 	if (hThreadHandle)
 	{
@@ -96,19 +96,19 @@ void CryCloseThreadHandle(TThreadHandle& hThreadHandle)
 }
 
 //////////////////////////////////////////////////////////////////////////
-unsigned long CryGetCurrentThreadId()
+unsigned long AngelicaGetCurrentThreadId()
 {
 	return GetCurrentThreadId();
 }
 
 //////////////////////////////////////////////////////////////////////////
-//unsigned long CryGetThreadId(TThreadHandle hThreadHandle)
+//unsigned long AngelicaGetThreadId(TThreadHandle hThreadHandle)
 //{
 //	return GetThreadId(hThreadHandle);
 //}
 
 //////////////////////////////////////////////////////////////////////////
-void CrySetThreadName(unsigned long threadId, const char* sThreadName)
+void AngelicaSetThreadName(unsigned long threadId, const char* sThreadName)
 {
 	const DWORD MS_VC_EXCEPTION = 0x406D1388;
 
@@ -141,30 +141,30 @@ void CrySetThreadName(unsigned long threadId, const char* sThreadName)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CrySetThreadAffinityMask(TThreadHandle pThreadHandle, DWORD dwAffinityMask)
+void AngelicaSetThreadAffinityMask(TThreadHandle pThreadHandle, DWORD dwAffinityMask)
 {
 	SetThreadAffinityMask(pThreadHandle, dwAffinityMask);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CrySetThreadPriority(TThreadHandle pThreadHandle, DWORD dwPriority)
+void AngelicaSetThreadPriority(TThreadHandle pThreadHandle, DWORD dwPriority)
 {
 	if (!SetThreadPriority(pThreadHandle, dwPriority))
 	{
 		CString errMsg = GetLastErrorAsString();
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo> Unable to set thread priority. System Error Msg: \"%s\"", errMsg.GetBuffer(0));
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo> Unable to set thread priority. System Error Msg: \"%s\"", errMsg.GetBuffer(0));
 		return;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CrySetThreadPriorityBoost(TThreadHandle pThreadHandle, bool bEnabled)
+void AngelicaSetThreadPriorityBoost(TThreadHandle pThreadHandle, bool bEnabled)
 {
 	SetThreadPriorityBoost(pThreadHandle, !bEnabled);
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CryCreateThread(TThreadHandle* pThreadHandle, const SThreadCreationDesc& threadDesc)
+bool AngelicaCreateThread(TThreadHandle* pThreadHandle, const SThreadCreationDesc& threadDesc)
 {
 	const unsigned int nStackSize = threadDesc.nStackSizeInBytes != 0 ? threadDesc.nStackSizeInBytes : DEFAULT_THREAD_STACK_SIZE_KB * 1024;
 
@@ -179,7 +179,7 @@ bool CryCreateThread(TThreadHandle* pThreadHandle, const SThreadCreationDesc& th
 	if (!(*pThreadHandle))
 	{
 		CString errMsg = GetLastErrorAsString();
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo> Unable to create thread \"%s\". System Error Msg: \"%s\"", threadDesc.szThreadName, errMsg.GetBuffer(0));
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo> Unable to create thread \"%s\". System Error Msg: \"%s\"", threadDesc.szThreadName, errMsg.GetBuffer(0));
 		return false;
 	}
 
@@ -187,12 +187,12 @@ bool CryCreateThread(TThreadHandle* pThreadHandle, const SThreadCreationDesc& th
 	ResumeThread(*pThreadHandle);
 
 	// Print info to log
-	//CryComment("<ThreadInfo>: New thread \"%s\" | StackSize: %u(KB)", threadDesc.szThreadName, threadDesc.nStackSizeInBytes / 1024);
+	//AngelicaComment("<ThreadInfo>: New thread \"%s\" | StackSize: %u(KB)", threadDesc.szThreadName, threadDesc.nStackSizeInBytes / 1024);
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryThreadExitCall()
+void AngelicaThreadExitCall()
 {
 	// Note on: ExitThread() (from MSDN)
 	// ExitThread is the preferred method of exiting a thread in C code.
@@ -204,7 +204,7 @@ void CryThreadExitCall()
 //////////////////////////////////////////////////////////////////////////
 // FLOATING POINT EXCEPTIONS
 //////////////////////////////////////////////////////////////////////////
-namespace CryThreadUtil
+namespace AngelicaThreadUtil
 {
 ///////////////////////////////////////////////////////////////////////////
 void EnableFloatExceptions(EFPE_Severity eFPESeverity)
@@ -270,11 +270,11 @@ void EnableFloatExceptions(unsigned long nThreadId, EFPE_Severity eFPESeverity)
 {
 	if (eFPESeverity >= eFPE_LastEntry)
 	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, "Floating Point Exception (FPE) severity is out of range. (%i)", eFPESeverity);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, "Floating Point Exception (FPE) severity is out of range. (%i)", eFPESeverity);
 	}
 
 	// Check if the thread ID matches the current thread
-	if (nThreadId == 0 || nThreadId == CryGetCurrentThreadId())
+	if (nThreadId == 0 || nThreadId == AngelicaGetCurrentThreadId())
 	{
 		EnableFloatExceptions(eFPESeverity);
 		return;
@@ -284,7 +284,7 @@ void EnableFloatExceptions(unsigned long nThreadId, EFPE_Severity eFPESeverity)
 
 	if (hThread == 0)
 	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, "Unable to open thread. %p", hThread);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, "Unable to open thread. %p", hThread);
 		return;
 	}
 
@@ -295,7 +295,7 @@ void EnableFloatExceptions(unsigned long nThreadId, EFPE_Severity eFPESeverity)
 	ctx.ContextFlags = CONTEXT_ALL;
 	if (GetThreadContext(hThread, &ctx) == 0)
 	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, "Unable to get thread context");
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, "Unable to get thread context");
 		ResumeThread(hThread);
 		CloseHandle(hThread);
 		return;
@@ -370,7 +370,7 @@ void EnableFloatExceptions(unsigned long nThreadId, EFPE_Severity eFPESeverity)
 	ctx.ContextFlags = CONTEXT_ALL;
 	if (SetThreadContext(hThread, &ctx) == 0)
 	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, "Error setting ThreadContext for ThreadID: %u", nThreadId);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, "Error setting ThreadContext for ThreadID: %u", nThreadId);
 		ResumeThread(hThread);
 		CloseHandle(hThread);
 		return;

@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #pragma once
 #include <type_traits>
@@ -7,59 +7,59 @@
 //////////////////////////////////////////////////////////////////////////
 
 // Returns the resulting incremented value
-LONG CryInterlockedIncrement(int volatile* pDst);
+LONG AngelicaInterlockedIncrement(int volatile* pDst);
 
 // Returns the resulting decremented value
-LONG CryInterlockedDecrement(int volatile* pDst);
+LONG AngelicaInterlockedDecrement(int volatile* pDst);
 
 // Returns the resulting added value
-LONG CryInterlockedAdd(volatile LONG* pVal, LONG add);
+LONG AngelicaInterlockedAdd(volatile LONG* pVal, LONG add);
 
 // Returns the resulting added value
-size_t CryInterlockedAdd(volatile size_t* pVal, size_t add);
+size_t AngelicaInterlockedAdd(volatile size_t* pVal, size_t add);
 
 //////////////////////////////////////////////////////////////////////////
 // Returns initial value prior exchange
-LONG CryInterlockedExchange(volatile LONG* pDst, LONG exchange);
+LONG AngelicaInterlockedExchange(volatile LONG* pDst, LONG exchange);
 
 // Returns initial value prior exchange
-long long CryInterlockedExchange64(volatile long long* addr, long long exchange);
+long long AngelicaInterlockedExchange64(volatile long long* addr, long long exchange);
 
 // Returns initial value prior exchange
-LONG CryInterlockedExchangeAdd(volatile LONG* pDst, LONG value);
+LONG AngelicaInterlockedExchangeAdd(volatile LONG* pDst, LONG value);
 
 // Returns initial value prior exchange
-size_t CryInterlockedExchangeAdd(volatile size_t* pDst, size_t value);
+size_t AngelicaInterlockedExchangeAdd(volatile size_t* pDst, size_t value);
 
 // Returns initial value prior exchange
-LONG CryInterlockedExchangeAnd(volatile LONG* pDst, LONG value);
+LONG AngelicaInterlockedExchangeAnd(volatile LONG* pDst, LONG value);
 
 // Returns initial value prior exchange
-LONG CryInterlockedExchangeOr(volatile LONG* pDst, LONG value);
+LONG AngelicaInterlockedExchangeOr(volatile LONG* pDst, LONG value);
 
 // Returns initial value prior exchange
-void* CryInterlockedExchangePointer(void* volatile* pDst, void* pExchange);
+void* AngelicaInterlockedExchangePointer(void* volatile* pDst, void* pExchange);
 
 //////////////////////////////////////////////////////////////////////////
 // Returns initial value prior exchange
-LONG CryInterlockedCompareExchange(volatile LONG* pDst, LONG exchange, LONG comperand);
+LONG AngelicaInterlockedCompareExchange(volatile LONG* pDst, LONG exchange, LONG comperand);
 
 // Returns initial value prior exchange
-long long CryInterlockedCompareExchange64(volatile long long* pDst, long long exchange, long long comperand);
+long long AngelicaInterlockedCompareExchange64(volatile long long* pDst, long long exchange, long long comperand);
 
 #if ANGELICA_PLATFORM_64BIT
 // Returns initial value prior exchange
-unsigned char CryInterlockedCompareExchange128(volatile long long* pDst, long long exchangeHigh, long long exchangeLow, long long* comparandResult);
+unsigned char AngelicaInterlockedCompareExchange128(volatile long long* pDst, long long exchangeHigh, long long exchangeLow, long long* comparandResult);
 #endif
 
 // Returns initial address prior exchange
-void* CryInterlockedCompareExchangePointer(void* volatile* pDst, void* pExchange, void* pComperand);
+void* AngelicaInterlockedCompareExchangePointer(void* volatile* pDst, void* pExchange, void* pComperand);
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-// CryInterlocked*SList Function, these are specialized C-A-S
+// AngelicaInterlocked*SList Function, these are specialized C-A-S
 // functions for single-linked lists which prevent the A-B-A problem there
-// there are implemented in the platform specific CryThread_*.h files
+// there are implemented in the platform specific AngelicaThread_*.h files
 //NOTE: The sizes are verified at compile-time in the implementation functions, but this is still ugly
 
 #if ANGELICA_PLATFORM_64BIT
@@ -89,26 +89,26 @@ template<typename DestinationType, typename SourceType> inline DestinationType a
 struct SLockFreeSingleLinkedListHeader
 {
 	//! Initializes the single-linked list.
-	friend void CryInitializeSListHead(SLockFreeSingleLinkedListHeader& list);
+	friend void AngelicaInitializeSListHead(SLockFreeSingleLinkedListHeader& list);
 
 	//! Push one element atomically onto the front of a single-linked list.
-	friend void CryInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& element);
+	friend void AngelicaInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& element);
 
 	//! Push a list of elements atomically onto the front of a single-linked list.
 	//! \note The entries must already be linked (ie, last must be reachable by moving through pNext starting at first).
-	friend void CryInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& first, SLockFreeSingleLinkedListEntry& last, unsigned int count);
+	friend void AngelicaInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& first, SLockFreeSingleLinkedListEntry& last, unsigned int count);
 
 	//! Retrieves a pointer to the first item on a single-linked list.
 	//! \note This does not remove the item from the list, and it's unsafe to inspect anything but the returned address.
-	//friend void* CryRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list);
+	//friend void* AngelicaRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list);
 
 	//! Pops one element atomically from the front of a single-linked list, and returns a pointer to the item.
 	//! \note If the list was empty, nullptr is returned instead.
-	friend void* CryInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list);
+	friend void* AngelicaInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list);
 
 	//! Flushes the entire single-linked list, and returns a pointer to the first item that was on the list.
 	//! \note If the list was empty, nullptr is returned instead.
-	friend void* CryInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list);
+	friend void* AngelicaInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list);
 
 private:
 	_declspec(align(LOCK_FREE_LINKED_LIST_DOUBLE_SIZE_PTR_ALIGN)) SLockFreeSingleLinkedListEntry * volatile pNext;
@@ -133,32 +133,32 @@ static_assert(std::alignment_of<SLockFreeSingleLinkedListHeader>::value == sizeo
 
 #define WRITE_LOCK_VAL (1 << 16)
 
-void*      CryCreateCriticalSection();
-void       CryCreateCriticalSectionInplace(void*);
-void       CryDeleteCriticalSection(void* cs);
-void       CryDeleteCriticalSectionInplace(void* cs);
-void       CryEnterCriticalSection(void* cs);
-bool       CryTryCriticalSection(void* cs);
-void       CryLeaveCriticalSection(void* cs);
+void*      AngelicaCreateCriticalSection();
+void       AngelicaCreateCriticalSectionInplace(void*);
+void       AngelicaDeleteCriticalSection(void* cs);
+void       AngelicaDeleteCriticalSectionInplace(void* cs);
+void       AngelicaEnterCriticalSection(void* cs);
+bool       AngelicaTryCriticalSection(void* cs);
+void       AngelicaLeaveCriticalSection(void* cs);
 
-inline void CrySpinLock(volatile int* pLock, int checkVal, int setVal)
+inline void AngelicaSpinLock(volatile int* pLock, int checkVal, int setVal)
 {
 	static_assert(sizeof(int) == sizeof(LONG), "Unsecured cast. Int is not same size as LONG.");
 	CSimpleThreadBackOff threadBackoff;
-	while (CryInterlockedCompareExchange((volatile LONG*)pLock, setVal, checkVal) != checkVal)
+	while (AngelicaInterlockedCompareExchange((volatile LONG*)pLock, setVal, checkVal) != checkVal)
 	{
 		threadBackoff.backoff();
 	}
 }
 
-inline void CryReleaseSpinLock(volatile int* pLock, int setVal)
+inline void AngelicaReleaseSpinLock(volatile int* pLock, int setVal)
 {
 	*pLock = setVal;
 }
 
-inline void CryReadLock(volatile int* rw)
+inline void AngelicaReadLock(volatile int* rw)
 {
-	CryInterlockedAdd(rw, 1);
+	AngelicaInterlockedAdd(rw, 1);
 #ifdef NEED_ENDIAN_SWAP
 	volatile char* pw = (volatile char*)rw + 1;
 #else
@@ -172,19 +172,19 @@ inline void CryReadLock(volatile int* rw)
 	}
 }
 
-inline void CryReleaseReadLock(volatile int* rw)
+inline void AngelicaReleaseReadLock(volatile int* rw)
 {
-	CryInterlockedAdd(rw, -1);
+	AngelicaInterlockedAdd(rw, -1);
 }
 
-inline void CryWriteLock(volatile int* rw)
+inline void AngelicaWriteLock(volatile int* rw)
 {
-	CrySpinLock(rw, 0, WRITE_LOCK_VAL);
+	AngelicaSpinLock(rw, 0, WRITE_LOCK_VAL);
 }
 
-inline void CryReleaseWriteLock(volatile int* rw)
+inline void AngelicaReleaseWriteLock(volatile int* rw)
 {
-	CryInterlockedAdd(rw, -WRITE_LOCK_VAL);
+	AngelicaInterlockedAdd(rw, -WRITE_LOCK_VAL);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -192,12 +192,12 @@ struct ReadLock
 {
 	ReadLock(volatile int& rw) : prw(&rw)
 	{
-		CryReadLock(prw);
+		AngelicaReadLock(prw);
 	}
 
 	~ReadLock()
 	{
-		CryReleaseReadLock(prw);
+		AngelicaReleaseReadLock(prw);
 	}
 
 private:
@@ -211,7 +211,7 @@ struct ReadLockCond
 		if (bActive)
 		{
 			iActive = 1;
-			CryReadLock(prw);
+			AngelicaReadLock(prw);
 		}
 	}
 
@@ -222,12 +222,12 @@ struct ReadLockCond
 
 	void Release()
 	{
-		CryInterlockedAdd(prw, -iActive);
+		AngelicaInterlockedAdd(prw, -iActive);
 	}
 
 	~ReadLockCond()
 	{
-		CryInterlockedAdd(prw, -iActive);
+		AngelicaInterlockedAdd(prw, -iActive);
 	}
 
 private:
@@ -240,12 +240,12 @@ struct WriteLock
 {
 	WriteLock(volatile int& rw) : prw(&rw)
 	{
-		CryWriteLock(&rw);
+		AngelicaWriteLock(&rw);
 	}
 
 	~WriteLock()
 	{
-		CryReleaseWriteLock(prw);
+		AngelicaReleaseWriteLock(prw);
 	}
 
 private:
@@ -257,12 +257,12 @@ struct WriteAfterReadLock
 {
 	WriteAfterReadLock(volatile int& rw) : prw(&rw)
 	{
-		CrySpinLock(&rw, 1, WRITE_LOCK_VAL + 1);
+		AngelicaSpinLock(&rw, 1, WRITE_LOCK_VAL + 1);
 	}
 
 	~WriteAfterReadLock()
 	{
-		CryInterlockedAdd(prw, -WRITE_LOCK_VAL);
+		AngelicaInterlockedAdd(prw, -WRITE_LOCK_VAL);
 	}
 
 private:
@@ -277,7 +277,7 @@ struct WriteLockCond
 		if (bActive)
 		{
 			iActive = WRITE_LOCK_VAL;
-			CrySpinLock(prw, 0, iActive);
+			AngelicaSpinLock(prw, 0, iActive);
 		}
 	}
 
@@ -285,7 +285,7 @@ struct WriteLockCond
 
 	~WriteLockCond()
 	{
-		CryInterlockedAdd(prw, -iActive);
+		AngelicaInterlockedAdd(prw, -iActive);
 	}
 
 	void SetActive(int bActive = 1)
@@ -295,7 +295,7 @@ struct WriteLockCond
 
 	void Release()
 	{
-		CryInterlockedAdd(prw, -iActive);
+		AngelicaInterlockedAdd(prw, -iActive);
 	}
 
 	int           iActive; //!< Not private because used directly in Physics RWI.
@@ -311,20 +311,20 @@ inline void SpinLock(volatile int* pLock, int checkVal, int setVal)
 inline void AtomicAdd(volatile int* pVal, int iAdd)                    { *(int*)pVal += iAdd; }
 inline void AtomicAdd(volatile unsigned int* pVal, int iAdd)           { *(unsigned int*)pVal += iAdd; }
 
-inline void JobSpinLock(volatile int* pLock, int checkVal, int setVal) { CrySpinLock(pLock, checkVal, setVal); }
+inline void JobSpinLock(volatile int* pLock, int checkVal, int setVal) { AngelicaSpinLock(pLock, checkVal, setVal); }
 #else
 inline void SpinLock(volatile int* pLock, int checkVal, int setVal)
 {
-	CrySpinLock(pLock, checkVal, setVal);
+	AngelicaSpinLock(pLock, checkVal, setVal);
 }
-inline void AtomicAdd(volatile int* pVal, int iAdd)                    { CryInterlockedAdd(pVal, iAdd); }
-inline void AtomicAdd(volatile unsigned int* pVal, int iAdd)           { CryInterlockedAdd((volatile int*)pVal, iAdd); }
+inline void AtomicAdd(volatile int* pVal, int iAdd)                    { AngelicaInterlockedAdd(pVal, iAdd); }
+inline void AtomicAdd(volatile unsigned int* pVal, int iAdd)           { AngelicaInterlockedAdd((volatile int*)pVal, iAdd); }
 
 inline void JobSpinLock(volatile int* pLock, int checkVal, int setVal) { SpinLock(pLock, checkVal, setVal); }
 #endif
 
 inline void JobAtomicAdd(volatile int* pVal, int iAdd)
 {
-	CryInterlockedAdd(pVal, iAdd);
+	AngelicaInterlockedAdd(pVal, iAdd);
 }
-inline void JobAtomicAdd(volatile unsigned int* pVal, int iAdd) { CryInterlockedAdd((volatile int*)pVal, iAdd); }
+inline void JobAtomicAdd(volatile unsigned int* pVal, int iAdd) { AngelicaInterlockedAdd((volatile int*)pVal, iAdd); }

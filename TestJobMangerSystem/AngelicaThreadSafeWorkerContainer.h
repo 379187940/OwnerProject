@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 /*************************************************************************
    -------------------------------------------------------------------------
@@ -14,7 +14,7 @@
 #ifndef _ANGELICA_THREAD_SAFE_WORKER_CONTAINER_H_
 #define _ANGELICA_THREAD_SAFE_WORKER_CONTAINER_H_
 
-#include <CryCore/Platform/platform.h>
+#include <AngelicaCore/Platform/platform.h>
 #include <vector>
 
 //! BE CAREFULL WHEN USING THIS CONTAINER!
@@ -84,7 +84,7 @@ public:
 	void PrefillContainer(T* pElement, size_t numElements);
 	void CoalesceMemory();
 
-	void GetMemoryUsage(ICrySizer* pSizer) const;
+	void GetMemoryUsage(IAngelicaSizer* pSizer) const;
 
 private:
 
@@ -126,7 +126,7 @@ template<typename T>
 inline CThreadSafeWorkerContainer<T>::~CThreadSafeWorkerContainer()
 {
 	clear();
-	CryAlignedDeleteArray(m_workers, m_nNumWorkers);
+	AngelicaAlignedDeleteArray(m_workers, m_nNumWorkers);
 	m_workers = nullptr;
 }
 
@@ -135,7 +135,7 @@ template<typename T>
 inline void CThreadSafeWorkerContainer<T >::Init()
 {
 	m_nNumWorkers = GetJobManagerInterface()->GetNumWorkerThreads() + 1; 
-	m_workers = CryAlignedNewArray<CThreadSafeWorkerContainer<T>::SWorker>(m_nNumWorkers);
+	m_workers = AngelicaAlignedNewArray<CThreadSafeWorkerContainer<T>::SWorker>(m_nNumWorkers);
 
 	m_foreignWorkerId = THREADID_NULL;
 }
@@ -414,8 +414,8 @@ inline void CThreadSafeWorkerContainer<T >::CoalesceMemory()
 	if (m_isCoalesced)
 		return;
 
-	static CryCriticalSectionNonRecursive s_accessLock;
-	CryAutoLock<CryCriticalSectionNonRecursive> lock(s_accessLock);
+	static AngelicaCriticalSectionNonRecursive s_accessLock;
+	AngelicaAutoLock<AngelicaCriticalSectionNonRecursive> lock(s_accessLock);
 
 	// Ensure enough memory exists
 	unsigned int minSizeNeeded = 0;
@@ -459,7 +459,7 @@ unsigned int CThreadSafeWorkerContainer<T >::GetNumWorkers() const
 
 ///////////////////////////////////////////////////////////////////////////////
 template<typename T>
-inline void CThreadSafeWorkerContainer<T >::GetMemoryUsage(ICrySizer* pSizer) const
+inline void CThreadSafeWorkerContainer<T >::GetMemoryUsage(IAngelicaSizer* pSizer) const
 {
 	pSizer->AddObject(m_coalescedArr, m_coalescedArrCapacity * sizeof(T));
 
@@ -517,7 +517,7 @@ unsigned int CThreadSafeWorkerContainer<T >::GetWorkerId_threadlocal() const
 	if (nWorkerId == ~0)
 	{
 		if (m_foreignWorkerId != GetCurrentThreadId())
-			//CryFatalError("Trying to access CThreadSafeWorkerContainer from an unspecified none-worker thread. Current specified none-worker threadId with access rights: %" PRI_THREADID, m_foreignWorkerId);
+			//AngelicaFatalError("Trying to access CThreadSafeWorkerContainer from an unspecified none-worker thread. Current specified none-worker threadId with access rights: %" PRI_THREADID, m_foreignWorkerId);
 	}
 
 	// None-worker has id of ~0 ... add +1 to shift to 0. Worker0 will use slot 1 etc.

@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 // Created by: Michael Smith
 // Modified 2008-06, Scott Peter
@@ -51,11 +51,11 @@ struct PSyncMultiThread
 
 	void Lock()
 	{
-		CryWriteLock(&_Semaphore);
+		AngelicaWriteLock(&_Semaphore);
 	}
 	void Unlock()
 	{
-		CryReleaseWriteLock(&_Semaphore);
+		AngelicaReleaseWriteLock(&_Semaphore);
 	}
 	int IsLocked() const volatile
 	{

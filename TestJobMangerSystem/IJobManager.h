@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 // -------------------------------------------------------------------------
 //  File name:   IJobManager.h
@@ -114,8 +114,8 @@ public:
 	bool HasOwner() const { return m_pOwner != NULL; }
 
 private:
-	/*CryMutex             m_Notify;
-	CryConditionVariable m_CondNotify;*/
+	/*AngelicaMutex             m_Notify;
+	AngelicaConditionVariable m_CondNotify;*/
 	FairMonitor m_CondNotify;
 	volatile unsigned int      m_nFinished;
 	volatile unsigned int      m_nRefCounter;
@@ -366,7 +366,7 @@ private:
 	SJobState*                     m_callbackJobState;
 	std::function<void()>          m_callback;
 	TPriorityLevel                 m_callbackJobPriority;
-	CryCriticalSectionNonRecursive m_stopLock;
+	AngelicaCriticalSectionNonRecursive m_stopLock;
 };
 
 //! Stores worker utilization stats for a frame.
@@ -1352,7 +1352,7 @@ inline JobManager::SProdConsQueueBase::SProdConsQueueBase() :
 //		bool bNeedSemaphoreWait = false;
 //#if ANGELICA_PLATFORM_64BIT // for 64 bit, we need to atomicly swap 128 bit
 //		long long compareValue[2] = { *alias_cast<long long*>(&curQueueRunningState), (long long)nPushPtr };
-//		CryInterlockedCompareExchange128((volatile long long*)this, (long long)markedPushPtr, *alias_cast<long long*>(&curQueueRunningState), compareValue);
+//		AngelicaInterlockedCompareExchange128((volatile long long*)this, (long long)markedPushPtr, *alias_cast<long long*>(&curQueueRunningState), compareValue);
 //		// make sure nobody set the state to stopped in the meantime
 //		bNeedSemaphoreWait = (compareValue[0] == *alias_cast<long long*>(&curQueueRunningState) && compareValue[1] == (long long)nPushPtr);
 //#else
@@ -1377,7 +1377,7 @@ inline JobManager::SProdConsQueueBase::SProdConsQueueBase() :
 //		exchangeValue.word1 = (unsigned int)markedPushPtr;
 //
 //		T64BitValue resultValue;
-//		resultValue.doubleWord = CryInterlockedCompareExchange64((volatile long long*)this, exchangeValue.doubleWord, compareValue.doubleWord);
+//		resultValue.doubleWord = AngelicaInterlockedCompareExchange64((volatile long long*)this, exchangeValue.doubleWord, compareValue.doubleWord);
 //
 //		bNeedSemaphoreWait = (resultValue.word0 == *alias_cast<unsigned int*>(&curQueueRunningState) && resultValue.word1 == nPushPtr);
 //#endif
@@ -1445,7 +1445,7 @@ inline JobManager::SProdConsQueueBase::SProdConsQueueBase() :
 //	newSyncVar.SetRunning();
 //#if ANGELICA_PLATFORM_64BIT // for 64 bit, we need to atomicly swap 128 bit
 //	long long compareValue[2] = { *alias_cast<long long*>(&newSyncVar), (long long)cpCurPush };
-//	CryInterlockedCompareExchange128((volatile long long*)this, (long long)cpNextPushPtr, *alias_cast<long long*>(&newSyncVar), compareValue);
+//	AngelicaInterlockedCompareExchange128((volatile long long*)this, (long long)cpNextPushPtr, *alias_cast<long long*>(&newSyncVar), compareValue);
 //	// make sure nobody set the state to stopped in the meantime
 //	bAtomicSwapSuccessfull = (compareValue[0] > 0);
 //#else
@@ -1470,7 +1470,7 @@ inline JobManager::SProdConsQueueBase::SProdConsQueueBase() :
 //	exchangeValue.word1 = (unsigned int)(TRUNCATE_PTR)cpNextPushPtr;
 //
 //	T64BitValue resultValue;
-//	resultValue.doubleWord = CryInterlockedCompareExchange64((volatile long long*)this, exchangeValue.doubleWord, compareValue.doubleWord);
+//	resultValue.doubleWord = AngelicaInterlockedCompareExchange64((volatile long long*)this, exchangeValue.doubleWord, compareValue.doubleWord);
 //
 //	bAtomicSwapSuccessfull = (resultValue.word0 > 0);
 //#endif
@@ -1647,7 +1647,7 @@ retry:
 		{
 			newValue = currentValue;
 			newValue.semaphoreHandle = semaphoreHandle;
-			resValue.wordValue = CryInterlockedCompareExchange((volatile LONG*)&syncVar.wordValue, newValue.wordValue, currentValue.wordValue);
+			resValue.wordValue = AngelicaInterlockedCompareExchange((volatile LONG*)&syncVar.wordValue, newValue.wordValue, currentValue.wordValue);
 
 			// four case are now possible:
 			//a) job has finished -> we only need to free our semaphore
@@ -1712,7 +1712,7 @@ inline void JobManager::SJobSyncVariable::SetRunning() volatile
 		}
 
 	}
-	while (CryInterlockedCompareExchange((volatile LONG*)&syncVar.wordValue, newValue.wordValue, currentValue.wordValue) != currentValue.wordValue);
+	while (AngelicaInterlockedCompareExchange((volatile LONG*)&syncVar.wordValue, newValue.wordValue, currentValue.wordValue) != currentValue.wordValue);
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -1737,7 +1737,7 @@ inline bool JobManager::SJobSyncVariable::SetStopped(SJobStateBase* pPostCallbac
 		newValue = currentValue;
 		newValue.nRunningCounter -= 1;
 
-		resValue.wordValue = CryInterlockedCompareExchange((volatile LONG*)&syncVar.wordValue, newValue.wordValue, currentValue.wordValue);
+		resValue.wordValue = AngelicaInterlockedCompareExchange((volatile LONG*)&syncVar.wordValue, newValue.wordValue, currentValue.wordValue);
 
 	}
 	while (resValue.wordValue != currentValue.wordValue);
@@ -1767,7 +1767,7 @@ inline bool JobManager::SJobSyncVariable::SetStopped(SJobStateBase* pPostCallbac
 				return false;
 
 		}
-		while (CryInterlockedCompareExchange((volatile LONG*)&syncVar.wordValue, newValue.wordValue, currentValue.wordValue) != currentValue.wordValue);
+		while (AngelicaInterlockedCompareExchange((volatile LONG*)&syncVar.wordValue, newValue.wordValue, currentValue.wordValue) != currentValue.wordValue);
 		// set the running successfull to 0, now we can release the semaphore
 		GetJobManagerInterface()->GetSemaphore(resValue.semaphoreHandle, this)->Release();
 	}
@@ -1795,7 +1795,7 @@ inline void JobManager::SInfoBlock::Release(unsigned int nMaxValue)
 		newInfoBlockState.nRoundID = (currentInfoBlockState.nRoundID + 1) & 0x7FFF;
 		newInfoBlockState.nRoundID = newInfoBlockState.nRoundID >= nMaxValue ? 0 : newInfoBlockState.nRoundID;
 
-		resultInfoBlockState.nValue = CryInterlockedCompareExchange((volatile LONG*)&jobState.nValue, newInfoBlockState.nValue, currentInfoBlockState.nValue);
+		resultInfoBlockState.nValue = AngelicaInterlockedCompareExchange((volatile LONG*)&jobState.nValue, newInfoBlockState.nValue, currentInfoBlockState.nValue);
 	}
 	while (resultInfoBlockState.nValue != currentInfoBlockState.nValue);
 
@@ -1849,7 +1849,7 @@ inline void JobManager::SInfoBlock::Wait(unsigned int nRoundID, unsigned int nMa
 			newInfoBlockState.nRoundID = currentInfoBlockState.nRoundID;
 			newInfoBlockState.nSemaphoreHandle = semaphoreHandle;
 
-			resultInfoBlockState.nValue = CryInterlockedCompareExchange((volatile LONG*)&jobState.nValue, newInfoBlockState.nValue, currentInfoBlockState.nValue);
+			resultInfoBlockState.nValue = AngelicaInterlockedCompareExchange((volatile LONG*)&jobState.nValue, newInfoBlockState.nValue, currentInfoBlockState.nValue);
 
 			// three case are now possible:
 			//a) job has finished -> we only need to free our semaphore
@@ -1880,11 +1880,11 @@ inline void JobManager::SInfoBlock::Wait(unsigned int nRoundID, unsigned int nMa
 
 //! Global helper function to wait for a job.
 //! Wait for a job, preempt the calling thread if the job is not done yet.
-inline const bool CryWaitForJob(JobManager::SJobState& rJobState)
+inline const bool AngelicaWaitForJob(JobManager::SJobState& rJobState)
 {
 	return GetJobManagerInterface()->WaitForJob(rJobState);
 }
 
 // Shorter helper type for job states
-typedef JobManager::SJobState       CryJobState;
-typedef JobManager::SJobStateLambda CryJobStateLambda;
+typedef JobManager::SJobState       AngelicaJobState;
+typedef JobManager::SJobStateLambda AngelicaJobStateLambda;

@@ -1,9 +1,9 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #ifndef _SMART_PTR_H_
 #define _SMART_PTR_H_
 
-void CryFatalError(const char*, ...) PRINTF_PARAMS(1, 2);
+void AngelicaFatalError(const char*, ...) PRINTF_PARAMS(1, 2);
 #if ANGELICA_PLATFORM_APPLE
 #include <cstddef>
 #endif
@@ -172,7 +172,7 @@ public:
 		else if (m_nRefCounter < 0)
 		{
 			assert(0);
-			//CryFatalError("Deleting Reference Counted Object Twice");
+			//AngelicaFatalError("Deleting Reference Counted Object Twice");
 		}
 	}
 
@@ -220,7 +220,7 @@ public:
 		else if (m_nRefCounter < 0)
 		{
 			assert(0);
-			//CryFatalError("Deleting Reference Counted Object Twice");
+			//AngelicaFatalError("Deleting Reference Counted Object Twice");
 		}
 	}
 
@@ -282,7 +282,7 @@ public:
 		else if (m_nRefCounter < 0)
 		{
 			assert(0);
-			//CryFatalError("Deleting Reference Counted Object Twice");
+			//AngelicaFatalError("Deleting Reference Counted Object Twice");
 		}
 	}
 
@@ -333,7 +333,7 @@ public:
 		else if (m_nRefCounter < 0)
 		{
 			assert(0);
-			//CryFatalError("Deleting Reference Counted Object Twice");
+			//AngelicaFatalError("Deleting Reference Counted Object Twice");
 		}
 	}
 
@@ -359,11 +359,11 @@ public:
 
 	void AddRef()
 	{
-		CryInterlockedIncrement(&m_cnt);
+		AngelicaInterlockedIncrement(&m_cnt);
 	}
 	void Release()
 	{
-		const int nCount = CryInterlockedDecrement(&m_cnt);
+		const int nCount = AngelicaInterlockedDecrement(&m_cnt);
 		assert(nCount >= 0);
 		if (nCount == 0)
 		{
@@ -372,13 +372,13 @@ public:
 		else if (nCount < 0)
 		{
 			assert(0);
-			//CryFatalError("Deleting Reference Counted Object Twice");
+			//AngelicaFatalError("Deleting Reference Counted Object Twice");
 		}
 	}
 
 	int UseCount() const
 	{
-		//CryFatalError("Do not use this function as it is not thread-safe.The return value of UseCount() may be wrong on return already.");
+		//AngelicaFatalError("Do not use this function as it is not thread-safe.The return value of UseCount() may be wrong on return already.");
 		return -1;
 	}
 
@@ -412,12 +412,12 @@ public:
 
 	virtual void AddRef()
 	{
-		CryInterlockedIncrement(&m_nRefCounter);
+		AngelicaInterlockedIncrement(&m_nRefCounter);
 	}
 
 	virtual void Release()
 	{
-		const int nCount = CryInterlockedDecrement(&m_nRefCounter);
+		const int nCount = AngelicaInterlockedDecrement(&m_nRefCounter);
 		assert(nCount >= 0);
 		if (nCount == 0)
 		{
@@ -426,13 +426,13 @@ public:
 		else if (nCount < 0)
 		{
 			assert(0);
-			//CryFatalError("Deleting Reference Counted Object Twice");
+			//AngelicaFatalError("Deleting Reference Counted Object Twice");
 		}
 	}
 
 	Counter UseCount() const
 	{
-		//CryFatalError("Do not use this function as it is not thread-safe.The return value of UseCount() may be wrong on return already.");
+		//AngelicaFatalError("Do not use this function as it is not thread-safe.The return value of UseCount() may be wrong on return already.");
 		return Counter(-1);
 	}
 

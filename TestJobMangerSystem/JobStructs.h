@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 /*
    declaration of job structures
@@ -119,7 +119,7 @@ inline JobManager::detail::EAddJobRes JobManager::SJobQueue<nMaxWorkQueueJobsHig
 	{
 		// fetch next to update field
 #if ANGELICA_PLATFORM_WINDOWS || ANGELICA_PLATFORM_APPLE || ANGELICA_PLATFORM_LINUX // emulate a 64bit atomic read on PC platfom
-		currentIndex = CryInterlockedCompareExchange64(alias_cast<volatile int64*>(&curPushEntry.index), 0, 0);
+		currentIndex = AngelicaInterlockedCompareExchange64(alias_cast<volatile int64*>(&curPushEntry.index), 0, 0);
 #else
 		currentIndex = *const_cast<volatile unsigned long long*>(&curPushEntry.index);
 #endif
@@ -152,7 +152,7 @@ inline JobManager::detail::EAddJobRes JobManager::SJobQueue<nMaxWorkQueueJobsHig
 
 		rJobSlot = jobSlot;
 
-		if (CryInterlockedCompareExchange64(alias_cast<volatile long long*>(&curPushEntry.index), nextIndex, currentIndex) == currentIndex)
+		if (AngelicaInterlockedCompareExchange64(alias_cast<volatile long long*>(&curPushEntry.index), nextIndex, currentIndex) == currentIndex)
 			break;
 
 	}

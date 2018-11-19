@@ -1,42 +1,42 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #pragma once
 
 #include <sched.h>
-#include <CryCore/Assert/CryAssert.h>
+#include <AngelicaCore/Assert/AngelicaAssert.h>
 
 //////////////////////////////////////////////////////////////////////////
 // Interlocked API
 //////////////////////////////////////////////////////////////////////////
 
 // Returns the resulting incremented value
-inline LONG CryInterlockedIncrement(volatile int* pDst)
+inline LONG AngelicaInterlockedIncrement(volatile int* pDst)
 {
 	static_assert(sizeof(int) == sizeof(LONG), "Unsecured cast. int is not same size as LONG.");
 	return __sync_add_and_fetch(pDst, 1);
 }
 
 // Returns the resulting decremented value
-inline LONG CryInterlockedDecrement(volatile int* pDst)
+inline LONG AngelicaInterlockedDecrement(volatile int* pDst)
 {
 	static_assert(sizeof(int) == sizeof(LONG), "Unsecured cast. int is not same size as LONG.");
 	return __sync_sub_and_fetch(pDst, 1);
 }
 
 // Returns the resulting added value
-inline LONG CryInterlockedAdd(volatile LONG* pDst, LONG add)
+inline LONG AngelicaInterlockedAdd(volatile LONG* pDst, LONG add)
 {
 	return __sync_add_and_fetch(pDst, add);
 }
 
 // Returns the resulting added value
-inline size_t CryInterlockedAdd(volatile size_t* pDst, size_t add)
+inline size_t AngelicaInterlockedAdd(volatile size_t* pDst, size_t add)
 {
 	return __sync_add_and_fetch(pDst, add);
 }
 
 // Returns initial value prior exchange
-inline LONG CryInterlockedExchange(volatile LONG* pDst, LONG exchange)
+inline LONG AngelicaInterlockedExchange(volatile LONG* pDst, LONG exchange)
 {
 #if !(_WIN64 || ANGELICA_PLATFORM_X86)
 	__sync_synchronize(); // follow X64 standard and ensure full memory barrier (this also adds mfence)
@@ -46,51 +46,51 @@ inline LONG CryInterlockedExchange(volatile LONG* pDst, LONG exchange)
 }
 
 // Returns initial value prior exchange
-inline long long CryInterlockedExchange64(volatile long long* addr, long long exchange)
+inline long long AngelicaInterlockedExchange64(volatile long long* addr, long long exchange)
 {
 	__sync_synchronize();
 	return __sync_lock_test_and_set(addr, exchange);
 }
 
 // Returns initial value prior exchange
-inline LONG CryInterlockedExchangeAdd(volatile LONG* pDst, LONG value)
+inline LONG AngelicaInterlockedExchangeAdd(volatile LONG* pDst, LONG value)
 {
 	return __sync_fetch_and_add(pDst, value);
 }
 
 // Returns initial value prior exchange
-inline size_t CryInterlockedExchangeAdd(volatile size_t* pDst, size_t add)
+inline size_t AngelicaInterlockedExchangeAdd(volatile size_t* pDst, size_t add)
 {
 	return __sync_fetch_and_add(pDst, add);
 }
 
 // Returns initial value prior exchange
-inline LONG CryInterlockedExchangeAnd(volatile LONG* pDst, LONG value)
+inline LONG AngelicaInterlockedExchangeAnd(volatile LONG* pDst, LONG value)
 {
 	return __sync_fetch_and_and(pDst, value);
 }
 
 // Returns initial value prior exchange
-inline LONG CryInterlockedExchangeOr(volatile LONG* pDst, LONG value)
+inline LONG AngelicaInterlockedExchangeOr(volatile LONG* pDst, LONG value)
 {
 	return __sync_fetch_and_or(pDst, value);
 }
 
 // Returns initial address prior exchange
-inline void* CryInterlockedExchangePointer(void* volatile* pDst, void* pExchange)
+inline void* AngelicaInterlockedExchangePointer(void* volatile* pDst, void* pExchange)
 {
 	__sync_synchronize();                             // follow X86/X64 standard and ensure full memory barrier
 	return __sync_lock_test_and_set(pDst, pExchange); // only creates acquire memory barrier
 }
 
 // Returns initial address prior exchange
-inline LONG CryInterlockedCompareExchange(volatile LONG* pDst, LONG exchange, LONG comperand)
+inline LONG AngelicaInterlockedCompareExchange(volatile LONG* pDst, LONG exchange, LONG comperand)
 {
 	return __sync_val_compare_and_swap(pDst, comperand, exchange);
 }
 
 // Returns initial address prior exchange
-inline long long CryInterlockedCompareExchange64(volatile long long* addr, long long exchange, long long comperand)
+inline long long AngelicaInterlockedCompareExchange64(volatile long long* addr, long long exchange, long long comperand)
 {
 	return __sync_val_compare_and_swap(addr, comperand, exchange);
 }
@@ -99,10 +99,10 @@ inline long long CryInterlockedCompareExchange64(volatile long long* addr, long 
 // Returns initial address prior exchange
 // Chipset needs to support cmpxchg16b which most do
 //https://blog.lse.epita.fr/articles/42-implementing-generic-double-word-compare-and-swap-.html
-inline unsigned char CryInterlockedCompareExchange128(volatile long long* pDst, long long exchangehigh, long long exchangelow, long long* pComparandResult)
+inline unsigned char AngelicaInterlockedCompareExchange128(volatile long long* pDst, long long exchangehigh, long long exchangelow, long long* pComparandResult)
 {
 	#if ANGELICA_PLATFORM_IOS
-		#error Ensure CryInterlockedCompareExchange128 is working on IOS also
+		#error Ensure AngelicaInterlockedCompareExchange128 is working on IOS also
 	#endif
 	ANGELICA_ASSERT_MESSAGE((((long long)pDst) & 15) == 0, "The destination data must be 16-byte aligned to avoid a general protection fault.");
 	#if _WIN64 || ANGELICA_PLATFORM_X86
@@ -137,7 +137,7 @@ inline unsigned char CryInterlockedCompareExchange128(volatile long long* pDst, 
 #endif
 
 // Returns initial address prior exchange
-inline void* CryInterlockedCompareExchangePointer(void* volatile* pDst, void* pExchange, void* pComperand)
+inline void* AngelicaInterlockedCompareExchangePointer(void* volatile* pDst, void* pExchange, void* pComperand)
 {
 	return __sync_val_compare_and_swap(pDst, pComperand, pExchange);
 }
@@ -151,7 +151,7 @@ typedef __uint128_t uint128;
 //////////////////////////////////////////////////////////////////////////
 // Implementation for Linux64 with gcc using __int128_t
 //////////////////////////////////////////////////////////////////////////
-inline void CryInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& element)
+inline void AngelicaInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& element)
 {
 	unsigned long long curSetting[2];
 	unsigned long long newSetting[2];
@@ -165,11 +165,11 @@ inline void CryInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, 
 		newSetting[1] = curSetting[1] + 1; // new salt
 	}
 	// while (false == __sync_bool_compare_and_swap( (volatile uint128*)&list.pNext,*(uint128*)&curSetting[0],*(uint128*)&newSetting[0] ));
-	while (0 == CryInterlockedCompareExchange128((volatile long long*)&list.pNext, (long long)newSetting[1], (long long)newSetting[0], (long long*)&curSetting[0]));
+	while (0 == AngelicaInterlockedCompareExchange128((volatile long long*)&list.pNext, (long long)newSetting[1], (long long)newSetting[0], (long long*)&curSetting[0]));
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline void CryInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& first, SLockFreeSingleLinkedListEntry& last, unsigned int count)
+inline void AngelicaInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& first, SLockFreeSingleLinkedListEntry& last, unsigned int count)
 {
 	(void)count; // unused
 
@@ -184,11 +184,11 @@ inline void CryInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, S
 		newSetting[0] = newPointer;        // new pointer
 		newSetting[1] = curSetting[1] + 1; // new salt
 	}
-	while (0 == CryInterlockedCompareExchange128((volatile long long*)&list.pNext, (long long)newSetting[1], (long long)newSetting[0], (long long*)&curSetting[0]));
+	while (0 == AngelicaInterlockedCompareExchange128((volatile long long*)&list.pNext, (long long)newSetting[1], (long long)newSetting[0], (long long*)&curSetting[0]));
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline void* CryInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
+inline void* AngelicaInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
 {
 	unsigned long long curSetting[2];
 	unsigned long long newSetting[2];
@@ -202,25 +202,25 @@ inline void* CryInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
 		newSetting[1] = curSetting[1] + 1;       // new salt
 	}
 	//while (false == __sync_bool_compare_and_swap( (volatile uint128*)&list.pNext,*(uint128*)&curSetting[0],*(uint128*)&newSetting[0] ));
-	while (0 == CryInterlockedCompareExchange128((volatile long long*)&list.pNext, (long long)newSetting[1], (long long)newSetting[0], (long long*)&curSetting[0]));
+	while (0 == AngelicaInterlockedCompareExchange128((volatile long long*)&list.pNext, (long long)newSetting[1], (long long)newSetting[0], (long long*)&curSetting[0]));
 	return (void*)curSetting[0];
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline void* CryRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list)
+inline void* AngelicaRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list)
 {
 	return list.pNext;
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline void CryInitializeSListHead(SLockFreeSingleLinkedListHeader& list)
+inline void AngelicaInitializeSListHead(SLockFreeSingleLinkedListHeader& list)
 {
 	list.salt = 0;
 	list.pNext = NULL;
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline void* CryInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list)
+inline void* AngelicaInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list)
 {
 	unsigned long long curSetting[2];
 	unsigned long long newSetting[2];
@@ -236,7 +236,7 @@ inline void* CryInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list)
 		newSetting[1] = curSetting[1] + 1;
 	}
 	//	while (false == __sync_bool_compare_and_swap( (volatile uint128*)&list.pNext,*(uint128*)&curSetting[0],*(uint128*)&newSetting[0] ));
-	while (0 == CryInterlockedCompareExchange128((volatile long long*)&list.pNext, (long long)newSetting[1], (long long)newSetting[0], (long long*)&curSetting[0]));
+	while (0 == AngelicaInterlockedCompareExchange128((volatile long long*)&list.pNext, (long long)newSetting[1], (long long)newSetting[0], (long long*)&curSetting[0]));
 	return (void*)curSetting[0];
 }
 //////////////////////////////////////////////////////////////////////////
@@ -244,7 +244,7 @@ inline void* CryInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list)
 //////////////////////////////////////////////////////////////////////////
 // Implementation for Linux32 with gcc using unsigned long long
 //////////////////////////////////////////////////////////////////////////
-inline void CryInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& element)
+inline void AngelicaInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& element)
 {
 	unsigned int curSetting[2];
 	unsigned int newSetting[2];
@@ -261,7 +261,7 @@ inline void CryInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, 
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline void CryInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& first, SLockFreeSingleLinkedListEntry& last, unsigned int count)
+inline void AngelicaInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& first, SLockFreeSingleLinkedListEntry& last, unsigned int count)
 {
 	(void)count; //unused
 
@@ -280,7 +280,7 @@ inline void CryInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, S
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline void* CryInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
+inline void* AngelicaInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
 {
 	unsigned int curSetting[2];
 	unsigned int newSetting[2];
@@ -298,20 +298,20 @@ inline void* CryInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline void* CryRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list)
+inline void* AngelicaRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list)
 {
 	return list.pNext;
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline void CryInitializeSListHead(SLockFreeSingleLinkedListHeader& list)
+inline void AngelicaInitializeSListHead(SLockFreeSingleLinkedListHeader& list)
 {
 	list.salt = 0;
 	list.pNext = NULL;
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline void* CryInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list)
+inline void* AngelicaInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list)
 {
 	unsigned int curSetting[2];
 	unsigned int newSetting[2];

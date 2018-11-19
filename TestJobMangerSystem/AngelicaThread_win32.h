@@ -1,9 +1,9 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #pragma once
 
 #include <process.h>
-namespace CryMT {
+namespace AngelicaMT {
 namespace detail {
 enum eLOCK_TYPE
 {
@@ -45,18 +45,18 @@ struct ANGELICA_CONDITION_VARIABLE // From winnt.h
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-class CryLock_SRWLOCK
+class AngelicaLock_SRWLOCK
 {
 public:
 	static const eLOCK_TYPE s_value = eLockType_SRW;
-	friend class CryConditionVariable;
+	friend class AngelicaConditionVariable;
 public:
-	//CryLock_SRWLOCK() = default;
-	CryLock_SRWLOCK()
+	//AngelicaLock_SRWLOCK() = default;
+	AngelicaLock_SRWLOCK()
 	{
 		InitializeCriticalSection(&m_cs);
 	}
-	~CryLock_SRWLOCK()
+	~AngelicaLock_SRWLOCK()
 	{
 		DeleteCriticalSection(&m_cs);
 	}
@@ -65,8 +65,8 @@ public:
 
 
 private:
-	CryLock_SRWLOCK(const CryLock_SRWLOCK&) = delete;
-	CryLock_SRWLOCK& operator=(const CryLock_SRWLOCK&) = delete;
+	AngelicaLock_SRWLOCK(const AngelicaLock_SRWLOCK&) = delete;
+	AngelicaLock_SRWLOCK& operator=(const AngelicaLock_SRWLOCK&) = delete;
 
 private:
 	CRITICAL_SECTION m_cs;
@@ -77,14 +77,14 @@ private:
 // SRW Lock (Slim Reader/Writer Lock)
 // Faster + lighter than CriticalSection. Also only enters into kernel mode if contended.
 // Cannot be shared between processes.
-class CryLock_SRWLOCK_Recursive
+class AngelicaLock_SRWLOCK_Recursive
 {
 public:
 	static const eLOCK_TYPE s_value = eLockType_SRW;
-	friend class CryConditionVariable;
+	friend class AngelicaConditionVariable;
 
 public:
-	CryLock_SRWLOCK_Recursive() : m_recurseCounter(0), m_exclusiveOwningThreadId(0) {}
+	AngelicaLock_SRWLOCK_Recursive() : m_recurseCounter(0), m_exclusiveOwningThreadId(0) {}
 
 	void Lock();
 	void Unlock();
@@ -98,11 +98,11 @@ public:
 #endif
 
 private:
-	CryLock_SRWLOCK_Recursive(const CryLock_SRWLOCK_Recursive&) = delete;
-	CryLock_SRWLOCK_Recursive& operator=(const CryLock_SRWLOCK_Recursive&) = delete;
+	AngelicaLock_SRWLOCK_Recursive(const AngelicaLock_SRWLOCK_Recursive&) = delete;
+	AngelicaLock_SRWLOCK_Recursive& operator=(const AngelicaLock_SRWLOCK_Recursive&) = delete;
 
 private:
-	CryLock_SRWLOCK m_win32_lock_type;
+	AngelicaLock_SRWLOCK m_win32_lock_type;
 	unsigned int          m_recurseCounter;
 	
 	// Due to its semantics, this member can be accessed in an unprotected manner,
@@ -114,15 +114,15 @@ private:
 // Critical section
 // Faster then WinMutex as it only enters into kernel mode if contended.
 // Cannot be shared between processes.
-class CryLock_CriticalSection
+class AngelicaLock_CriticalSection
 {
 public:
 	static const eLOCK_TYPE s_value = eLockType_CRITICAL_SECTION;
-	friend class CryConditionVariable;
+	friend class AngelicaConditionVariable;
 
 public:
-	CryLock_CriticalSection();
-	~CryLock_CriticalSection();
+	AngelicaLock_CriticalSection();
+	~AngelicaLock_CriticalSection();
 
 	void Lock();
 	void Unlock();
@@ -136,37 +136,37 @@ public:
 #endif
 
 private:
-	CryLock_CriticalSection(const CryLock_CriticalSection&) = delete;
-	CryLock_CriticalSection& operator=(const CryLock_CriticalSection&) = delete;
+	AngelicaLock_CriticalSection(const AngelicaLock_CriticalSection&) = delete;
+	AngelicaLock_CriticalSection& operator=(const AngelicaLock_CriticalSection&) = delete;
 
 private:
 	ANGELICA_CRITICAL_SECTION m_win32_lock_type;
 };
 
 } // detail
-} // CryMT
+} // AngelicaMT
 
   //////////////////////////////////////////////////////////////////////////
   /////////////////////////    DEFINE LOCKS    /////////////////////////////
   //////////////////////////////////////////////////////////////////////////
 
-template<> class CryLockT<ANGELICALOCK_RECURSIVE> : public CryMT::detail::CryLock_SRWLOCK_Recursive
+template<> class AngelicaLockT<ANGELICALOCK_RECURSIVE> : public AngelicaMT::detail::AngelicaLock_SRWLOCK_Recursive
 {
 };
-template<> class CryLockT<ANGELICALOCK_FAST> : public CryMT::detail::CryLock_SRWLOCK
+template<> class AngelicaLockT<ANGELICALOCK_FAST> : public AngelicaMT::detail::AngelicaLock_SRWLOCK
 {
 };
 
-typedef CryMT::detail::CryLock_SRWLOCK_Recursive CryMutex;
-typedef CryMT::detail::CryLock_SRWLOCK           CryMutexFast; // Not recursive
+typedef AngelicaMT::detail::AngelicaLock_SRWLOCK_Recursive AngelicaMutex;
+typedef AngelicaMT::detail::AngelicaLock_SRWLOCK           AngelicaMutexFast; // Not recursive
 
 //////////////////////////////////////////////////////////////////////////
-//! CryEvent represent a synchronization event.
-class CryEvent
+//! AngelicaEvent represent a synchronization event.
+class AngelicaEvent
 {
 public:
-	CryEvent();
-	~CryEvent();
+	AngelicaEvent();
+	~AngelicaEvent();
 
 	//! Reset the event to the unsignalled state.
 	void Reset();
@@ -184,41 +184,41 @@ public:
 	bool Wait(const unsigned int timeoutMillis) const;
 
 private:
-	CryEvent(const CryEvent&);
-	CryEvent& operator=(const CryEvent&);
+	AngelicaEvent(const AngelicaEvent&);
+	AngelicaEvent& operator=(const AngelicaEvent&);
 
 private:
 	void* m_handle;
 };
-typedef CryEvent CryEventTimed;
+typedef AngelicaEvent AngelicaEventTimed;
 
 //////////////////////////////////////////////////////////////////////////
-class CryConditionVariable
+class AngelicaConditionVariable
 {
 public:
-	CryConditionVariable() = default;
-	/*void Wait(CryMutex& lock);
-	void Wait(CryMutexFast& lock);
-	bool TimedWait(CryMutex& lock, unsigned int millis);
-	bool TimedWait(CryMutexFast& lock, unsigned int millis);*/
+	AngelicaConditionVariable() = default;
+	/*void Wait(AngelicaMutex& lock);
+	void Wait(AngelicaMutexFast& lock);
+	bool TimedWait(AngelicaMutex& lock, unsigned int millis);
+	bool TimedWait(AngelicaMutexFast& lock, unsigned int millis);*/
 	void NotifySingle();
 	void Notify();
 
 private:
-	CryConditionVariable(const CryConditionVariable&);
-	CryConditionVariable& operator=(const CryConditionVariable&);
+	AngelicaConditionVariable(const AngelicaConditionVariable&);
+	AngelicaConditionVariable& operator=(const AngelicaConditionVariable&);
 
 private:
-	CryMT::detail::ANGELICA_CONDITION_VARIABLE m_condVar;
+	AngelicaMT::detail::ANGELICA_CONDITION_VARIABLE m_condVar;
 };
 
 //////////////////////////////////////////////////////////////////////////
 //! Platform independent wrapper for a counting semaphore.
-class CrySemaphore
+class AngelicaSemaphore
 {
 public:
-	CrySemaphore(int nMaximumCount, int nInitialCount = 0);
-	~CrySemaphore();
+	AngelicaSemaphore(int nMaximumCount, int nInitialCount = 0);
+	~AngelicaSemaphore();
 	void Acquire();
 	void Release();
 
@@ -230,15 +230,15 @@ private:
 //! Platform independent wrapper for a counting semaphore
 //! except that this version uses C-A-S only until a blocking call is needed.
 //! -> No kernel call if there are object in the semaphore.
-class CryFastSemaphore
+class AngelicaFastSemaphore
 {
 public:
-	CryFastSemaphore(int nMaximumCount, int nInitialCount = 0);
-	~CryFastSemaphore();
+	AngelicaFastSemaphore(int nMaximumCount, int nInitialCount = 0);
+	~AngelicaFastSemaphore();
 	void Acquire();
 	void Release();
 
 private:
-	CrySemaphore   m_Semaphore;
+	AngelicaSemaphore   m_Semaphore;
 	volatile int m_nCounter;
 };

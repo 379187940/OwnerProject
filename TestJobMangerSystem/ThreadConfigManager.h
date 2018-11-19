@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #pragma once
 
@@ -57,12 +57,12 @@
    "x, y, ..."  : Run thread on specified cores
 
    Priority:
-   "idle"             : Hint to CryEngine to run thread with pre-set priority
-   "below_normal"		: Hint to CryEngine to run thread with pre-set priority
-   "normal"           : Hint to CryEngine to run thread with pre-set priority - (default) -
-   "above_normal"		: Hint to CryEngine to run thread with pre-set priority
-   "highest"					: Hint to CryEngine to run thread with pre-set priority
-   "time_critical"		: Hint to CryEngine to run thread with pre-set priority
+   "idle"             : Hint to AngelicaEngine to run thread with pre-set priority
+   "below_normal"		: Hint to AngelicaEngine to run thread with pre-set priority
+   "normal"           : Hint to AngelicaEngine to run thread with pre-set priority - (default) -
+   "above_normal"		: Hint to AngelicaEngine to run thread with pre-set priority
+   "highest"					: Hint to AngelicaEngine to run thread with pre-set priority
+   "time_critical"		: Hint to AngelicaEngine to run thread with pre-set priority
    "x" (number)			: User defined thread priority number
 
    StackSizeKB:

@@ -1,10 +1,10 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #pragma once
 
 #include "AngelicaThread_win32.h"
 #include "Win32specific.h"
-namespace CryMT
+namespace AngelicaMT
 {
 namespace detail
 {
@@ -14,7 +14,7 @@ static_assert(sizeof(ANGELICA_CRITICAL_SECTION) == sizeof(CRITICAL_SECTION), "Wi
 static_assert(sizeof(ANGELICA_CONDITION_VARIABLE) == sizeof(CONDITION_VARIABLE), "Win32 CONDITION_VARIABLE size does not match ANGELICA_CONDITION_VARIABLE");
 
 //////////////////////////////////////////////////////////////////////////
-//CryLock_SRWLOCK
+//AngelicaLock_SRWLOCK
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ ANGELICA_CONDITION_VARIABLE::ANGELICA_CONDITION_VARIABLE()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// CryLock_SRWLOCK
+// AngelicaLock_SRWLOCK
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -47,14 +47,14 @@ ANGELICA_CONDITION_VARIABLE::ANGELICA_CONDITION_VARIABLE()
 
 
 //////////////////////////////////////////////////////////////////////////
-void CryLock_SRWLOCK::Lock()
+void AngelicaLock_SRWLOCK::Lock()
 {
 	//AcquireSRWLockExclusive(reinterpret_cast<PSRWLOCK>(&m_win32_lock_type.SRWLock_));
 	EnterCriticalSection(&m_cs);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryLock_SRWLOCK::Unlock()
+void AngelicaLock_SRWLOCK::Unlock()
 {
 	//ReleaseSRWLockExclusive(reinterpret_cast<PSRWLOCK>(&m_win32_lock_type.SRWLock_));
 	LeaveCriticalSection(&m_cs);
@@ -62,11 +62,11 @@ void CryLock_SRWLOCK::Unlock()
 
 
 //////////////////////////////////////////////////////////////////////////
-// CryLock_SRWLOCK_Recursive
+// AngelicaLock_SRWLOCK_Recursive
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-void CryLock_SRWLOCK_Recursive::Lock()
+void AngelicaLock_SRWLOCK_Recursive::Lock()
 {
 	const unsigned long threadId = GetCurrentThreadId();
 
@@ -84,7 +84,7 @@ void CryLock_SRWLOCK_Recursive::Lock()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryLock_SRWLOCK_Recursive::Unlock()
+void AngelicaLock_SRWLOCK_Recursive::Unlock()
 {
 	const unsigned long threadId = GetCurrentThreadId();
 	assert(m_exclusiveOwningThreadId == threadId);
@@ -102,29 +102,29 @@ void CryLock_SRWLOCK_Recursive::Unlock()
 
 
 //////////////////////////////////////////////////////////////////////////
-// CryLock_CritSection
+// AngelicaLock_CritSection
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-CryLock_CriticalSection::CryLock_CriticalSection()
+AngelicaLock_CriticalSection::AngelicaLock_CriticalSection()
 {
 	InitializeCriticalSection((CRITICAL_SECTION*)&m_win32_lock_type);
 }
 
 //////////////////////////////////////////////////////////////////////////
-CryLock_CriticalSection::~CryLock_CriticalSection()
+AngelicaLock_CriticalSection::~AngelicaLock_CriticalSection()
 {
 	DeleteCriticalSection((CRITICAL_SECTION*)&m_win32_lock_type);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryLock_CriticalSection::Lock()
+void AngelicaLock_CriticalSection::Lock()
 {
 	EnterCriticalSection((CRITICAL_SECTION*)&m_win32_lock_type);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryLock_CriticalSection::Unlock()
+void AngelicaLock_CriticalSection::Unlock()
 {
 	LeaveCriticalSection((CRITICAL_SECTION*)&m_win32_lock_type);
 }
@@ -134,37 +134,37 @@ void CryLock_CriticalSection::Unlock()
 }
 
 //////////////////////////////////////////////////////////////////////////
-CryEvent::CryEvent()
+AngelicaEvent::AngelicaEvent()
 {
 	m_handle = (void*)CreateEvent(NULL, FALSE, FALSE, NULL);
 }
 
 //////////////////////////////////////////////////////////////////////////
-CryEvent::~CryEvent()
+AngelicaEvent::~AngelicaEvent()
 {
 	CloseHandle(m_handle);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryEvent::Reset()
+void AngelicaEvent::Reset()
 {
 	ResetEvent(m_handle);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryEvent::Set()
+void AngelicaEvent::Set()
 {
 	SetEvent(m_handle);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryEvent::Wait() const
+void AngelicaEvent::Wait() const
 {
 	WaitForSingleObject(m_handle, INFINITE);
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CryEvent::Wait(const unsigned int timeoutMillis) const
+bool AngelicaEvent::Wait(const unsigned int timeoutMillis) const
 {
 	if (WaitForSingleObject(m_handle, timeoutMillis) == WAIT_TIMEOUT)
 		return false;
@@ -175,20 +175,20 @@ bool CryEvent::Wait(const unsigned int timeoutMillis) const
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-//void CryConditionVariable::Wait(CryMutex& lock)
+//void AngelicaConditionVariable::Wait(AngelicaMutex& lock)
 //{
 //	TimedWait(lock, INFINITE);
 //}
 //
-//void CryConditionVariable::Wait(CryMutexFast& lock)
+//void AngelicaConditionVariable::Wait(AngelicaMutexFast& lock)
 //{
 //	TimedWait(lock, INFINITE);
 //}
 //
 ////////////////////////////////////////////////////////////////////////////
-//bool CryConditionVariable::TimedWait(CryMutex& lock, unsigned int millis)
+//bool AngelicaConditionVariable::TimedWait(AngelicaMutex& lock, unsigned int millis)
 //{
-//	if (lock.s_value == CryMT::detail::eLockType_SRW)
+//	if (lock.s_value == AngelicaMT::detail::eLockType_SRW)
 //	{
 //		assert(lock.m_recurseCounter == 0);
 //		lock.m_exclusiveOwningThreadId = THREADID_NULL;
@@ -197,82 +197,82 @@ bool CryEvent::Wait(const unsigned int timeoutMillis) const
 //		return ret;
 //
 //	}
-//	else if (lock.s_value == CryMT::detail::eLockType_CRITICAL_SECTION)
+//	else if (lock.s_value == AngelicaMT::detail::eLockType_CRITICAL_SECTION)
 //	{
 //		return SleepConditionVariableCS(reinterpret_cast<PCONDITION_VARIABLE>(&m_condVar), reinterpret_cast<PCRITICAL_SECTION>(&lock.m_win32_lock_type), millis) == TRUE;
 //	}
 //}
 //
 ////////////////////////////////////////////////////////////////////////////
-//bool CryConditionVariable::TimedWait(CryMutexFast& lock, unsigned int millis)
+//bool AngelicaConditionVariable::TimedWait(AngelicaMutexFast& lock, unsigned int millis)
 //{
-//	if (lock.s_value == CryMT::detail::eLockType_SRW)
+//	if (lock.s_value == AngelicaMT::detail::eLockType_SRW)
 //	{
 //		return SleepConditionVariableSRW(reinterpret_cast<PCONDITION_VARIABLE>(&m_condVar), reinterpret_cast<PSRWLOCK>(&lock.m_win32_lock_type), millis, ULONG(0)) == TRUE;
 //	}
-//	else if (lock.s_value == CryMT::detail::eLockType_CRITICAL_SECTION)
+//	else if (lock.s_value == AngelicaMT::detail::eLockType_CRITICAL_SECTION)
 //	{
 //		return SleepConditionVariableCS(reinterpret_cast<PCONDITION_VARIABLE>(&m_condVar), reinterpret_cast<PCRITICAL_SECTION>(&lock.m_win32_lock_type), millis) == TRUE;
 //	}
 //}
 
 //////////////////////////////////////////////////////////////////////////
-void CryConditionVariable::NotifySingle()
+void AngelicaConditionVariable::NotifySingle()
 {
 	WakeConditionVariable(reinterpret_cast<PCONDITION_VARIABLE>(&m_condVar));
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryConditionVariable::Notify()
+void AngelicaConditionVariable::Notify()
 {
 	WakeAllConditionVariable(reinterpret_cast<PCONDITION_VARIABLE>(&m_condVar));
 }
 
 //////////////////////////////////////////////////////////////////////////
-CrySemaphore::CrySemaphore(int nMaximumCount, int nInitialCount)
+AngelicaSemaphore::AngelicaSemaphore(int nMaximumCount, int nInitialCount)
 {
 	m_Semaphore = (void*)CreateSemaphore(NULL, nInitialCount, nMaximumCount, NULL);
 }
 
 //////////////////////////////////////////////////////////////////////////
-CrySemaphore::~CrySemaphore()
+AngelicaSemaphore::~AngelicaSemaphore()
 {
 	CloseHandle((HANDLE)m_Semaphore);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CrySemaphore::Acquire()
+void AngelicaSemaphore::Acquire()
 {
 	WaitForSingleObject((HANDLE)m_Semaphore, INFINITE);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CrySemaphore::Release()
+void AngelicaSemaphore::Release()
 {
 	ReleaseSemaphore((HANDLE)m_Semaphore, 1, NULL);
 }
 
 //////////////////////////////////////////////////////////////////////////
-CryFastSemaphore::CryFastSemaphore(int nMaximumCount, int nInitialCount) :
+AngelicaFastSemaphore::AngelicaFastSemaphore(int nMaximumCount, int nInitialCount) :
 	m_Semaphore(nMaximumCount),
 	m_nCounter(nInitialCount)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////
-CryFastSemaphore::~CryFastSemaphore()
+AngelicaFastSemaphore::~AngelicaFastSemaphore()
 {
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryFastSemaphore::Acquire()
+void AngelicaFastSemaphore::Acquire()
 {
 	int nCount = ~0;
 	do
 	{
 		nCount = *const_cast<volatile int*>(&m_nCounter);
 	}
-	while (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nCounter), nCount - 1, nCount) != nCount);
+	while (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nCounter), nCount - 1, nCount) != nCount);
 
 	// if the count would have been 0 or below, go to kernel semaphore
 	if ((nCount - 1) < 0)
@@ -280,14 +280,14 @@ void CryFastSemaphore::Acquire()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryFastSemaphore::Release()
+void AngelicaFastSemaphore::Release()
 {
 	int nCount = ~0;
 	do
 	{
 		nCount = *const_cast<volatile int*>(&m_nCounter);
 	}
-	while (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nCounter), nCount + 1, nCount) != nCount);
+	while (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nCounter), nCount + 1, nCount) != nCount);
 
 	// wake up kernel semaphore if we have waiter
 	if (nCount < 0)
@@ -295,17 +295,17 @@ void CryFastSemaphore::Release()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace CryMT {
+namespace AngelicaMT {
 
 //////////////////////////////////////////////////////////////////////////
-void CryMemoryBarrier()
+void AngelicaMemoryBarrier()
 {
 	MemoryBarrier();
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryYieldThread()
+void AngelicaYieldThread()
 {
 	SwitchToThread();
 }
-} // namespace CryMT
+} // namespace AngelicaMT

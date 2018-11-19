@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #include "StdAfx.h"
 //#include "System.h"
@@ -22,27 +22,27 @@
 #undef INCLUDED_FROM_SYSTEM_THREADING_CPP
 
 //////////////////////////////////////////////////////////////////////////
-static void ApplyThreadConfig(unsigned long threadId, CryThreadUtil::TThreadHandle pThreadHandle, const SThreadConfig& rThreadDesc)
+static void ApplyThreadConfig(unsigned long threadId, AngelicaThreadUtil::TThreadHandle pThreadHandle, const SThreadConfig& rThreadDesc)
 {
 	// Apply config
 	if (rThreadDesc.paramActivityFlag & SThreadConfig::eThreadParamFlag_ThreadName)
 	{
-		CryThreadUtil::CrySetThreadName(threadId, rThreadDesc.szThreadName);
+		AngelicaThreadUtil::AngelicaSetThreadName(threadId, rThreadDesc.szThreadName);
 	}
 	if (rThreadDesc.paramActivityFlag & SThreadConfig::eThreadParamFlag_Affinity)
 	{
-		CryThreadUtil::CrySetThreadAffinityMask(pThreadHandle, rThreadDesc.affinityFlag);
+		AngelicaThreadUtil::AngelicaSetThreadAffinityMask(pThreadHandle, rThreadDesc.affinityFlag);
 	}
 	if (rThreadDesc.paramActivityFlag & SThreadConfig::eThreadParamFlag_Priority)
 	{
-		CryThreadUtil::CrySetThreadPriority(pThreadHandle, rThreadDesc.priority);
+		AngelicaThreadUtil::AngelicaSetThreadPriority(pThreadHandle, rThreadDesc.priority);
 	}
 	if (rThreadDesc.paramActivityFlag & SThreadConfig::eThreadParamFlag_PriorityBoost)
 	{
-		CryThreadUtil::CrySetThreadPriorityBoost(pThreadHandle, !rThreadDesc.bDisablePriorityBoost);
+		AngelicaThreadUtil::AngelicaSetThreadPriorityBoost(pThreadHandle, !rThreadDesc.bDisablePriorityBoost);
 	}
 
-	/*CryComment("<ThreadInfo> Configured thread \"%s\" %s | AffinityMask: %u %s | Priority: %i %s | PriorityBoost: %s %s",
+	/*AngelicaComment("<ThreadInfo> Configured thread \"%s\" %s | AffinityMask: %u %s | Priority: %i %s | PriorityBoost: %s %s",
 	           rThreadDesc.szThreadName, (rThreadDesc.paramActivityFlag & SThreadConfig::eThreadParamFlag_ThreadName) ? "" : "(ignored)",
 	           rThreadDesc.affinityFlag, (rThreadDesc.paramActivityFlag & SThreadConfig::eThreadParamFlag_Affinity) ? "" : "(ignored)",
 	           rThreadDesc.priority, (rThreadDesc.paramActivityFlag & SThreadConfig::eThreadParamFlag_Priority) ? "" : "(ignored)",
@@ -57,7 +57,7 @@ struct SThreadMetaData : public CMultiThreadRefCount
 		, m_pThreadMngr(nullptr)
 		, m_threadHandle(0)
 		, m_threadId(0)
-		, m_threadName("Cry_UnnamedThread")
+		, m_threadName("Angelica_UnnamedThread")
 		, m_isRunning(false)
 	{
 	}
@@ -65,11 +65,11 @@ struct SThreadMetaData : public CMultiThreadRefCount
 	IThread*                                m_pThreadTask; // Pointer to thread task to be executed
 	CThreadManager*                         m_pThreadMngr; // Pointer to thread manager
 
-	CryThreadUtil::TThreadHandle            m_threadHandle; // Thread handle
+	AngelicaThreadUtil::TThreadHandle            m_threadHandle; // Thread handle
 	unsigned long                                m_threadId;     // The active threadId, 0 = Invalid Id
 	FairMonitor								m_threadExitMonitor;
-	//CryMutex                                m_threadExitMutex;     // Mutex used to safeguard thread exit condition signaling
-	//CryConditionVariable                    m_threadExitCondition; // Signaled when the thread is about to exit
+	//AngelicaMutex                                m_threadExitMutex;     // Mutex used to safeguard thread exit condition signaling
+	//AngelicaConditionVariable                    m_threadExitCondition; // Signaled when the thread is about to exit
 
 	CStringA m_threadName; // Thread name
 	volatile bool                           m_isRunning;  // Indicates the thread is not ready to exit yet
@@ -115,7 +115,7 @@ private:
 
 	bool     SpawnThreadImpl(IThread* pThread, const char* sThreadName);
 
-	//bool     RegisterThirdPartyThreadImpl(CryThreadUtil::TThreadHandle pThreadHandle, const char* sThreadName);
+	//bool     RegisterThirdPartyThreadImpl(AngelicaThreadUtil::TThreadHandle pThreadHandle, const char* sThreadName);
 	bool     UnRegisterThirdPartyThreadImpl(const char* sThreadName);
 
 	unsigned long GetThreadIdImpl(const char* sThreadName);
@@ -135,10 +135,10 @@ private:
 	typedef std::map<CString, _smart_ptr<SThreadMetaData>>::const_iterator SpawnedThirdPartyThreadMapConstIter;
 	typedef std::pair<CString, _smart_ptr<SThreadMetaData>>                ThirdPartyThreadMapPair;
 
-	CryCriticalSection         m_spawnedThreadsLock; // Use lock for the rare occasion a thread is created/destroyed
+	AngelicaCriticalSection         m_spawnedThreadsLock; // Use lock for the rare occasion a thread is created/destroyed
 	SpawnedThreadMap           m_spawnedThreads;     // Holds information of all spawned threads (through this system)
 
-	CryCriticalSection         m_spawnedThirdPartyThreadsLock; // Use lock for the rare occasion a thread is created/destroyed
+	AngelicaCriticalSection         m_spawnedThirdPartyThreadsLock; // Use lock for the rare occasion a thread is created/destroyed
 	SpawnedThirdPartyThreadMap m_spawnedThirdPartyThread;      // Holds information of all registered 3rd party threads (through this system)
 
 	CThreadConfigManager       m_threadConfigManager;
@@ -155,13 +155,13 @@ unsigned __stdcall CThreadManager::RunThread(void* thisPtr)
 	// Otherwise we cannot enable floating point exceptions
 	//if (!gEnv || !gEnv->pSystem)
 	//{
-	//	//CryFatalError("[Error]: CThreadManager::RunThread requires gEnv->pSystem to be initialized.");
+	//	//AngelicaFatalError("[Error]: CThreadManager::RunThread requires gEnv->pSystem to be initialized.");
 	//}
 
 	//PLATFORM_PROFILER_MARKER("Thread_Run");
 
 	SThreadMetaData* pThreadData = reinterpret_cast<SThreadMetaData*>(thisPtr);
-	pThreadData->m_threadId = CryThreadUtil::CryGetCurrentThreadId();
+	pThreadData->m_threadId = AngelicaThreadUtil::AngelicaGetCurrentThreadId();
 
 	// Apply config
 	const SThreadConfig* pThreadConfig = g_ThreadManager.GetThreadConfigManager()->GetDefaultThreadConfig();
@@ -178,7 +178,7 @@ unsigned __stdcall CThreadManager::RunThread(void* thisPtr)
 
 
 	// Rename Thread
-	CryThreadUtil::CrySetThreadName(pThreadData->m_threadId, tmpString.GetBuffer(0));
+	AngelicaThreadUtil::AngelicaSetThreadName(pThreadData->m_threadId, tmpString.GetBuffer(0));
 	//ANGELICA_PROFILE_THREADNAME(tmpString.GetBuffer(0));
 	
 
@@ -202,7 +202,7 @@ unsigned __stdcall CThreadManager::RunThread(void* thisPtr)
 	pThreadData->m_pThreadMngr->UnregisterThread(pThreadData->m_pThreadTask);
 
 //	PLATFORM_PROFILER_MARKER("Thread_Stop");
-	CryThreadUtil::CryThreadExitCall();
+	AngelicaThreadUtil::AngelicaThreadExitCall();
 
 	return NULL;
 }
@@ -253,7 +253,7 @@ bool CThreadManager::UnregisterThread(IThread* pThreadTask)
 	if (res == m_spawnedThreads.end())
 	{
 		// Duplicate thread deletion
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: UnregisterThread: Unable to unregister thread. Thread name could not be found. Double deletion? IThread pointer: %p", pThreadTask);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: UnregisterThread: Unable to unregister thread. Thread name could not be found. Double deletion? IThread pointer: %p", pThreadTask);
 		return false;
 	}
 
@@ -302,7 +302,7 @@ const char* CThreadManager::GetThreadName(unsigned long nThreadId)
 //////////////////////////////////////////////////////////////////////////
 void CThreadManager::ForEachOtherThread(IThreadManager::ThreadModifFunction fpThreadModiFunction, void* pFuncData)
 {
-	unsigned long nCurThreadId = CryThreadUtil::CryGetCurrentThreadId();
+	unsigned long nCurThreadId = AngelicaThreadUtil::AngelicaGetCurrentThreadId();
 
 	// Loop over internally spawned threads
 	{
@@ -347,7 +347,7 @@ bool CThreadManager::SpawnThread(IThread* pThreadTask, const char* sThreadName, 
 	char strThreadName[THREAD_NAME_LENGTH_MAX];
 	if (!sprintf_s(strThreadName, sThreadName, args))
 	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: ThreadName \"%s\" has been truncated to \"%s\". Max characters allowed: %i.", sThreadName, strThreadName, (int)sizeof(strThreadName) - 1);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: ThreadName \"%s\" has been truncated to \"%s\". Max characters allowed: %i.", sThreadName, strThreadName, (int)sizeof(strThreadName) - 1);
 	}
 
 	// Spawn thread
@@ -355,7 +355,7 @@ bool CThreadManager::SpawnThread(IThread* pThreadTask, const char* sThreadName, 
 
 	if (!ret)
 	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: CSystem::SpawnThread error spawning thread: \"%s\"", strThreadName);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: CSystem::SpawnThread error spawning thread: \"%s\"", strThreadName);
 	}
 
 	va_end(args);
@@ -367,7 +367,7 @@ bool CThreadManager::SpawnThreadImpl(IThread* pThreadTask, const char* sThreadNa
 {
 	if (pThreadTask == NULL)
 	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, "<ThreadInfo>: SpawnThread '%s' ThreadTask is NULL : ignoring", sThreadName);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, "<ThreadInfo>: SpawnThread '%s' ThreadTask is NULL : ignoring", sThreadName);
 		return false;
 	}
 
@@ -384,7 +384,7 @@ bool CThreadManager::SpawnThreadImpl(IThread* pThreadTask, const char* sThreadNa
 		if (res != m_spawnedThreads.end())
 		{
 			// Thread with same name already spawned
-			//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: SpawnThread: Thread \"%s\" already exists.", sThreadName);
+			//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: SpawnThread: Thread \"%s\" already exists.", sThreadName);
 			delete pThreadMetaData;
 			return false;
 		}
@@ -397,15 +397,15 @@ bool CThreadManager::SpawnThreadImpl(IThread* pThreadTask, const char* sThreadNa
 	const SThreadConfig* pThreadConfig = g_ThreadManager.GetThreadConfigManager()->GetThreadConfig(sThreadName);
 
 	// Create thread description
-	CryThreadUtil::SThreadCreationDesc desc = { sThreadName, RunThread, pThreadMetaData, pThreadConfig->paramActivityFlag & SThreadConfig::eThreadParamFlag_StackSize ? pThreadConfig->stackSizeBytes : 0 };
+	AngelicaThreadUtil::SThreadCreationDesc desc = { sThreadName, RunThread, pThreadMetaData, pThreadConfig->paramActivityFlag & SThreadConfig::eThreadParamFlag_StackSize ? pThreadConfig->stackSizeBytes : 0 };
 
 	// Spawn new thread
-	pThreadMetaData->m_isRunning = CryThreadUtil::CryCreateThread(&(pThreadMetaData->m_threadHandle), desc);
+	pThreadMetaData->m_isRunning = AngelicaThreadUtil::AngelicaCreateThread(&(pThreadMetaData->m_threadHandle), desc);
 
 	// Validate thread creation
 	if (!pThreadMetaData->m_isRunning)
 	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: SpawnThread: Could not spawn thread \"%s\".", sThreadName);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: SpawnThread: Could not spawn thread \"%s\".", sThreadName);
 
 		// Remove thread from map (also releases SThreadMetaData _smart_ptr)
 		m_spawnedThreads.erase(m_spawnedThreads.find(pThreadTask));
@@ -420,7 +420,7 @@ bool CThreadManager::SpawnThreadImpl(IThread* pThreadTask, const char* sThreadNa
 //{
 //	if (!pThreadHandle)
 //	{
-//		pThreadHandle = reinterpret_cast<void*>(CryThreadUtil::CryGetCurrentThreadHandle());
+//		pThreadHandle = reinterpret_cast<void*>(AngelicaThreadUtil::AngelicaGetCurrentThreadHandle());
 //	}
 //
 //	va_list args;
@@ -430,22 +430,22 @@ bool CThreadManager::SpawnThreadImpl(IThread* pThreadTask, const char* sThreadNa
 //	char strThreadName[THREAD_NAME_LENGTH_MAX];
 //	if (!sprintf_s(strThreadName, sThreadName, args))
 //	{
-//		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: ThreadName \"%s\" has been truncated to \"%s\". Max characters allowed: %i.", sThreadName, strThreadName, (int)sizeof(strThreadName) - 1);
+//		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: ThreadName \"%s\" has been truncated to \"%s\". Max characters allowed: %i.", sThreadName, strThreadName, (int)sizeof(strThreadName) - 1);
 //	}
 //
 //	// Register 3rd party thread
-//	bool ret = RegisterThirdPartyThreadImpl(reinterpret_cast<CryThreadUtil::TThreadHandle>(pThreadHandle), strThreadName);
+//	bool ret = RegisterThirdPartyThreadImpl(reinterpret_cast<AngelicaThreadUtil::TThreadHandle>(pThreadHandle), strThreadName);
 //
 //	va_end(args);
 //	return ret;
 //}
 
 //////////////////////////////////////////////////////////////////////////
-//bool CThreadManager::RegisterThirdPartyThreadImpl(CryThreadUtil::TThreadHandle threadHandle, const char* sThreadName)
+//bool CThreadManager::RegisterThirdPartyThreadImpl(AngelicaThreadUtil::TThreadHandle threadHandle, const char* sThreadName)
 //{
 //	if (strcmp(sThreadName, "") == 0)
 //	{
-//		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: CThreadManager::RegisterThirdPartyThread error registering third party thread. No name provided.");
+//		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: CThreadManager::RegisterThirdPartyThread error registering third party thread. No name provided.");
 //		return false;
 //	}
 //	// Init thread meta data
@@ -453,8 +453,8 @@ bool CThreadManager::SpawnThreadImpl(IThread* pThreadTask, const char* sThreadNa
 //	pThreadMetaData->m_pThreadTask = 0;
 //	pThreadMetaData->m_pThreadMngr = this;
 //	pThreadMetaData->m_threadName = sThreadName;
-//	pThreadMetaData->m_threadHandle = CryThreadUtil::CryDuplicateThreadHandle(threadHandle); // Ensure that we are not storing a pseudo handle
-//	pThreadMetaData->m_threadId = CryThreadUtil::CryGetThreadId(pThreadMetaData->m_threadHandle);
+//	pThreadMetaData->m_threadHandle = AngelicaThreadUtil::AngelicaDuplicateThreadHandle(threadHandle); // Ensure that we are not storing a pseudo handle
+//	pThreadMetaData->m_threadId = AngelicaThreadUtil::AngelicaGetThreadId(pThreadMetaData->m_threadHandle);
 //
 //	{
 //		AUTO_LOCK(m_spawnedThirdPartyThreadsLock);
@@ -463,7 +463,7 @@ bool CThreadManager::SpawnThreadImpl(IThread* pThreadTask, const char* sThreadNa
 //		SpawnedThirdPartyThreadMapConstIter res = m_spawnedThirdPartyThread.find(sThreadName);
 //		if (res != m_spawnedThirdPartyThread.end())
 //		{
-//			/*CryFatalError("CThreadManager::RegisterThirdPartyThread - Unable to register thread \"%s\""
+//			/*AngelicaFatalError("CThreadManager::RegisterThirdPartyThread - Unable to register thread \"%s\""
 //			              "because another third party thread with the same name \"%s\" has already been registered with ThreadHandle: %p",
 //			              sThreadName, res->second->m_threadName.GetBuffer(0), reinterpret_cast<void*>(threadHandle));*/
 //
@@ -487,7 +487,7 @@ bool CThreadManager::SpawnThreadImpl(IThread* pThreadTask, const char* sThreadNa
 //	// Update FP exception mask for 3rd party thread
 //	if (pThreadMetaData->m_threadId)
 //	{
-//		CryThreadUtil::EnableFloatExceptions(pThreadMetaData->m_threadId, (EFPE_Severity)0);
+//		AngelicaThreadUtil::EnableFloatExceptions(pThreadMetaData->m_threadId, (EFPE_Severity)0);
 //	}
 //
 //	return true;
@@ -503,7 +503,7 @@ bool CThreadManager::UnRegisterThirdPartyThread(const char* sThreadName, ...)
 	char strThreadName[THREAD_NAME_LENGTH_MAX];
 	if (!sprintf_s(strThreadName, sThreadName, args))
 	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: ThreadName \"%s\" has been truncated to \"%s\". Max characters allowed: %i.", sThreadName, strThreadName, (int)sizeof(strThreadName) - 1);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: ThreadName \"%s\" has been truncated to \"%s\". Max characters allowed: %i.", sThreadName, strThreadName, (int)sizeof(strThreadName) - 1);
 	}
 
 	// Unregister 3rd party thread
@@ -522,12 +522,12 @@ bool CThreadManager::UnRegisterThirdPartyThreadImpl(const char* sThreadName)
 	if (res == m_spawnedThirdPartyThread.end())
 	{
 		// Duplicate thread deletion
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: UnRegisterThirdPartyThread: Unable to unregister thread. Thread name \"%s\" could not be found. Double deletion?", sThreadName);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: UnRegisterThirdPartyThread: Unable to unregister thread. Thread name \"%s\" could not be found. Double deletion?", sThreadName);
 		return false;
 	}
 
 	// Close thread handle
-	CryThreadUtil::CryCloseThreadHandle(res->second->m_threadHandle);
+	AngelicaThreadUtil::AngelicaCloseThreadHandle(res->second->m_threadHandle);
 
 	// Delete reference from container
 	m_spawnedThirdPartyThread.erase(res);
@@ -544,7 +544,7 @@ unsigned long CThreadManager::GetThreadId(const char* sThreadName, ...)
 	char strThreadName[THREAD_NAME_LENGTH_MAX];
 	if (!sprintf_s(strThreadName, sThreadName, args))
 	{
-		//CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: ThreadName \"%s\" has been truncated to \"%s\". Max characters allowed: %i. ", sThreadName, strThreadName, (int)sizeof(strThreadName) - 1);
+		//AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadInfo>: ThreadName \"%s\" has been truncated to \"%s\". Max characters allowed: %i. ", sThreadName, strThreadName, (int)sizeof(strThreadName) - 1);
 	}
 
 	// Get thread name
@@ -597,13 +597,13 @@ unsigned long CThreadManager::GetThreadIdImpl(const char* sThreadName)
 static void EnableFPExceptionsForThread(unsigned long nThreadId, void* pData)
 {
 	EFPE_Severity eFPESeverity = *(EFPE_Severity*)pData;
-	CryThreadUtil::EnableFloatExceptions(nThreadId, eFPESeverity);
+	AngelicaThreadUtil::EnableFloatExceptions(nThreadId, eFPESeverity);
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CThreadManager::EnableFloatExceptions(EFPE_Severity eFPESeverity, unsigned long nThreadId /*=0*/)
 {
-	CryThreadUtil::EnableFloatExceptions(nThreadId, eFPESeverity);
+	AngelicaThreadUtil::EnableFloatExceptions(nThreadId, eFPESeverity);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -615,13 +615,13 @@ void CThreadManager::EnableFloatExceptionsForEachOtherThread(EFPE_Severity eFPES
 //////////////////////////////////////////////////////////////////////////
 unsigned int CThreadManager::GetFloatingPointExceptionMask()
 {
-	return CryThreadUtil::GetFloatingPointExceptionMask();
+	return AngelicaThreadUtil::GetFloatingPointExceptionMask();
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CThreadManager::SetFloatingPointExceptionMask(unsigned int nMask)
 {
-	CryThreadUtil::SetFloatingPointExceptionMask(nMask);
+	AngelicaThreadUtil::SetFloatingPointExceptionMask(nMask);
 }
 
 //////////////////////////////////////////////////////////////////////////

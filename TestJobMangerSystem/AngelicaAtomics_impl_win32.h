@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 
 #if !(defined(NTDDI_VERSION) && defined(NTDDI_WIN8) && (NTDDI_VERSION >= NTDDI_WIN8))
@@ -8,7 +8,7 @@ extern "C" WINBASEAPI PSLIST_ENTRY __fastcall InterlockedPushListSList(_Inout_ P
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-void CryInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& element)
+void AngelicaInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& element)
 {
 	static_assert(sizeof(SLockFreeSingleLinkedListHeader) == sizeof(SLIST_HEADER), "ANGELICA_INTERLOCKED_SLIST_HEADER_HAS_WRONG_SIZE");
 	static_assert(sizeof(SLockFreeSingleLinkedListEntry) >= sizeof(SLIST_ENTRY), "ANGELICA_INTERLOCKED_SLIST_ENTRY_HAS_WRONG_SIZE");
@@ -19,7 +19,7 @@ void CryInterlockedPushEntrySList(SLockFreeSingleLinkedListHeader& list, SLockFr
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& first, SLockFreeSingleLinkedListEntry& last, unsigned int count)
+void AngelicaInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, SLockFreeSingleLinkedListEntry& first, SLockFreeSingleLinkedListEntry& last, unsigned int count)
 {
 	static_assert(sizeof(SLockFreeSingleLinkedListHeader) == sizeof(SLIST_HEADER), "ANGELICA_INTERLOCKED_SLIST_HEADER_HAS_WRONG_SIZE");
 	static_assert(sizeof(SLockFreeSingleLinkedListEntry) >= sizeof(SLIST_ENTRY), "ANGELICA_INTERLOCKED_SLIST_ENTRY_HAS_WRONG_SIZE");
@@ -31,7 +31,7 @@ void CryInterlockedPushListSList(SLockFreeSingleLinkedListHeader& list, SLockFre
 }
 
 //////////////////////////////////////////////////////////////////////////
-void* CryInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
+void* AngelicaInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
 {
 	static_assert(sizeof(SLockFreeSingleLinkedListHeader) == sizeof(SLIST_HEADER), "ANGELICA_INTERLOCKED_SLIST_HEADER_HAS_WRONG_SIZE");
 
@@ -40,7 +40,7 @@ void* CryInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
 }
 
 ////////////////////////////////////////////////////////////////////////////
-//void* CryRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list)
+//void* AngelicaRtlFirstEntrySList(SLockFreeSingleLinkedListHeader& list)
 //{
 //	static_assert(sizeof(SLockFreeSingleLinkedListHeader) == sizeof(SLIST_HEADER), "ANGELICA_INTERLOCKED_SLIST_HEADER_HAS_WRONG_SIZE");
 //	static_assert(sizeof(SLockFreeSingleLinkedListEntry) >= sizeof(SLIST_ENTRY), "ANGELICA_INTERLOCKED_SLIST_ENTRY_HAS_WRONG_SIZE");
@@ -56,7 +56,7 @@ void* CryInterlockedPopEntrySList(SLockFreeSingleLinkedListHeader& list)
 //}
 
 //////////////////////////////////////////////////////////////////////////
-void CryInitializeSListHead(SLockFreeSingleLinkedListHeader& list)
+void AngelicaInitializeSListHead(SLockFreeSingleLinkedListHeader& list)
 {
 	//ANGELICA_ASSERT_MESSAGE(IsAligned(&list, MEMORY_ALLOCATION_ALIGNMENT), "LockFree SingleLink List Header has wrong Alignment");
 
@@ -65,7 +65,7 @@ void CryInitializeSListHead(SLockFreeSingleLinkedListHeader& list)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void* CryInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list)
+void* AngelicaInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list)
 {
 	//ANGELICA_ASSERT_MESSAGE(IsAligned(&list, MEMORY_ALLOCATION_ALIGNMENT), "LockFree SingleLink List Header has wrong Alignment");
 

@@ -1,25 +1,25 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #pragma once
 
 // Include basic multithread primitives.
 #include "AngelicaAtomics.h"
 typedef const char*            cstr;
-//class CryConditionVariable;
-class CrySemaphore;
-class CryFastSemaphore;
+//class AngelicaConditionVariable;
+class AngelicaSemaphore;
+class AngelicaFastSemaphore;
 
 #define THREAD_NAME_LENGTH_MAX 64
 
-enum CryLockType
+enum AngelicaLockType
 {
 	ANGELICALOCK_FAST      = 1,  //!< A fast potentially (non-recursive) mutex.
 	ANGELICALOCK_RECURSIVE = 2,  //!< A recursive mutex.
 };
 
 //! Primitive locks and conditions.
-//! Primitive locks are represented by instance of class CryLockT<Type>.
-template<CryLockType Type> class CryLockT
+//! Primitive locks are represented by instance of class AngelicaLockT<Type>.
+template<AngelicaLockType Type> class AngelicaLockT
 {
 	/* Unsupported lock type. */
 };
@@ -27,47 +27,47 @@ template<CryLockType Type> class CryLockT
 //////////////////////////////////////////////////////////////////////////
 // Typedefs.
 //////////////////////////////////////////////////////////////////////////
-typedef CryLockT<ANGELICALOCK_RECURSIVE> CryCriticalSection;
-typedef CryLockT<ANGELICALOCK_FAST>      CryCriticalSectionNonRecursive;
+typedef AngelicaLockT<ANGELICALOCK_RECURSIVE> AngelicaCriticalSection;
+typedef AngelicaLockT<ANGELICALOCK_FAST>      AngelicaCriticalSectionNonRecursive;
 
 //////////////////////////////////////////////////////////////////////////
-//! CryAutoCriticalSection implements a helper class to automatically.
+//! AngelicaAutoCriticalSection implements a helper class to automatically.
 //! lock critical section in constructor and release on destructor.
-template<class LockClass> class CryAutoLock
+template<class LockClass> class AngelicaAutoLock
 {
 public:
-	CryAutoLock() = delete;
-	CryAutoLock(const CryAutoLock<LockClass>&) = delete;
-	CryAutoLock<LockClass>& operator=(const CryAutoLock<LockClass>&) = delete;
+	AngelicaAutoLock() = delete;
+	AngelicaAutoLock(const AngelicaAutoLock<LockClass>&) = delete;
+	AngelicaAutoLock<LockClass>& operator=(const AngelicaAutoLock<LockClass>&) = delete;
 
-	CryAutoLock(LockClass& Lock) : m_pLock(&Lock) { m_pLock->Lock(); }
-	CryAutoLock(const LockClass& Lock) : m_pLock(const_cast<LockClass*>(&Lock)) { m_pLock->Lock(); }
-	~CryAutoLock() { m_pLock->Unlock(); }
+	AngelicaAutoLock(LockClass& Lock) : m_pLock(&Lock) { m_pLock->Lock(); }
+	AngelicaAutoLock(const LockClass& Lock) : m_pLock(const_cast<LockClass*>(&Lock)) { m_pLock->Lock(); }
+	~AngelicaAutoLock() { m_pLock->Unlock(); }
 private:
 	LockClass* m_pLock;
 };
 
-//! CryOptionalAutoLock implements a helper class to automatically.
+//! AngelicaOptionalAutoLock implements a helper class to automatically.
 //! Lock critical section (if needed) in constructor and release on destructor.
-template<class LockClass> class CryOptionalAutoLock
+template<class LockClass> class AngelicaOptionalAutoLock
 {
 private:
 	LockClass* m_Lock;
 	bool       m_bLockAcquired;
 
-	CryOptionalAutoLock();
-	CryOptionalAutoLock(const CryOptionalAutoLock<LockClass>&);
-	CryOptionalAutoLock<LockClass>& operator=(const CryOptionalAutoLock<LockClass>&);
+	AngelicaOptionalAutoLock();
+	AngelicaOptionalAutoLock(const AngelicaOptionalAutoLock<LockClass>&);
+	AngelicaOptionalAutoLock<LockClass>& operator=(const AngelicaOptionalAutoLock<LockClass>&);
 
 public:
-	CryOptionalAutoLock(LockClass& Lock, bool acquireLock) : m_Lock(&Lock), m_bLockAcquired(false)
+	AngelicaOptionalAutoLock(LockClass& Lock, bool acquireLock) : m_Lock(&Lock), m_bLockAcquired(false)
 	{
 		if (acquireLock)
 		{
 			Acquire();
 		}
 	}
-	~CryOptionalAutoLock()
+	~AngelicaOptionalAutoLock()
 	{
 		Release();
 	}
@@ -89,33 +89,33 @@ public:
 	}
 };
 
-//! CryAutoSet implements a helper class to automatically.
+//! AngelicaAutoSet implements a helper class to automatically.
 //! set and reset value in constructor and release on destructor.
-template<class ValueClass> class CryAutoSet
+template<class ValueClass> class AngelicaAutoSet
 {
 private:
 	ValueClass* m_pValue;
 
-	CryAutoSet();
-	CryAutoSet(const CryAutoSet<ValueClass>&);
-	CryAutoSet<ValueClass>& operator=(const CryAutoSet<ValueClass>&);
+	AngelicaAutoSet();
+	AngelicaAutoSet(const AngelicaAutoSet<ValueClass>&);
+	AngelicaAutoSet<ValueClass>& operator=(const AngelicaAutoSet<ValueClass>&);
 
 public:
-	CryAutoSet(ValueClass& value) : m_pValue(&value) { *m_pValue = (ValueClass)1; }
-	~CryAutoSet() { *m_pValue = (ValueClass)0; }
+	AngelicaAutoSet(ValueClass& value) : m_pValue(&value) { *m_pValue = (ValueClass)1; }
+	~AngelicaAutoSet() { *m_pValue = (ValueClass)0; }
 };
 
 //! Auto critical section is the most commonly used type of auto lock.
-typedef CryAutoLock<CryCriticalSection>             CryAutoCriticalSection;
-typedef CryAutoLock<CryCriticalSectionNonRecursive> CryAutoCriticalSectionNoRecursive;
+typedef AngelicaAutoLock<AngelicaCriticalSection>             AngelicaAutoCriticalSection;
+typedef AngelicaAutoLock<AngelicaCriticalSectionNonRecursive> AngelicaAutoCriticalSectionNoRecursive;
 
-#define AUTO_LOCK_T(Type, lock) PREFAST_SUPPRESS_WARNING(6246); CryAutoLock<Type> __AutoLock(lock)
-#define AUTO_LOCK(lock)         AUTO_LOCK_T(CryCriticalSection, lock)
-#define AUTO_LOCK_CS(csLock)    CryAutoCriticalSection __AL__ ## csLock(csLock)
+#define AUTO_LOCK_T(Type, lock) PREFAST_SUPPRESS_WARNING(6246); AngelicaAutoLock<Type> __AutoLock(lock)
+#define AUTO_LOCK(lock)         AUTO_LOCK_T(AngelicaCriticalSection, lock)
+#define AUTO_LOCK_CS(csLock)    AngelicaAutoCriticalSection __AL__ ## csLock(csLock)
 
 ///////////////////////////////////////////////////////////////////////////////
-//! Base class for lockless Producer/Consumer queue, due platforms specific they are implemented in CryThead_platform.h.
-namespace CryMT {
+//! Base class for lockless Producer/Consumer queue, due platforms specific they are implemented in AngelicaThead_platform.h.
+namespace AngelicaMT {
 namespace detail {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -137,7 +137,7 @@ class N_ProducerSingleConsumerQueueBase
 public:
 	N_ProducerSingleConsumerQueueBase()
 	{
-		CryInitializeSListHead(fallbackList);
+		AngelicaInitializeSListHead(fallbackList);
 	}
 
 	void Push(void* pObj, volatile unsigned int& rProducerIndex, volatile unsigned int& rConsumerIndex, volatile unsigned int& rRunning, void* arrBuffer, unsigned int nBufferSize, unsigned int nObjectSize, volatile unsigned int* arrStates);
@@ -154,13 +154,13 @@ private:
 };
 
 } // namespace detail
-} // namespace CryMT
+} // namespace AngelicaMT
 
 //////////////////////////////////////////////////////////////////////////
-namespace CryMT {
-	void CryMemoryBarrier();
-	void CryYieldThread();
-} // namespace CryMT
+namespace AngelicaMT {
+	void AngelicaMemoryBarrier();
+	void AngelicaYieldThread();
+} // namespace AngelicaMT
 
 // Include architecture specific code.
 #if _WIN32
@@ -197,8 +197,8 @@ public:
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//! Base class for lockless Producer/Consumer queue, due platforms specific they are implemented in CryThead_platform.h.
-namespace CryMT {
+//! Base class for lockless Producer/Consumer queue, due platforms specific they are implemented in AngelicaThead_platform.h.
+namespace AngelicaMT {
 namespace detail {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -211,20 +211,20 @@ inline void SingleProducerSingleConsumerQueueBase::Push(void* pObj, volatile uns
 		backoff.backoff();
 	}
 
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 	char* pBuffer = alias_cast<char*>(arrBuffer);
 	unsigned int nIndex = rProducerIndex % nBufferSize;
 
 	memcpy(pBuffer + (nIndex * nObjectSize), pObj, nObjectSize);
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 	rProducerIndex += 1;
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 inline  void SingleProducerSingleConsumerQueueBase::Pop(void* pObj, volatile unsigned int& rProducerIndex, volatile unsigned int& rConsumerIndex, unsigned int nBufferSize, void* arrBuffer, unsigned int nObjectSize)
 {
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 	// busy-loop if queue is empty
 	CSimpleThreadBackOff backoff;
 	while (rProducerIndex - rConsumerIndex == 0)
@@ -236,15 +236,15 @@ inline  void SingleProducerSingleConsumerQueueBase::Pop(void* pObj, volatile uns
 	unsigned int nIndex = rConsumerIndex % nBufferSize;
 
 	memcpy(pObj, pBuffer + (nIndex * nObjectSize), nObjectSize);
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 	rConsumerIndex += 1;
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 inline  void N_ProducerSingleConsumerQueueBase::Push(void* pObj, volatile unsigned int& rProducerIndex, volatile unsigned int& rConsumerIndex, volatile unsigned int& rRunning, void* arrBuffer, unsigned int nBufferSize, unsigned int nObjectSize, volatile unsigned int* arrStates)
 {
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 	unsigned int nProducerIndex;
 	unsigned int nConsumerIndex;
 
@@ -262,33 +262,33 @@ inline  void N_ProducerSingleConsumerQueueBase::Push(void* pObj, volatile unsign
 				unsigned int nSizeToAlloc = sizeof(SFallbackList) + nObjectSize - 1;
 				SFallbackList* pFallbackEntry = (SFallbackList*)_aligned_malloc(nSizeToAlloc, 128);
 				memcpy(pFallbackEntry->object, pObj, nObjectSize);
-				CryMT::CryMemoryBarrier();
-				CryInterlockedPushEntrySList(fallbackList, pFallbackEntry->nextEntry);
+				AngelicaMT::AngelicaMemoryBarrier();
+				AngelicaInterlockedPushEntrySList(fallbackList, pFallbackEntry->nextEntry);
 				return;
 			}
 			backoff.backoff();
 			continue;
 		}
 
-		if (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&rProducerIndex), nProducerIndex + 1, nProducerIndex) == nProducerIndex)
+		if (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&rProducerIndex), nProducerIndex + 1, nProducerIndex) == nProducerIndex)
 			break;
 	}
 	while (true);
 
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 	char* pBuffer = alias_cast<char*>(arrBuffer);
 	unsigned int nIndex = nProducerIndex % nBufferSize;
 
 	memcpy(pBuffer + (nIndex * nObjectSize), pObj, nObjectSize);
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 	arrStates[nIndex] = 1;
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 inline  bool N_ProducerSingleConsumerQueueBase::Pop(void* pObj, volatile unsigned int& rProducerIndex, volatile unsigned int& rConsumerIndex, volatile unsigned int& rRunning, void* arrBuffer, unsigned int nBufferSize, unsigned int nObjectSize, volatile unsigned int* arrStates)
 {
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 
 	// busy-loop if queue is empty
 	CSimpleThreadBackOff backoff;
@@ -302,7 +302,7 @@ inline  bool N_ProducerSingleConsumerQueueBase::Pop(void* pObj, volatile unsigne
 
 	if (rRunning == 0 && rProducerIndex - rConsumerIndex == 0)
 	{
-		SFallbackList* pFallback = (SFallbackList*)CryInterlockedPopEntrySList(fallbackList);
+		SFallbackList* pFallback = (SFallbackList*)AngelicaInterlockedPopEntrySList(fallbackList);
 		IF (pFallback, 0)
 		{
 			memcpy(pObj, pFallback->object, nObjectSize);
@@ -323,17 +323,17 @@ inline  bool N_ProducerSingleConsumerQueueBase::Pop(void* pObj, volatile unsigne
 	unsigned int nIndex = rConsumerIndex % nBufferSize;
 
 	memcpy(pObj, pBuffer + (nIndex * nObjectSize), nObjectSize);
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 	arrStates[nIndex] = 0;
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 	rConsumerIndex += 1;
-	CryMT::CryMemoryBarrier();
+	AngelicaMT::AngelicaMemoryBarrier();
 
 	return true;
 }
 
 } // namespace detail
-} // namespace CryMT
+} // namespace AngelicaMT
 
 // Include all multithreading containers.
 #include "MultiThread_Containers.h"

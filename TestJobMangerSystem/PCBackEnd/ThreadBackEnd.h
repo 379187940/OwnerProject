@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 // -------------------------------------------------------------------------
 //  File name:   ThreadBackEnd.h
@@ -52,7 +52,7 @@ public:
 		{
 			nCount = *const_cast<volatile int*>(&m_nCounter);
 		}
-		while (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nCounter), nCount + 1, nCount) != nCount);
+		while (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nCounter), nCount + 1, nCount) != nCount);
 #else
 		m_Semaphore.Release();
 #endif
@@ -64,7 +64,7 @@ public:
 		int nCount = *const_cast<volatile int*>(&m_nCounter);
 		if (nCount > 0)
 		{
-			if (CryInterlockedCompareExchange(alias_cast<volatile long*>(&m_nCounter), nCount - 1, nCount) == nCount)
+			if (AngelicaInterlockedCompareExchange(alias_cast<volatile long*>(&m_nCounter), nCount - 1, nCount) == nCount)
 				return true;
 		}
 		return false;
@@ -86,7 +86,7 @@ public:
 			nCurrentState.nValue = *const_cast<volatile unsigned int*>(&gEnv->mAsyncDipState.nValue);
 			nNewState = nCurrentState;
 			nNewState.nWorker_Idle |= 1 << nWorkerID;
-			if (CryInterlockedCompareExchange((volatile long*)&gEnv->mAsyncDipState.nValue, nNewState.nValue, nCurrentState.nValue) == nCurrentState.nValue)
+			if (AngelicaInterlockedCompareExchange((volatile long*)&gEnv->mAsyncDipState.nValue, nNewState.nValue, nCurrentState.nValue) == nCurrentState.nValue)
 				break;
 		}
 		while (true);
@@ -104,7 +104,7 @@ retry:
 
 				nNewState = nCurrentState;
 				nNewState.nQueueGuard = 1;
-				if (CryInterlockedCompareExchange((volatile long*)&gEnv->mAsyncDipState.nValue, nNewState.nValue, nCurrentState.nValue) == nCurrentState.nValue)
+				if (AngelicaInterlockedCompareExchange((volatile long*)&gEnv->mAsyncDipState.nValue, nNewState.nValue, nCurrentState.nValue) == nCurrentState.nValue)
 				{
 ExecuteAsyncDip:
 					gEnv->pRenderer->ExecuteAsyncDIP();
@@ -120,7 +120,7 @@ ExecuteAsyncDip:
 						if (nCurrentState.nNumJobs > 0)
 							goto ExecuteAsyncDip;
 
-						if (CryInterlockedCompareExchange((volatile long*)&gEnv->mAsyncDipState.nValue, nNewState.nValue, nCurrentState.nValue) == nCurrentState.nValue)
+						if (AngelicaInterlockedCompareExchange((volatile long*)&gEnv->mAsyncDipState.nValue, nNewState.nValue, nCurrentState.nValue) == nCurrentState.nValue)
 							break;
 					}
 					while (true);
@@ -132,7 +132,7 @@ ExecuteAsyncDip:
 			nCount = *const_cast<volatile int*>(&m_nCounter);
 			if (nCount > 0)
 			{
-				if (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nCounter), nCount - 1, nCount) == nCount)
+				if (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nCounter), nCount - 1, nCount) == nCount)
 					break;
 			}
 
@@ -164,7 +164,7 @@ ExecuteAsyncDip:
 				do      // increment job counter again, to allow another thread to take this job
 				{
 					nCount = *const_cast<volatile int*>(&m_nCounter);
-					if (CryInterlockedCompareExchange(alias_cast<volatile long*>(&m_nCounter), nCount + 1, nCount) == nCount)
+					if (AngelicaInterlockedCompareExchange(alias_cast<volatile long*>(&m_nCounter), nCount + 1, nCount) == nCount)
 						break;
 				}
 				while (true);
@@ -172,7 +172,7 @@ ExecuteAsyncDip:
 				goto retry;
 			}
 
-			if (CryInterlockedCompareExchange((volatile long*)&gEnv->mAsyncDipState.nValue, nNewState.nValue, nCurrentState.nValue) == nCurrentState.nValue)
+			if (AngelicaInterlockedCompareExchange((volatile long*)&gEnv->mAsyncDipState.nValue, nNewState.nValue, nCurrentState.nValue) == nCurrentState.nValue)
 				break;
 
 		}
@@ -186,7 +186,7 @@ private:
 #if defined(JOB_SPIN_DURING_IDLE)
 	volatile int m_nCounter;
 #else
-	CryFastSemaphore m_Semaphore;
+	AngelicaFastSemaphore m_Semaphore;
 #endif
 };
 

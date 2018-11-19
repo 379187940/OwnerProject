@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #pragma once
 
@@ -8,7 +8,7 @@ public:
 	static const signed long long TIMEVALUE_PRECISION = 100000; //!< One second.
 
 public:
-	void GetMemoryUsage(class ICrySizer* pSizer) const { /*nothing*/ }
+	void GetMemoryUsage(class IAngelicaSizer* pSizer) const { /*nothing*/ }
 
 	inline CTimeValue()
 	{
@@ -143,7 +143,7 @@ public:
 
 	
 
-	void GetMemoryStatistics(class ICrySizer* pSizer) const { /*nothing*/ }
+	void GetMemoryStatistics(class IAngelicaSizer* pSizer) const { /*nothing*/ }
 
 private:
 	signed long long m_lValue;     //!< Absolute or relative value in 1/TIMEVALUE_PRECISION, might be negative.

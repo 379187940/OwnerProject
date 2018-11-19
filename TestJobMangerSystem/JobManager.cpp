@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 /*
    implementation of job manager
@@ -215,14 +215,14 @@ void JobManager::CWorkerBackEndProfiler::RecordJob(const unsigned short profileI
 	{
 		nCount = *const_cast<volatile UINT32*>(&jobStats.count);
 	}
-	while (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&jobStats.count), nCount + 1, nCount) != nCount);
+	while (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&jobStats.count), nCount + 1, nCount) != nCount);
 
 	UINT32 nUsec = ~0;
 	do
 	{
 		nUsec = *const_cast<volatile UINT32*>(&jobStats.usec);
 	}
-	while (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&jobStats.usec), nUsec + runTimeMicroSec, nUsec) != nUsec);
+	while (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&jobStats.usec), nUsec + runTimeMicroSec, nUsec) != nUsec);
 
 	// Update worker stats
 	UINT32 threadExcutionTime = ~0;
@@ -230,14 +230,14 @@ void JobManager::CWorkerBackEndProfiler::RecordJob(const unsigned short profileI
 	{
 		threadExcutionTime = *const_cast<volatile UINT32*>(&workerStats.nExecutionPeriod);
 	}
-	while (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&workerStats.nExecutionPeriod), threadExcutionTime + runTimeMicroSec, threadExcutionTime) != threadExcutionTime);
+	while (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&workerStats.nExecutionPeriod), threadExcutionTime + runTimeMicroSec, threadExcutionTime) != threadExcutionTime);
 
 	UINT32 numJobsExecuted = ~0;
 	do
 	{
 		numJobsExecuted = *const_cast<volatile UINT32*>(&workerStats.nNumJobsExecuted);
 	}
-	while (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&workerStats.nNumJobsExecuted), numJobsExecuted + 1, numJobsExecuted) != numJobsExecuted);
+	while (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&workerStats.nNumJobsExecuted), numJobsExecuted + 1, numJobsExecuted) != numJobsExecuted);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -387,7 +387,7 @@ JobManager::CJobManager::CJobManager()
 	memset(m_pRegularWorkerFallbacks, 0, sizeof(JobManager::SInfoBlock*) * m_nRegularWorkerThreads);
 	void* pAlignedMemory = _aligned_malloc(sizeof(BlockingBackEnd::CBlockingBackEnd), std::alignment_of<BlockingBackEnd::CBlockingBackEnd>::value);
 	m_pBlockingBackEnd = new(pAlignedMemory) BlockingBackEnd::CBlockingBackEnd(m_pRegularWorkerFallbacks, m_nRegularWorkerThreads);
-	//m_pBlockingBackEnd = CryAlignedNew<BlockingBackEnd::CBlockingBackEnd>(m_pRegularWorkerFallbacks, m_nRegularWorkerThreads);
+	//m_pBlockingBackEnd = AngelicaAlignedNew<BlockingBackEnd::CBlockingBackEnd>(m_pRegularWorkerFallbacks, m_nRegularWorkerThreads);
 	m_pFallBackBackEnd = new FallBackBackEnd::CFallBackBackEnd();
 
 #if defined(JOBMANAGER_SUPPORT_PROFILING)
@@ -504,7 +504,7 @@ void JobManager::CJobManager::AddJob(JobManager::CJobDelegator& crJob, const Job
 {
 	char job_info[128];
 	sprintf_s(job_info, "AddJob_%s", cJobHandle->cpString);
-	//CryProfile::detail::SetProfilingEvent(0, job_info);
+	//AngelicaProfile::detail::SetProfilingEvent(0, job_info);
 
 	JobManager::SInfoBlock infoBlock;
 
@@ -715,7 +715,7 @@ unsigned short JobManager::CJobManager::ReserveProfilingData()
 {
 #if defined(JOBMANAGER_SUPPORT_PROFILING)
 	UINT32 nFrameIdx = m_profilingData.GetFillFrameIdx();
-	UINT32 nProfilingDataEntryIndex = CryInterlockedIncrement((volatile int*)&m_profilingData.nProfilingDataCounter[nFrameIdx]);
+	UINT32 nProfilingDataEntryIndex = AngelicaInterlockedIncrement((volatile int*)&m_profilingData.nProfilingDataCounter[nFrameIdx]);
 
 	// encore nFrameIdx in top two bits
 	if (nProfilingDataEntryIndex >= SJobProfilingDataContainer::nCapturedEntriesPerFrame)
@@ -1623,10 +1623,10 @@ SJobFinishedConditionVariable* JobManager::CJobManager::GetSemaphore(JobManager:
 void JobManager::CJobManager::DumpJobList()
 {
 	int i = 1;
-	//CryLogAlways("== JobManager registered Job List ==");
+	//AngelicaLogAlways("== JobManager registered Job List ==");
 	for (std::set<JobManager::SJobStringHandle>::iterator it = m_registeredJobs.begin(); it != m_registeredJobs.end(); ++it)
 	{
-		//CryLogAlways("%3d. %s", i++, it->cpString);
+		//AngelicaLogAlways("%3d. %s", i++, it->cpString);
 	}
 }
 

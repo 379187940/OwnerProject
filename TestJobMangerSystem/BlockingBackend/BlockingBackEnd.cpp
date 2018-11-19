@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 // -------------------------------------------------------------------------
 //  File name:   BlockingBackEnd.h
@@ -50,7 +50,7 @@ bool JobManager::BlockingBackEnd::CBlockingBackEnd::Init(unsigned int nSysMaxWor
 
 		if (!GetGlobalThreadManager()->SpawnThread(m_pWorkerThreads[i], "JobSystem_Worker_%u (Blocking)", i))
 		{
-			//CryFatalError("Error spawning \"JobSystem_Worker_%u (Blocking)\" thread.", i);
+			//AngelicaFatalError("Error spawning \"JobSystem_Worker_%u (Blocking)\" thread.", i);
 		}
 	}
 
@@ -197,7 +197,7 @@ void JobManager::BlockingBackEnd::CBlockingBackEnd::AddJob(JobManager::CJobDeleg
 	}
 	else
 	{
-		////CryLogAlways("Add Job to Slot 0x%x, priority 0x%x", jobSlot, nJobPriority );
+		////AngelicaLogAlways("Add Job to Slot 0x%x, priority 0x%x", jobSlot, nJobPriority );
 		MemoryBarrier();
 		m_JobQueue.jobInfoBlockStates[nJobPriority][jobSlot].SetReady();
 
@@ -261,7 +261,7 @@ void JobManager::BlockingBackEnd::CBlockingBackEndWorkerThread::ThreadEntry()
 					{
 						pRegularWorkerFallback = const_cast<JobManager::SInfoBlock*>(*(const_cast<volatile JobManager::SInfoBlock**>(&m_pRegularWorkerFallbacks[i])));
 					}
-					while (CryInterlockedCompareExchangePointer(alias_cast<void* volatile*>(&m_pRegularWorkerFallbacks[i]), pRegularWorkerFallback->pNext, alias_cast<void*>(pRegularWorkerFallback)) != pRegularWorkerFallback);
+					while (AngelicaInterlockedCompareExchangePointer(alias_cast<void* volatile*>(&m_pRegularWorkerFallbacks[i]), pRegularWorkerFallback->pNext, alias_cast<void*>(pRegularWorkerFallback)) != pRegularWorkerFallback);
 
 					// in case of a fallback job, just get it from the global per thread list
 					pRegularWorkerFallback->AssignMembersTo(&infoBlock);
@@ -291,8 +291,8 @@ void JobManager::BlockingBackEnd::CBlockingBackEndWorkerThread::ThreadEntry()
 				do
 				{
 #if ANGELICA_PLATFORM_WINDOWS || ANGELICA_PLATFORM_APPLE || ANGELICA_PLATFORM_LINUX || ANGELICA_PLATFORM_ANDROID // emulate a 64bit atomic read on PC platfom
-					currentPullIndex = CryInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.pull.index), 0, 0);
-					currentPushIndex = CryInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.push.index), 0, 0);
+					currentPullIndex = AngelicaInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.pull.index), 0, 0);
+					currentPushIndex = AngelicaInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.push.index), 0, 0);
 #else
 					currentPullIndex = *const_cast<volatile unsigned long long*>(&m_rJobQueue.pull.index);
 					currentPushIndex = *const_cast<volatile unsigned long long*>(&m_rJobQueue.push.index);
@@ -307,7 +307,7 @@ void JobManager::BlockingBackEnd::CBlockingBackEndWorkerThread::ThreadEntry()
 						continue;
 
 					// stop spinning when we succesfull got the index
-					if (CryInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.pull.index), newPullIndex, currentPullIndex) == currentPullIndex)
+					if (AngelicaInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.pull.index), newPullIndex, currentPullIndex) == currentPullIndex)
 						break;
 
 				}
@@ -318,7 +318,7 @@ void JobManager::BlockingBackEnd::CBlockingBackEndWorkerThread::ThreadEntry()
 				unsigned int nNumWorkerQUeueJobs = m_rJobQueue.GetMaxWorkerQueueJobs(nPriorityLevel);
 				unsigned int nJobSlot = nExtractedCurIndex & (nNumWorkerQUeueJobs - 1);
 
-				////CryLogAlways("Got Job From Slot 0x%x nPriorityLevel 0x%x", nJobSlot, nPriorityLevel );
+				////AngelicaLogAlways("Got Job From Slot 0x%x nPriorityLevel 0x%x", nJobSlot, nPriorityLevel );
 				// 2. Wait still the produces has finished writing all data to the SInfoBlock
 				JobManager::detail::SJobQueueSlotState* pJobInfoBlockState = &m_rJobQueue.jobInfoBlockStates[nPriorityLevel][nJobSlot];
 				int iter = 0;
@@ -528,7 +528,7 @@ void JobManager::BlockingBackEnd::CBlockingBackEndWorkerThread::DoWorkProducerCo
 		{
 			resultValue[0] = compareValue[0];
 			resultValue[1] = compareValue[1];
-			unsigned char ret = CryInterlockedCompareExchange128((volatile signed long long*)pQueue, exchangeValue[1], exchangeValue[0], resultValue);
+			unsigned char ret = AngelicaInterlockedCompareExchange128((volatile signed long long*)pQueue, exchangeValue[1], exchangeValue[0], resultValue);
 
 			bNewJobFound = ((resultValue[1] & ~1) != curPushPtr);
 			bStopLoop = bNewJobFound || (resultValue[0] == compareValue[0] && resultValue[1] == compareValue[1]);
@@ -580,7 +580,7 @@ void JobManager::BlockingBackEnd::CBlockingBackEndWorkerThread::DoWorkProducerCo
 		do
 		{
 
-			resultValue.doubleWord = CryInterlockedCompareExchange64((volatile signed long long*)pQueue, exchangeValue.doubleWord, compareValue.doubleWord);
+			resultValue.doubleWord = AngelicaInterlockedCompareExchange64((volatile signed long long*)pQueue, exchangeValue.doubleWord, compareValue.doubleWord);
 
 			bNewJobFound = ((resultValue.word1 & ~1) != curPushPtr);
 			bStopLoop = bNewJobFound || resultValue.doubleWord == compareValue.doubleWord;
@@ -623,7 +623,7 @@ void JobManager::BlockingBackEnd::CBlockingBackEndWorkerThread::DoWorkProducerCo
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-JobManager::BlockingBackEnd::CBlockingBackEndWorkerThread::CBlockingBackEndWorkerThread(CBlockingBackEnd* pBlockingBackend, CryFastSemaphore& rSemaphore, JobManager::SJobQueue_BlockingBackEnd& rJobQueue, JobManager::SInfoBlock** pRegularWorkerFallbacks, unsigned int nRegularWorkerThreads, unsigned int nID) :
+JobManager::BlockingBackEnd::CBlockingBackEndWorkerThread::CBlockingBackEndWorkerThread(CBlockingBackEnd* pBlockingBackend, AngelicaFastSemaphore& rSemaphore, JobManager::SJobQueue_BlockingBackEnd& rJobQueue, JobManager::SInfoBlock** pRegularWorkerFallbacks, unsigned int nRegularWorkerThreads, unsigned int nID) :
 	m_rSemaphore(rSemaphore),
 	m_rJobQueue(rJobQueue),
 	m_bStop(false),
@@ -649,5 +649,5 @@ void JobManager::BlockingBackEnd::CBlockingBackEnd::AddBlockingFallbackJob(JobMa
 		pCurrentWorkerFallback = *(const_cast<volatile JobManager::SInfoBlock**>(&m_pRegularWorkerFallbacks[nWorkerThreadID]));
 		pInfoBlock->pNext = const_cast<JobManager::SInfoBlock*>(pCurrentWorkerFallback);
 	}
-	while (CryInterlockedCompareExchangePointer(alias_cast<void* volatile*>(&m_pRegularWorkerFallbacks[nWorkerThreadID]), pInfoBlock, alias_cast<void*>(pCurrentWorkerFallback)) != pCurrentWorkerFallback);
+	while (AngelicaInterlockedCompareExchangePointer(alias_cast<void* volatile*>(&m_pRegularWorkerFallbacks[nWorkerThreadID]), pInfoBlock, alias_cast<void*>(pCurrentWorkerFallback)) != pCurrentWorkerFallback);
 }

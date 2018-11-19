@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 // -------------------------------------------------------------------------
 //  File name:   ThreadBackEnd.h
@@ -38,7 +38,7 @@ class CBlockingBackEnd;
 class CBlockingBackEndWorkerThread : public IThread
 {
 public:
-	CBlockingBackEndWorkerThread(CBlockingBackEnd* pBlockingBackend, CryFastSemaphore& rSemaphore, JobManager::SJobQueue_BlockingBackEnd& rJobQueue, JobManager::SInfoBlock** pRegularWorkerFallbacks, unsigned int nRegularWorkerThreads, unsigned int nID);
+	CBlockingBackEndWorkerThread(CBlockingBackEnd* pBlockingBackend, AngelicaFastSemaphore& rSemaphore, JobManager::SJobQueue_BlockingBackEnd& rJobQueue, JobManager::SInfoBlock** pRegularWorkerFallbacks, unsigned int nRegularWorkerThreads, unsigned int nID);
 	~CBlockingBackEndWorkerThread();
 
 	// Start accepting work on thread
@@ -53,7 +53,7 @@ private:
 
 	unsigned int                                 m_nId;                   // id of the worker thread
 	volatile bool                          m_bStop;
-	CryFastSemaphore&                      m_rSemaphore;
+	AngelicaFastSemaphore&                      m_rSemaphore;
 	JobManager::SJobQueue_BlockingBackEnd& m_rJobQueue;
 	CBlockingBackEnd*                      m_pBlockingBackend;
 
@@ -89,7 +89,7 @@ private:
 	friend class JobManager::CJobManager;
 
 	JobManager::SJobQueue_BlockingBackEnd m_JobQueue;                   // job queue node where jobs are pushed into and from
-	CryFastSemaphore                      m_Semaphore;                  // semaphore to count available jobs, to allow the workers to go sleeping instead of spinning when no work is requiered
+	AngelicaFastSemaphore                      m_Semaphore;                  // semaphore to count available jobs, to allow the workers to go sleeping instead of spinning when no work is requiered
 	CBlockingBackEndWorkerThread**        m_pWorkerThreads;             // worker threads for blocking backend
 	unsigned char m_nNumWorker;                                                 // number of allocated worker threads
 

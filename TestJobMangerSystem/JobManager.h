@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 /*
    definitions for job manager
@@ -198,7 +198,7 @@ public:
 	struct SMarker
 	{
 		//panzhijie
-		//typedef CryFixedStringT<64> TMarkerString;
+		//typedef AngelicaFixedStringT<64> TMarkerString;
 		enum MarkerType { PUSH_MARKER, POP_MARKER };
 
 		SMarker() {}
@@ -269,7 +269,7 @@ public:
 private:
 	//static ColorB GenerateColorBasedOnName(const char* name);
 
-	CryCriticalSection m_JobManagerLock;                             // lock to protect non-performance critical parts of the jobmanager
+	AngelicaCriticalSection m_JobManagerLock;                             // lock to protect non-performance critical parts of the jobmanager
 	JobManager::Invoker m_arrJobInvokers[JOBSYSTEM_INVOKER_COUNT];   // support 128 jobs for now
 	unsigned int m_nJobInvokerIdx;
 
@@ -333,13 +333,13 @@ inline void JobManager::CJobManager::CopyJobParameter(const unsigned int cJobPar
 ///////////////////////////////////////////////////////////////////////////////
 inline void JobManager::CJobManager::IncreaseRunJobs()
 {
-	CryInterlockedIncrement((int volatile*)&m_nJobsRunCounter);
+	AngelicaInterlockedIncrement((int volatile*)&m_nJobsRunCounter);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 inline void JobManager::CJobManager::IncreaseRunFallbackJobs()
 {
-	CryInterlockedIncrement((int volatile*)&m_nFallbackJobsRunCounter);
+	AngelicaInterlockedIncrement((int volatile*)&m_nFallbackJobsRunCounter);
 }
 
 #endif //__JOB_MANAGER_H__

@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 /*************************************************************************
    -------------------------------------------------------------------------
@@ -64,7 +64,7 @@ public:
 
 	void CoalesceMemory();
 
-	void GetMemoryUsage(ICrySizer*) const;
+	void GetMemoryUsage(IAngelicaSizer*) const;
 
 	// disable copy/assignment
 	CThreadSafeRendererContainer(const CThreadSafeRendererContainer &rOther);
@@ -364,7 +364,7 @@ inline bool CThreadSafeRendererContainer<T >::try_append_to_continuous_memory(si
 		if (nSize >= nCapacity)
 			return false;
 	}
-	while (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nSize), nSize + 1, nSize) != nSize);
+	while (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nSize), nSize + 1, nSize) != nSize);
 	nIndex = nSize;
 	pObj = &m_arrData[nSize];
 
@@ -405,7 +405,7 @@ inline void* CThreadSafeRendererContainer<T >::push_back_impl(size_t& nIndex)
 		if (pCurrentMemoryPage && pCurrentMemoryPage->TryAllocateElement(nIndex, pObj))
 		{
 			// update global elements counter
-			CryInterlockedIncrement(alias_cast<volatile int*>(&m_nSize));
+			AngelicaInterlockedIncrement(alias_cast<volatile int*>(&m_nSize));
 
 			// adjust in-page-index to global index
 			nIndex += nPageBaseIndex + m_nCapacity;
@@ -430,7 +430,7 @@ inline void* CThreadSafeRendererContainer<T >::push_back_impl(size_t& nIndex)
 				}
 
 			}
-			while (CryInterlockedCompareExchangePointer(ppLastMemoryPageAddress, pNewPage, NULL) != NULL);
+			while (AngelicaInterlockedCompareExchangePointer(ppLastMemoryPageAddress, pNewPage, NULL) != NULL);
 		}
 
 	}
@@ -517,7 +517,7 @@ inline void CThreadSafeRendererContainer<T >::CoalesceMemory()
 
 //! Collect information about used memory.
 template<typename T>
-void CThreadSafeRendererContainer<T >::GetMemoryUsage(ICrySizer* pSizer) const
+void CThreadSafeRendererContainer<T >::GetMemoryUsage(IAngelicaSizer* pSizer) const
 {
 	pSizer->AddObject(m_arrData, m_nCapacity * sizeof(T));
 
@@ -578,7 +578,7 @@ inline bool CThreadSafeRendererContainer<T>::CMemoryPage::TryAllocateElement(siz
 		if (nSize >= nCapacity)
 			return false;
 	}
-	while (CryInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nSize), nSize + 1, nSize) != nSize);
+	while (AngelicaInterlockedCompareExchange(alias_cast<volatile LONG*>(&m_nSize), nSize + 1, nSize) != nSize);
 
 	//Note: this is the index in the page and it is adjusted in the calling context
 	nIndex = nSize;

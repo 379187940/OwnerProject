@@ -1,4 +1,4 @@
-// Copyright 2001-2017 Crytek GmbH / Crytek Group. All rights reserved. 
+// Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #include "StdAfx.h"
 #include "ThreadConfigManager.h"
@@ -12,7 +12,7 @@ const unsigned int sPlausibleStackSizeLimitKB = (1024 * 100); // 100mb
 //////////////////////////////////////////////////////////////////////////
 CThreadConfigManager::CThreadConfigManager()
 {
-	m_defaultConfig.szThreadName = "CryThread_Unnamed";
+	m_defaultConfig.szThreadName = "AngelicaThread_Unnamed";
 	m_defaultConfig.stackSizeBytes = 0;
 	m_defaultConfig.affinityFlag = -1;
 	m_defaultConfig.priority = THREAD_PRIORITY_NORMAL;
@@ -59,7 +59,7 @@ bool CThreadConfigManager::ConfigLoaded() const
 //	// Validate node
 //	if (!rXmlRoot->isTag("ThreadConfig"))
 //	{
-//		CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: Unable to find root xml node \"ThreadConfig\"");
+//		AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: Unable to find root xml node \"ThreadConfig\"");
 //		return false;
 //	}
 //
@@ -112,7 +112,7 @@ bool CThreadConfigManager::ConfigLoaded() const
 //		// Ensure thread config has name
 //		if (!xmlThreadNode->haveAttr("Name"))
 //		{
-//			CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Thread node without \"name\" attribute encountered.");
+//			AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Thread node without \"name\" attribute encountered.");
 //			continue;
 //		}
 //
@@ -128,14 +128,14 @@ bool CThreadConfigManager::ConfigLoaded() const
 //		// Check for duplicate and override it with new config if found
 //		if (threadConfig.find(szThreadName) != threadConfig.end())
 //		{
-//			//CryLogAlways("<ThreadConfigInfo>: [XML Parsing] Thread with name \"%s\" already loaded. Overriding with new configuration", szThreadName);
+//			//AngelicaLogAlways("<ThreadConfigInfo>: [XML Parsing] Thread with name \"%s\" already loaded. Overriding with new configuration", szThreadName);
 //			threadConfig[szThreadName] = loadedThreadConfig;
 //			continue;
 //		}
 //
 //		// Store new thread config
 //		std::pair<ThreadConfigMapIter, bool> res;
-//		res = threadConfig.insert(ThreadConfigMapPair(CryFixedStringT<THREAD_NAME_LENGTH_MAX>(szThreadName), loadedThreadConfig));
+//		res = threadConfig.insert(ThreadConfigMapPair(AngelicaFixedStringT<THREAD_NAME_LENGTH_MAX>(szThreadName), loadedThreadConfig));
 //
 //		// Store name (ref to key)
 //		SThreadConfig& rMapThreadConfig = res.first->second;
@@ -173,10 +173,10 @@ bool CThreadConfigManager::ConfigLoaded() const
 //		return;
 //
 //	// Validate token
-//	CryFixedStringT<32> affinityRawStr(rXmlThreadRef->getAttr("Affinity"));
+//	AngelicaFixedStringT<32> affinityRawStr(rXmlThreadRef->getAttr("Affinity"));
 //	if (affinityRawStr.empty())
 //	{
-//		CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Empty attribute \"Affinity\" encountered");
+//		AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Empty attribute \"Affinity\" encountered");
 //		return;
 //	}
 //
@@ -187,10 +187,10 @@ bool CThreadConfigManager::ConfigLoaded() const
 //		return;
 //	}
 //
-//	CryFixedStringT<32>::size_type nPos = affinityRawStr.find_first_not_of(" -,0123456789");
-//	if (nPos != CryFixedStringT<32>::npos)
+//	AngelicaFixedStringT<32>::size_type nPos = affinityRawStr.find_first_not_of(" -,0123456789");
+//	if (nPos != AngelicaFixedStringT<32>::npos)
 //	{
-//		CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING,
+//		AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING,
 //		           "<ThreadConfigInfo>: [XML Parsing] Invalid character \"%c\" encountered in \"Affinity\" attribute. Valid characters:\"%s\" Offending token:\"%s\"", affinityRawStr.at(nPos),
 //		           szValidCharacters, affinityRawStr.GetBuffer(0));
 //		return;
@@ -198,7 +198,7 @@ bool CThreadConfigManager::ConfigLoaded() const
 //
 //	// Tokenize comma separated string
 //	int pos = 0;
-//	CryFixedStringT<32> affnityTokStr = affinityRawStr.Tokenize(",", pos);
+//	AngelicaFixedStringT<32> affnityTokStr = affinityRawStr.Tokenize(",", pos);
 //	while (!affnityTokStr.empty())
 //	{
 //		affnityTokStr.Trim();
@@ -206,7 +206,7 @@ bool CThreadConfigManager::ConfigLoaded() const
 //		long affinityId = strtol(affnityTokStr.GetBuffer(0), NULL, 10);
 //		if (affinityId == LONG_MAX || affinityId == LONG_MIN)
 //		{
-//			CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Unknown value \"%s\" encountered for attribute \"Affinity\"", affnityTokStr.GetBuffer(0));
+//			AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Unknown value \"%s\" encountered for attribute \"Affinity\"", affnityTokStr.GetBuffer(0));
 //			return;
 //		}
 //
@@ -238,11 +238,11 @@ bool CThreadConfigManager::ConfigLoaded() const
 //		return;
 //
 //	// Validate token
-//	CryFixedStringT<32> threadPrioStr(rXmlThreadRef->getAttr("Priority"));
+//	AngelicaFixedStringT<32> threadPrioStr(rXmlThreadRef->getAttr("Priority"));
 //	threadPrioStr.Trim();
 //	if (threadPrioStr.empty())
 //	{
-//		CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Empty attribute \"Priority\" encountered");
+//		AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Empty attribute \"Priority\" encountered");
 //		return;
 //	}
 //
@@ -254,7 +254,7 @@ bool CThreadConfigManager::ConfigLoaded() const
 //	}
 //
 //	// Test for character string (no numbers allowed)
-//	if (threadPrioStr.find_first_of(szValidCharacters) == CryFixedStringT<32>::npos)
+//	if (threadPrioStr.find_first_of(szValidCharacters) == AngelicaFixedStringT<32>::npos)
 //	{
 //		threadPrioStr.MakeLower();
 //
@@ -289,17 +289,17 @@ bool CThreadConfigManager::ConfigLoaded() const
 //		}
 //		else
 //		{
-//			CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Platform unsupported value \"%s\" encountered for attribute \"Priority\"", threadPrioStr.GetBuffer(0));
+//			AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Platform unsupported value \"%s\" encountered for attribute \"Priority\"", threadPrioStr.GetBuffer(0));
 //			return;
 //		}
 //	}
 //	// Test for number string (no alphabetical characters allowed)
-//	else if (threadPrioStr.find_first_not_of(szValidCharacters) == CryFixedStringT<32>::npos)
+//	else if (threadPrioStr.find_first_not_of(szValidCharacters) == AngelicaFixedStringT<32>::npos)
 //	{
 //		long numValue = strtol(threadPrioStr.GetBuffer(0), NULL, 10);
 //		if (numValue == LONG_MAX || numValue == LONG_MIN)
 //		{
-//			CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Unsupported number type \"%s\" for for attribute \"Priority\"", threadPrioStr.GetBuffer(0));
+//			AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Unsupported number type \"%s\" for for attribute \"Priority\"", threadPrioStr.GetBuffer(0));
 //			return;
 //		}
 //
@@ -309,7 +309,7 @@ bool CThreadConfigManager::ConfigLoaded() const
 //	else
 //	{
 //		// String contains characters and numbers
-//		CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Unsupported type \"%s\" encountered for attribute \"Priority\". Token containers numbers and characters", threadPrioStr.GetBuffer(0));
+//		AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Unsupported type \"%s\" encountered for attribute \"Priority\". Token containers numbers and characters", threadPrioStr.GetBuffer(0));
 //		return;
 //	}
 //}
@@ -326,7 +326,7 @@ bool CThreadConfigManager::ConfigLoaded() const
 //	}
 //
 //	// Extract bool info
-//	CryFixedStringT<16> sAttribToken(rXmlThreadRef->getAttr("DisablePriorityBoost"));
+//	AngelicaFixedStringT<16> sAttribToken(rXmlThreadRef->getAttr("DisablePriorityBoost"));
 //	sAttribToken.Trim();
 //	sAttribToken.MakeLower();
 //
@@ -346,7 +346,7 @@ bool CThreadConfigManager::ConfigLoaded() const
 //	}
 //	else
 //	{
-//		CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Unsupported bool type \"%s\" encountered for attribute \"DisablePriorityBoost\"",
+//		AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Unsupported bool type \"%s\" encountered for attribute \"DisablePriorityBoost\"",
 //		           rXmlThreadRef->getAttr("DisablePriorityBoost"));
 //		return;
 //	}
@@ -362,12 +362,12 @@ bool CThreadConfigManager::ConfigLoaded() const
 //		int nPos = 0;
 //
 //		// Read stack size
-//		CryFixedStringT<32> stackSize(rXmlThreadRef->getAttr("StackSizeKB"));
+//		AngelicaFixedStringT<32> stackSize(rXmlThreadRef->getAttr("StackSizeKB"));
 //
 //		// Validate stack size
 //		if (stackSize.empty())
 //		{
-//			CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Empty attribute \"StackSize\" encountered");
+//			AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Empty attribute \"StackSize\" encountered");
 //			return;
 //		}
 //		else if (stackSize.compareNoCase("ignore") == 0)
@@ -376,18 +376,18 @@ bool CThreadConfigManager::ConfigLoaded() const
 //			rParamActivityFlag &= ~SThreadConfig::eThreadParamFlag_StackSize;
 //			return;
 //		}
-//		else if (stackSize.find_first_not_of(sValidCharacters) == CryFixedStringT<32>::npos)
+//		else if (stackSize.find_first_not_of(sValidCharacters) == AngelicaFixedStringT<32>::npos)
 //		{
 //			// Convert string to long
 //			long stackSizeVal = strtol(stackSize.GetBuffer(0), NULL, 10);
 //			if (stackSizeVal == LONG_MAX || stackSizeVal == LONG_MIN)
 //			{
-//				CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Invalid number for \"StackSize\" encountered. \"%s\"", stackSize.GetBuffer(0));
+//				AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] Invalid number for \"StackSize\" encountered. \"%s\"", stackSize.GetBuffer(0));
 //				return;
 //			}
 //			else if (stackSizeVal <= 0 || stackSizeVal > sPlausibleStackSizeLimitKB)
 //			{
-//				CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] \"StackSize\" value not plausible \"%" PRId64 "KB\"", (signed long long)stackSizeVal);
+//				AngelicaWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "<ThreadConfigInfo>: [XML Parsing] \"StackSize\" value not plausible \"%" PRId64 "KB\"", (signed long long)stackSizeVal);
 //				return;
 //			}
 //
@@ -433,10 +433,10 @@ bool CThreadConfigManager::ConfigLoaded() const
 //#if !defined(RELEASE)
 //
 //	// Print header
-//	//CryLogAlways("== Thread Startup Config List (\"%s\") ==", IdentifyPlatform());
+//	//AngelicaLogAlways("== Thread Startup Config List (\"%s\") ==", IdentifyPlatform());
 //
 //	// Print loaded default config
-//	//CryLogAlways("  (Default) 1. \"%s\" (StackSize:%uKB | Affinity:%u | Priority:%i | PriorityBoost:\"%s\")", m_defaultConfig.szThreadName, m_defaultConfig.stackSizeBytes / 1024,
+//	//AngelicaLogAlways("  (Default) 1. \"%s\" (StackSize:%uKB | Affinity:%u | Priority:%i | PriorityBoost:\"%s\")", m_defaultConfig.szThreadName, m_defaultConfig.stackSizeBytes / 1024,
 //	             m_defaultConfig.affinityFlag, m_defaultConfig.priority, m_defaultConfig.bDisablePriorityBoost ? "disabled" : "enabled");
 //
 //	// Print loaded thread configs
@@ -446,7 +446,7 @@ bool CThreadConfigManager::ConfigLoaded() const
 //	for (; iter != iterEnd; ++iter)
 //	{
 //		const SThreadConfig& threadConfig = iter->second;
-//		//CryLogAlways("%3d.\"%s\" %s (StackSize:%uKB %s | Affinity:%u %s | Priority:%i %s | PriorityBoost:\"%s\" %s)", ++listItemCounter,
+//		//AngelicaLogAlways("%3d.\"%s\" %s (StackSize:%uKB %s | Affinity:%u %s | Priority:%i %s | PriorityBoost:\"%s\" %s)", ++listItemCounter,
 //		             threadConfig.szThreadName, (threadConfig.paramActivityFlag & SThreadConfig::eThreadParamFlag_ThreadName) ? "" : "(ignored)",
 //		             threadConfig.stackSizeBytes / 1024u, (threadConfig.paramActivityFlag & SThreadConfig::eThreadParamFlag_StackSize) ? "" : "(ignored)",
 //		             threadConfig.affinityFlag, (threadConfig.paramActivityFlag & SThreadConfig::eThreadParamFlag_Affinity) ? "" : "(ignored)",

@@ -17,7 +17,7 @@
 #include <set>
 #include <algorithm>
 
-namespace CryMT
+namespace AngelicaMT
 {
 // Thread Safe wrappers on the standard STL containers.
 
@@ -28,7 +28,7 @@ class queue
 public:
 	typedef T                      value_type;
 	typedef std::vector<T, Alloc>  container_type;
-	typedef CryAutoCriticalSection AutoLock;
+	typedef AngelicaAutoCriticalSection AutoLock;
 
 	// std::queue interface
 	const T& front() const           { AutoLock lock(m_cs); return v.front(); };
@@ -38,7 +38,7 @@ public:
 	// classic pop function of queue should not be used for thread safety, use try_pop instead
 	//void	pop()							{ AutoLock lock(m_cs); return v.erase(v.begin()); };
 
-	CryCriticalSection& get_lock() const { return m_cs; }
+	AngelicaCriticalSection& get_lock() const { return m_cs; }
 
 	bool                empty() const    { AutoLock lock(m_cs); return v.empty(); }
 	int                 size() const     { AutoLock lock(m_cs); return v.size(); }
@@ -95,7 +95,7 @@ public:
 
 private:
 	container_type             v;
-	mutable CryCriticalSection m_cs;
+	mutable AngelicaCriticalSection m_cs;
 };
 
 //! Multi-Thread safe vector container, can be used instead of std::vector.
@@ -104,9 +104,9 @@ class vector
 {
 public:
 	typedef T                      value_type;
-	typedef CryAutoCriticalSection AutoLock;
+	typedef AngelicaAutoCriticalSection AutoLock;
 
-	CryCriticalSection& get_lock() const { return m_cs; }
+	AngelicaCriticalSection& get_lock() const { return m_cs; }
 
 	void                free_memory()    { AutoLock lock(m_cs); stl::free_container(v); }
 
@@ -278,7 +278,7 @@ public:
 	}
 private:
 	std::vector<T>             v;
-	mutable CryCriticalSection m_cs;
+	mutable AngelicaCriticalSection m_cs;
 };
 
 //! Multi-Thread safe set container, can be used instead of std::set.
@@ -290,7 +290,7 @@ public:
 	typedef T                               value_type;
 	typedef T                               Key;
 	typedef typename std::set<T>::size_type size_type;
-	typedef CryAutoCriticalSection          AutoLock;
+	typedef AngelicaAutoCriticalSection          AutoLock;
 
 	// Methods
 	void                clear()                              { AutoLock lock(m_cs); s.clear(); }
@@ -310,11 +310,11 @@ public:
 	size_type           size() const                         { AutoLock lock(m_cs); return s.size(); }
 	void                swap(set& _Right)                    { AutoLock lock(m_cs); s.swap(_Right); }
 
-	CryCriticalSection& get_lock()                           { return m_cs; }
+	AngelicaCriticalSection& get_lock()                           { return m_cs; }
 
 private:
 	std::set<value_type>       s;
-	mutable CryCriticalSection m_cs;
+	mutable AngelicaCriticalSection m_cs;
 };
 
 //! Multi-thread safe lock-less FIFO queue container for passing pointers between threads.
@@ -368,7 +368,7 @@ inline T* CLocklessPointerQueue<T, Alloc >::pop()
 //! \note This producer/consumer queue is only thread safe in a 1 to 1 situation
 //! and doesn't provide any yields or similar to prevent spinning.
 template<typename T>
-class ANGELICA_ALIGN(128) SingleProducerSingleConsumerQueue: public CryMT::detail::SingleProducerSingleConsumerQueueBase
+class ANGELICA_ALIGN(128) SingleProducerSingleConsumerQueue: public AngelicaMT::detail::SingleProducerSingleConsumerQueueBase
 {
 public:
 	SingleProducerSingleConsumerQueue();
@@ -436,7 +436,7 @@ inline void SingleProducerSingleConsumerQueue<T >::Pop(T* pResult)
 //! a internal producer refcount is managed, the queue is empty
 //! as soon as there are no more producers and no new elements.
 template<typename T>
-class ANGELICA_ALIGN(128) N_ProducerSingleConsumerQueue: public CryMT::detail::N_ProducerSingleConsumerQueueBase
+class ANGELICA_ALIGN(128) N_ProducerSingleConsumerQueue: public AngelicaMT::detail::N_ProducerSingleConsumerQueueBase
 {
 public:
 	N_ProducerSingleConsumerQueue();
@@ -519,7 +519,7 @@ inline void N_ProducerSingleConsumerQueue<T >::AddProducer()
 	if (m_nRunning == 0)
 		__debugbreak();
 #endif
-	CryInterlockedIncrement((volatile int*)&m_nProducerCount);
+	AngelicaInterlockedIncrement((volatile int*)&m_nProducerCount);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -533,7 +533,7 @@ inline void N_ProducerSingleConsumerQueue<T >::RemoveProducer()
 	if (m_nRunning == 0)
 		__debugbreak();
 #endif
-	if (CryInterlockedDecrement((volatile int*)&m_nProducerCount) == 0)
+	if (AngelicaInterlockedDecrement((volatile int*)&m_nProducerCount) == 0)
 		m_nRunning = 0;
 }
 
@@ -544,7 +544,7 @@ inline void N_ProducerSingleConsumerQueue<T >::Push(const T& rObj)
 	assert(m_arrBuffer != NULL);
 	assert(m_arrStates != NULL);
 	assert(m_nBufferSize != 0);
-	CryMT::detail::N_ProducerSingleConsumerQueueBase::Push((void*)&rObj, m_nProducerIndex, m_nComsumerIndex, m_nRunning, m_arrBuffer, m_nBufferSize, sizeof(T), m_arrStates);
+	AngelicaMT::detail::N_ProducerSingleConsumerQueueBase::Push((void*)&rObj, m_nProducerIndex, m_nComsumerIndex, m_nRunning, m_arrBuffer, m_nBufferSize, sizeof(T), m_arrStates);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -554,17 +554,17 @@ inline bool N_ProducerSingleConsumerQueue<T >::Pop(T* pResult)
 	assert(m_arrBuffer != NULL);
 	assert(m_arrStates != NULL);
 	assert(m_nBufferSize != 0);
-	return CryMT::detail::N_ProducerSingleConsumerQueueBase::Pop(pResult, m_nProducerIndex, m_nComsumerIndex, m_nRunning, m_arrBuffer, m_nBufferSize, sizeof(T), m_arrStates);
+	return AngelicaMT::detail::N_ProducerSingleConsumerQueueBase::Pop(pResult, m_nProducerIndex, m_nComsumerIndex, m_nRunning, m_arrBuffer, m_nBufferSize, sizeof(T), m_arrStates);
 }
 };
 
 namespace stl
 {
-template<typename T> void free_container(CryMT::vector<T>& v)
+template<typename T> void free_container(AngelicaMT::vector<T>& v)
 {
 	v.free_memory();
 }
-template<typename T> void free_container(CryMT::queue<T>& v)
+template<typename T> void free_container(AngelicaMT::queue<T>& v)
 {
 	v.free_memory();
 }
