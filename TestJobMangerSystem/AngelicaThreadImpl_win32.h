@@ -9,16 +9,16 @@ namespace CryMT
 namespace detail
 {
 
-static_assert(sizeof(CRY_CRITICAL_SECTION) == sizeof(CRITICAL_SECTION), "Win32 CRITICAL_SECTION size does not match CRY_CRITICAL_SECTION");
-//static_assert(sizeof(CRY_SRWLOCK) == sizeof(SRWLOCK), "Win32 SRWLOCK size does not match CRY_SRWLOCK");
-static_assert(sizeof(CRY_CONDITION_VARIABLE) == sizeof(CONDITION_VARIABLE), "Win32 CONDITION_VARIABLE size does not match CRY_CONDITION_VARIABLE");
+static_assert(sizeof(ANGELICA_CRITICAL_SECTION) == sizeof(CRITICAL_SECTION), "Win32 CRITICAL_SECTION size does not match ANGELICA_CRITICAL_SECTION");
+//static_assert(sizeof(ANGELICA_SRWLOCK) == sizeof(SRWLOCK), "Win32 SRWLOCK size does not match ANGELICA_SRWLOCK");
+static_assert(sizeof(ANGELICA_CONDITION_VARIABLE) == sizeof(CONDITION_VARIABLE), "Win32 CONDITION_VARIABLE size does not match ANGELICA_CONDITION_VARIABLE");
 
 //////////////////////////////////////////////////////////////////////////
 //CryLock_SRWLOCK
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-//CRY_SRWLOCK::CRY_SRWLOCK()
+//ANGELICA_SRWLOCK::ANGELICA_SRWLOCK()
 //	: SRWLock_(0)
 //{
 //	static_assert(sizeof(SRWLock_) == sizeof(PSRWLOCK), "RWLock-pointer has invalid size");
@@ -26,11 +26,11 @@ static_assert(sizeof(CRY_CONDITION_VARIABLE) == sizeof(CONDITION_VARIABLE), "Win
 //}
 
 //////////////////////////////////////////////////////////////////////////
-//CRY_CONDITION_VARIABLE
+//ANGELICA_CONDITION_VARIABLE
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-CRY_CONDITION_VARIABLE::CRY_CONDITION_VARIABLE()
+ANGELICA_CONDITION_VARIABLE::ANGELICA_CONDITION_VARIABLE()
 	: condVar_(0)
 {
 	static_assert(sizeof(condVar_) == sizeof(PCONDITION_VARIABLE), "ConditionVariable-pointer has invalid size");

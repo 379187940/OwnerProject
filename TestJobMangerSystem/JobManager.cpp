@@ -318,7 +318,7 @@ void JobManager::CWorkerBackEndProfiler::GetJobStats(const unsigned char nBuffer
 	case JobManager::IWorkerBackEndProfiler::eJobSortOrder_NoSort:
 		break;
 	default:
-		//CRY_ASSERT_MESSAGE(false, "Unsupported type");
+		//ANGELICA_ASSERT_MESSAGE(false, "Unsupported type");
 		assert(0);
 	}
 	;
@@ -376,7 +376,7 @@ JobManager::CJobManager::CJobManager()
 	// create backends
 	m_pThreadBackEnd = new ThreadBackEnd::CThreadBackEnd();
 
-#if CRY_PLATFORM_DURANGO || CRY_PLATFORM_ORBIS
+#if ANGELICA_PLATFORM_DURANGO || ANGELICA_PLATFORM_ORBIS
 	m_nRegularWorkerThreads = 6;
 #else
 	int numWorkers = 7;
@@ -462,7 +462,7 @@ const JobManager::TJobHandle JobManager::CJobManager::GetJobHandle(const char* c
 		m_arrJobInvokers[m_nJobInvokerIdx] = pInvoker;
 		ret->nJobInvokerIdx = m_nJobInvokerIdx;
 		m_nJobInvokerIdx += 1;
-		//assert(m_nJobInvokerIdx < CRY_ARRAY_COUNT(m_arrJobInvokers));
+		//assert(m_nJobInvokerIdx < ANGELICA_ARRAY_COUNT(m_arrJobInvokers));
 	}
 
 	if (!bJobIdSet)

@@ -28,7 +28,7 @@
 #endif
 
 // Disable features which cost performance.
-#if !defined(USE_FRAME_PROFILER) || CRY_PLATFORM_MOBILE
+#if !defined(USE_FRAME_PROFILER) || ANGELICA_PLATFORM_MOBILE
 	#undef JOBMANAGER_SUPPORT_FRAMEPROFILER
 	#undef JOBMANAGER_SUPPORT_PROFILING
 #endif
@@ -140,7 +140,7 @@ struct SJobQueueSlotState;
 //! Wrapper for Vector4 unsigned int.
 struct _declspec(align(16)) SVEC4_UINT
 {
-#if !CRY_PLATFORM_SSE2
+#if !ANGELICA_PLATFORM_SSE2
 	unsigned int v[4];
 #else
 	__m128 v;
@@ -285,7 +285,7 @@ private:
 	};
 
 	SyncVar syncVar;      //!< Sync-variable which contain the running state or the used semaphore.
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 	char    padding[4];
 #endif
 };
@@ -566,7 +566,7 @@ struct _declspec(align(128)) SInfoBlock
 	static const unsigned int scHasQueue = 0x4;
 
 	//! Size of the SInfoBlock struct and how much memory we have to store parameters.
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 	static const unsigned int scSizeOfSJobQueueEntry = 512;
 	static const unsigned int scSizeOfJobQueueEntryHeader = 64;   //!< Please adjust when adding/removing members, keep as a multiple of 16.
 	static const unsigned int scAvailParamSize = scSizeOfSJobQueueEntry - scSizeOfJobQueueEntryHeader;
@@ -1299,7 +1299,7 @@ inline JobManager::SProdConsQueueBase::SProdConsQueueBase() :
 //{
 //	//returns branch free the incremented wrapped aware param pointer
 //	INT_PTR cNextPtr = (INT_PTR)m_pPush + m_PullIncrement;
-//#if CRY_PLATFORM_64BIT
+//#if ANGELICA_PLATFORM_64BIT
 //	if ((INT_PTR)cNextPtr >= (INT_PTR)m_RingBufferEnd) cNextPtr = (INT_PTR)m_RingBufferStart;
 //	return (void*)cNextPtr;
 //#else
@@ -1350,7 +1350,7 @@ inline JobManager::SProdConsQueueBase::SProdConsQueueBase() :
 //		m_pQueueFullSemaphore = GetJobManagerInterface()->GetSemaphore(nSemaphoreHandle, this);
 //
 //		bool bNeedSemaphoreWait = false;
-//#if CRY_PLATFORM_64BIT // for 64 bit, we need to atomicly swap 128 bit
+//#if ANGELICA_PLATFORM_64BIT // for 64 bit, we need to atomicly swap 128 bit
 //		long long compareValue[2] = { *alias_cast<long long*>(&curQueueRunningState), (long long)nPushPtr };
 //		CryInterlockedCompareExchange128((volatile long long*)this, (long long)markedPushPtr, *alias_cast<long long*>(&curQueueRunningState), compareValue);
 //		// make sure nobody set the state to stopped in the meantime
@@ -1443,7 +1443,7 @@ inline JobManager::SProdConsQueueBase::SProdConsQueueBase() :
 //	bool bAtomicSwapSuccessfull = false;
 //	JobManager::SJobSyncVariable newSyncVar;
 //	newSyncVar.SetRunning();
-//#if CRY_PLATFORM_64BIT // for 64 bit, we need to atomicly swap 128 bit
+//#if ANGELICA_PLATFORM_64BIT // for 64 bit, we need to atomicly swap 128 bit
 //	long long compareValue[2] = { *alias_cast<long long*>(&newSyncVar), (long long)cpCurPush };
 //	CryInterlockedCompareExchange128((volatile long long*)this, (long long)cpNextPushPtr, *alias_cast<long long*>(&newSyncVar), compareValue);
 //	// make sure nobody set the state to stopped in the meantime
@@ -1597,7 +1597,7 @@ inline void JobManager::CJobDelegator::SetRunning()
 inline JobManager::SJobSyncVariable::SJobSyncVariable()
 {
 	syncVar.wordValue = 0;
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 	padding[0] = padding[1] = padding[2] = padding[3] = 0;
 #endif
 }
@@ -1708,7 +1708,7 @@ inline void JobManager::SJobSyncVariable::SetRunning() volatile
 
 		if (newValue.nRunningCounter == 0)
 		{
-			//CRY_ASSERT_MESSAGE(0, "JobManager: Atomic counter overflow");
+			//ANGELICA_ASSERT_MESSAGE(0, "JobManager: Atomic counter overflow");
 		}
 
 	}
@@ -1730,7 +1730,7 @@ inline bool JobManager::SJobSyncVariable::SetStopped(SJobStateBase* pPostCallbac
 
 		if (currentValue.nRunningCounter == 0)
 		{
-			//CRY_ASSERT_MESSAGE(0, "JobManager: Atomic counter underflow");
+			//ANGELICA_ASSERT_MESSAGE(0, "JobManager: Atomic counter underflow");
 			newValue.nRunningCounter = 1; // Force for potential stability problem, should not happen.
 		}
 

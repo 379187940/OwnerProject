@@ -11,8 +11,8 @@
    - 13:06:2013: Created by Nico Moss
 *************************************************************************/
 
-#ifndef _CRY_THREAD_SAFE_WORKER_CONTAINER_H_
-#define _CRY_THREAD_SAFE_WORKER_CONTAINER_H_
+#ifndef _ANGELICA_THREAD_SAFE_WORKER_CONTAINER_H_
+#define _ANGELICA_THREAD_SAFE_WORKER_CONTAINER_H_
 
 #include <CryCore/Platform/platform.h>
 #include <vector>
@@ -88,7 +88,7 @@ public:
 
 private:
 
-	class CRY_ALIGN(128) SWorker
+	class ANGELICA_ALIGN(128) SWorker
 	{
 	public:
 		SWorker() : m_dataSize(0) {}
@@ -229,7 +229,7 @@ inline T& CThreadSafeWorkerContainer<T >::operator[](size_t n)
 			}
 
 			// Out of bound access detected!
-			//CRY_ASSERT_MESSAGE(false, "CThreadSafeWorkerContainer::operator[] - Out of bounds access");
+			//ANGELICA_ASSERT_MESSAGE(false, "CThreadSafeWorkerContainer::operator[] - Out of bounds access");
 			__debugbreak();
 			return m_coalescedArr[0];
 		}
@@ -524,4 +524,4 @@ unsigned int CThreadSafeWorkerContainer<T >::GetWorkerId_threadlocal() const
 	return nWorkerId + 1;
 }
 
-#endif // _CRY_THREAD_SAFE_WORKER_CONTAINER_H_
+#endif // _ANGELICA_THREAD_SAFE_WORKER_CONTAINER_H_

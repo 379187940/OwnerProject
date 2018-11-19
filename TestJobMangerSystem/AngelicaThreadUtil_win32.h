@@ -6,7 +6,7 @@
 // It provides an interface for WinApi intrinsics
 // It's only client should be CThreadManager which should manage all thread interaction
 #if !defined(INCLUDED_FROM_SYSTEM_THREADING_CPP)
-	#error "CRYTEK INTERNAL HEADER. ONLY INCLUDE FROM SYSTEMTHRADING.CPP."
+	#error "ANGELICATEK INTERNAL HEADER. ONLY INCLUDE FROM SYSTEMTHRADING.CPP."
 #endif
 //////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +20,7 @@ static CStringA GetLastErrorAsString()
 	if (errorMessageID == 0)
 		return "";
 
-#if CRY_PLATFORM_DURANGO
+#if ANGELICA_PLATFORM_DURANGO
 	// FormatMessageA is not available on Durango
 	string errMsg;
 	errMsg.Format("Error code: %u (Note: Durango does not support error code resolving.)", errorMessageID);
@@ -170,7 +170,7 @@ bool CryCreateThread(TThreadHandle* pThreadHandle, const SThreadCreationDesc& th
 
 	// Create thread
 	unsigned int threadId = 0;
-#if CRY_PLATFORM_DURANGO
+#if ANGELICA_PLATFORM_DURANGO
 	*pThreadHandle = (void*)CreateThread(NULL, nStackSize, (LPTHREAD_START_ROUTINE)threadDesc.fpEntryFunc, threadDesc.pArgList, CREATE_SUSPENDED, (LPDWORD)&threadId);
 #else
 	*pThreadHandle = (void*)_beginthreadex(NULL, nStackSize, threadDesc.fpEntryFunc, threadDesc.pArgList, CREATE_SUSPENDED, &threadId);
@@ -301,7 +301,7 @@ void EnableFloatExceptions(unsigned long nThreadId, EFPE_Severity eFPESeverity)
 		return;
 	}
 
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 	//////////////////////////////////////////////////////////////////////////
 	// Note:
 	// DO NOT USE ctx.FltSave.MxCsr ... SetThreadContext() will copy the value of ctx.MxCsr into it
@@ -394,7 +394,7 @@ void SetFloatingPointExceptionMask(unsigned int nMask)
 {
 	unsigned int temp = 0;
 	_clearfp();
-#if CRY_PLATFORM_32BIT
+#if ANGELICA_PLATFORM_32BIT
 	const unsigned int kAllowedBits = _MCW_DN | _MCW_EM | _MCW_RC | _MCW_IC | _MCW_PC;
 #else
 	const unsigned int kAllowedBits = _MCW_DN | _MCW_EM | _MCW_RC;

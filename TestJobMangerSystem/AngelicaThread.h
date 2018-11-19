@@ -13,8 +13,8 @@ class CryFastSemaphore;
 
 enum CryLockType
 {
-	CRYLOCK_FAST      = 1,  //!< A fast potentially (non-recursive) mutex.
-	CRYLOCK_RECURSIVE = 2,  //!< A recursive mutex.
+	ANGELICALOCK_FAST      = 1,  //!< A fast potentially (non-recursive) mutex.
+	ANGELICALOCK_RECURSIVE = 2,  //!< A recursive mutex.
 };
 
 //! Primitive locks and conditions.
@@ -27,8 +27,8 @@ template<CryLockType Type> class CryLockT
 //////////////////////////////////////////////////////////////////////////
 // Typedefs.
 //////////////////////////////////////////////////////////////////////////
-typedef CryLockT<CRYLOCK_RECURSIVE> CryCriticalSection;
-typedef CryLockT<CRYLOCK_FAST>      CryCriticalSectionNonRecursive;
+typedef CryLockT<ANGELICALOCK_RECURSIVE> CryCriticalSection;
+typedef CryLockT<ANGELICALOCK_FAST>      CryCriticalSectionNonRecursive;
 
 //////////////////////////////////////////////////////////////////////////
 //! CryAutoCriticalSection implements a helper class to automatically.

@@ -16,7 +16,7 @@ inline unsigned int countLeadingZeros32(unsigned int x)
 
 inline unsigned long long countLeadingZeros64(unsigned long long x)
 {
-#if CRY_PLATFORM_X64
+#if ANGELICA_PLATFORM_X64
 	unsigned long result = 64 ^ 63;
 	if (!_BitScanReverse64(&result, x))
 		result = 64 ^ 63;
@@ -34,13 +34,13 @@ inline unsigned long long countLeadingZeros64(unsigned long long x)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Count the number of trailing zeros
 // Result ranges from 0 to 32/64
-#if (CRY_COMPILER_GCC || CRY_COMPILER_CLANG)
+#if (ANGELICA_COMPILER_GCC || ANGELICA_COMPILER_CLANG)
 
 	// builtin doesn't want to work for 0
 	#define countTrailingZeros32(x) ((x) ? __builtin_ctz  (x) : 32)
 	#define countTrailingZeros64(x) ((x) ? __builtin_ctzll(x) : 64)
 
-#elif CRY_PLATFORM_BMI1
+#elif ANGELICA_PLATFORM_BMI1
 	#include "ammintrin.h"
 
 	#define countTrailingZeros32(x) _tzcnt_u32(x)
@@ -59,7 +59,7 @@ inline unsigned int countTrailingZeros32(unsigned int x)
 
 inline unsigned long long countTrailingZeros64(unsigned long long x)
 {
-#if CRY_PLATFORM_X64
+#if ANGELICA_PLATFORM_X64
 	unsigned long result = 64;
 	if (!_BitScanForward64(&result, x))
 		result = 64;
@@ -75,7 +75,7 @@ inline unsigned long long countTrailingZeros64(unsigned long long x)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-#if CRY_COMPILER_GCC || CRY_COMPILER_CLANG
+#if ANGELICA_COMPILER_GCC || ANGELICA_COMPILER_CLANG
 
 inline unsigned int circularShift(unsigned int shiftBits, unsigned int value)
 {
@@ -88,7 +88,7 @@ inline unsigned int circularShift(unsigned int shiftBits, unsigned int value)
 
 #endif
 
-#if CRY_PLATFORM_BMI1
+#if ANGELICA_PLATFORM_BMI1
 
 	#define isolateLowestBit(x) _blsi_u32(x)
 	#define clearLowestBit(x) _blsr_u32(x)
@@ -107,7 +107,7 @@ inline unsigned int clearLowestBit(unsigned int x)
 }
 #endif
 
-#if CRY_PLATFORM_TBM
+#if ANGELICA_PLATFORM_TBM
 
 	#define fillFromLowestBit32(x) _blsfill_u32(x)
 	#define fillFromLowestBit64(x) _blsfill_u64(x)
@@ -163,7 +163,7 @@ struct IsPowerOfTwoCompileTime
 // Calculates the base-2 logarithm for a given number.
 // Passing 0 will return -1 in an unsigned datatype.
 // Result ranges from -1 to 7/15/31/63
-#if CRY_COMPILER_GCC || CRY_COMPILER_CLANG
+#if ANGELICA_COMPILER_GCC || ANGELICA_COMPILER_CLANG
 
 static inline unsigned char  IntegerLog2(unsigned char  v) { return unsigned char (31U   - __builtin_clz  (v)); }
 static inline unsigned short IntegerLog2(unsigned short v) { return unsigned short(31U   - __builtin_clz  (v)); }
@@ -175,7 +175,7 @@ static inline unsigned long long IntegerLog2(unsigned long long v) { return unsi
 static inline unsigned char  IntegerLog2(unsigned char  v) { unsigned long result = ~0U; _BitScanReverse  (&result, v); return unsigned char (result); }
 static inline unsigned short IntegerLog2(unsigned short v) { unsigned long result = ~0U; _BitScanReverse  (&result, v); return unsigned short(result); }
 static inline unsigned int IntegerLog2(unsigned int v) { unsigned long result = ~0U; _BitScanReverse  (&result, v); return unsigned int(result); }
-#if CRY_PLATFORM_X64
+#if ANGELICA_PLATFORM_X64
 static inline unsigned long long IntegerLog2(unsigned long long v) { unsigned long result = ~0U; _BitScanReverse64(&result, v); return unsigned long long(result); }
 #else
 static inline unsigned long long IntegerLog2(unsigned long long v)
@@ -210,10 +210,10 @@ inline unsigned long long NextPower2_64(unsigned long long x)
 	return 1ULL << IntegerLog2_RoundUp(x);
 }
 
-#if CRY_PLATFORM_LINUX || CRY_PLATFORM_ANDROID || CRY_PLATFORM_APPLE
+#if ANGELICA_PLATFORM_LINUX || ANGELICA_PLATFORM_ANDROID || ANGELICA_PLATFORM_APPLE
 inline unsigned long int IntegerLog2(unsigned long int x)
 {
-	#if CRY_PLATFORM_64BIT
+	#if ANGELICA_PLATFORM_64BIT
 	return IntegerLog2((unsigned long long)x);
 	#else
 	return IntegerLog2((unsigned int)x);
@@ -222,7 +222,7 @@ inline unsigned long int IntegerLog2(unsigned long int x)
 
 #endif
 
-#if CRY_PLATFORM_ORBIS
+#if ANGELICA_PLATFORM_ORBIS
 inline size_t IntegerLog2(size_t x)
 {
 	if (sizeof(size_t) == sizeof(unsigned int))
@@ -240,14 +240,14 @@ static inline unsigned char BitIndex(unsigned long long v) { return unsigned cha
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Calculates the number of bits set.
-#if CRY_COMPILER_GCC || CRY_COMPILER_CLANG
+#if ANGELICA_COMPILER_GCC || ANGELICA_COMPILER_CLANG
 
 static inline unsigned char CountBits(unsigned char  v) { return unsigned char(__builtin_popcount  (v)); }
 static inline unsigned char CountBits(unsigned short v) { return unsigned char(__builtin_popcount  (v)); }
 static inline unsigned char CountBits(unsigned int v) { return unsigned char(__builtin_popcount  (v)); }
 static inline unsigned char CountBits(unsigned long long v) { return unsigned char(__builtin_popcountll(v)); }
 
-#elif CRY_PLATFORM_SSE4
+#elif ANGELICA_PLATFORM_SSE4
 
 static inline unsigned char CountBits(unsigned char  v) { return unsigned char(__popcnt  (v)); }
 static inline unsigned char CountBits(unsigned short v) { return unsigned char(__popcnt  (v)); }

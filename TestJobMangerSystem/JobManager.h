@@ -123,7 +123,7 @@ public:
 };
 
 // singleton managing the job queues
-class CRY_ALIGN(128) CJobManager: public IJobManager
+class ANGELICA_ALIGN(128) CJobManager: public IJobManager
 {
 public:
 	// singleton stuff
@@ -165,7 +165,7 @@ public:
 		case eBET_Fallback:
 			return m_pFallBackBackEnd;
 		default:
-			//CRY_ASSERT_MESSAGE(0, "Unsupported EBackEndType encountered.");
+			//ANGELICA_ASSERT_MESSAGE(0, "Unsupported EBackEndType encountered.");
 			__debugbreak();
 			return 0;
 		}

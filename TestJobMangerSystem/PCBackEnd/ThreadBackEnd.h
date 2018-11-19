@@ -60,7 +60,7 @@ public:
 
 	bool TryGetJob()
 	{
-#if CRY_PLATFORM_DURANGO
+#if ANGELICA_PLATFORM_DURANGO
 		int nCount = *const_cast<volatile int*>(&m_nCounter);
 		if (nCount > 0)
 		{
@@ -77,7 +77,7 @@ public:
 #if defined(JOB_SPIN_DURING_IDLE)
 		int nCount = ~0;
 
-	#if CRY_PLATFORM_DURANGO
+	#if ANGELICA_PLATFORM_DURANGO
 		UAsyncDipState nCurrentState;
 		UAsyncDipState nNewState;
 
@@ -91,12 +91,12 @@ public:
 		}
 		while (true);
 retry:
-	#endif  // CRY_PLATFORM_DURANGO
+	#endif  // ANGELICA_PLATFORM_DURANGO
 
 		do
 		{
 
-	#if CRY_PLATFORM_DURANGO
+	#if ANGELICA_PLATFORM_DURANGO
 			nCurrentState.nValue = *const_cast<volatile unsigned int*>(&gEnv->mAsyncDipState.nValue);
 			if (nCurrentState.nQueueGuard == 0 && nCurrentState.nNumJobs > 0)
 			{
@@ -127,7 +127,7 @@ ExecuteAsyncDip:
 				}     // else another thread must have gotten the guard var, go back to IDLE priority spinning
 				SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_IDLE);
 			}
-	#endif    // CRY_PLATFORM_DURANGO
+	#endif    // ANGELICA_PLATFORM_DURANGO
 
 			nCount = *const_cast<volatile int*>(&m_nCounter);
 			if (nCount > 0)
@@ -150,7 +150,7 @@ ExecuteAsyncDip:
 		}
 		while (true);
 
-	#if CRY_PLATFORM_DURANGO
+	#if ANGELICA_PLATFORM_DURANGO
 		do      // mark as busy
 		{
 			nCurrentState.nValue = *const_cast<volatile unsigned int*>(&gEnv->mAsyncDipState.nValue);
@@ -177,7 +177,7 @@ ExecuteAsyncDip:
 
 		}
 		while (true);
-	#endif  // CRY_PLATFORM_DURANGO
+	#endif  // ANGELICA_PLATFORM_DURANGO
 #else
 		m_Semaphore.Acquire();
 #endif

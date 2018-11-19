@@ -19,7 +19,7 @@ enum eLOCK_TYPE
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-struct CRY_CRITICAL_SECTION // From winnt.h
+struct ANGELICA_CRITICAL_SECTION // From winnt.h
 {
 	void*          DebugInfo;
 	long           LockCount;
@@ -30,16 +30,16 @@ struct CRY_CRITICAL_SECTION // From winnt.h
 };
 
 //////////////////////////////////////////////////////////////////////////
-//struct CRY_SRWLOCK // From winnt.h
+//struct ANGELICA_SRWLOCK // From winnt.h
 //{
-//	CRY_SRWLOCK();
+//	ANGELICA_SRWLOCK();
 //	void* SRWLock_;
 //};
 
 //////////////////////////////////////////////////////////////////////////
-struct CRY_CONDITION_VARIABLE // From winnt.h
+struct ANGELICA_CONDITION_VARIABLE // From winnt.h
 {
-	CRY_CONDITION_VARIABLE();
+	ANGELICA_CONDITION_VARIABLE();
 	void* condVar_;
 };
 
@@ -70,7 +70,7 @@ private:
 
 private:
 	CRITICAL_SECTION m_cs;
-	//CRY_SRWLOCK m_win32_lock_type;
+	//ANGELICA_SRWLOCK m_win32_lock_type;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -140,7 +140,7 @@ private:
 	CryLock_CriticalSection& operator=(const CryLock_CriticalSection&) = delete;
 
 private:
-	CRY_CRITICAL_SECTION m_win32_lock_type;
+	ANGELICA_CRITICAL_SECTION m_win32_lock_type;
 };
 
 } // detail
@@ -150,10 +150,10 @@ private:
   /////////////////////////    DEFINE LOCKS    /////////////////////////////
   //////////////////////////////////////////////////////////////////////////
 
-template<> class CryLockT<CRYLOCK_RECURSIVE> : public CryMT::detail::CryLock_SRWLOCK_Recursive
+template<> class CryLockT<ANGELICALOCK_RECURSIVE> : public CryMT::detail::CryLock_SRWLOCK_Recursive
 {
 };
-template<> class CryLockT<CRYLOCK_FAST> : public CryMT::detail::CryLock_SRWLOCK
+template<> class CryLockT<ANGELICALOCK_FAST> : public CryMT::detail::CryLock_SRWLOCK
 {
 };
 
@@ -209,7 +209,7 @@ private:
 	CryConditionVariable& operator=(const CryConditionVariable&);
 
 private:
-	CryMT::detail::CRY_CONDITION_VARIABLE m_condVar;
+	CryMT::detail::ANGELICA_CONDITION_VARIABLE m_condVar;
 };
 
 //////////////////////////////////////////////////////////////////////////

@@ -368,7 +368,7 @@ inline T* CLocklessPointerQueue<T, Alloc >::pop()
 //! \note This producer/consumer queue is only thread safe in a 1 to 1 situation
 //! and doesn't provide any yields or similar to prevent spinning.
 template<typename T>
-class CRY_ALIGN(128) SingleProducerSingleConsumerQueue: public CryMT::detail::SingleProducerSingleConsumerQueueBase
+class ANGELICA_ALIGN(128) SingleProducerSingleConsumerQueue: public CryMT::detail::SingleProducerSingleConsumerQueueBase
 {
 public:
 	SingleProducerSingleConsumerQueue();
@@ -383,8 +383,8 @@ private:
 	T* m_arrBuffer;
 	unsigned int m_nBufferSize;
 
-	CRY_ALIGN(16) volatile unsigned int m_nProducerIndex;
-	CRY_ALIGN(64) volatile unsigned int m_nComsumerIndex;
+	ANGELICA_ALIGN(16) volatile unsigned int m_nProducerIndex;
+	ANGELICA_ALIGN(64) volatile unsigned int m_nComsumerIndex;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -436,7 +436,7 @@ inline void SingleProducerSingleConsumerQueue<T >::Pop(T* pResult)
 //! a internal producer refcount is managed, the queue is empty
 //! as soon as there are no more producers and no new elements.
 template<typename T>
-class CRY_ALIGN(128) N_ProducerSingleConsumerQueue: public CryMT::detail::N_ProducerSingleConsumerQueueBase
+class ANGELICA_ALIGN(128) N_ProducerSingleConsumerQueue: public CryMT::detail::N_ProducerSingleConsumerQueueBase
 {
 public:
 	N_ProducerSingleConsumerQueue();

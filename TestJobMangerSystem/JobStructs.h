@@ -76,8 +76,8 @@ struct SJobQueue
 		eMaxWorkQueueJobsStreamPriority  = nMaxWorkQueueJobsStreamPriority
 	};
 
-	CRY_ALIGN(128) JobManager::SJobQueuePos push;                     // position in which jobs are pushed by the PPU
-	CRY_ALIGN(128) JobManager::SJobQueuePos pull;                     // position from which jobs are pulled
+	ANGELICA_ALIGN(128) JobManager::SJobQueuePos push;                     // position in which jobs are pushed by the PPU
+	ANGELICA_ALIGN(128) JobManager::SJobQueuePos pull;                     // position from which jobs are pulled
 
 	JobManager::SInfoBlock*                 jobInfoBlocks[eNumPriorityLevel];      // aligned array of SInfoBlocks per priority level
 	JobManager::detail::SJobQueueSlotState* jobInfoBlockStates[eNumPriorityLevel]; // aligned array of SInfoBlocks states per priority level
@@ -118,7 +118,7 @@ inline JobManager::detail::EAddJobRes JobManager::SJobQueue<nMaxWorkQueueJobsHig
 	do
 	{
 		// fetch next to update field
-#if CRY_PLATFORM_WINDOWS || CRY_PLATFORM_APPLE || CRY_PLATFORM_LINUX // emulate a 64bit atomic read on PC platfom
+#if ANGELICA_PLATFORM_WINDOWS || ANGELICA_PLATFORM_APPLE || ANGELICA_PLATFORM_LINUX // emulate a 64bit atomic read on PC platfom
 		currentIndex = CryInterlockedCompareExchange64(alias_cast<volatile int64*>(&curPushEntry.index), 0, 0);
 #else
 		currentIndex = *const_cast<volatile unsigned long long*>(&curPushEntry.index);

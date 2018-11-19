@@ -10,8 +10,8 @@
    History:
    - 21:02:2012: Created by Christopher Bolte
 *************************************************************************/
-#ifndef _CRY_THREAD_SAFE_RENDERER_CONTAINER_H_
-#define _CRY_THREAD_SAFE_RENDERER_CONTAINER_H_
+#ifndef _ANGELICA_THREAD_SAFE_RENDERER_CONTAINER_H_
+#define _ANGELICA_THREAD_SAFE_RENDERER_CONTAINER_H_
 
 //! This container is specialized for data which is generated in the 3DEngine and consumed by the renderer
 //! in the following frame due to multithreaded rendering. To be useable by Jobs as well as other Threads
@@ -34,7 +34,7 @@
 //! Only push_back(_new) are safe to be called from any filling thread.
 
 template<typename T>
-class CRY_ALIGN(128) CThreadSafeRendererContainer
+class ANGELICA_ALIGN(128) CThreadSafeRendererContainer
 {
 public:
 	CThreadSafeRendererContainer();
@@ -618,4 +618,4 @@ inline size_t CThreadSafeRendererContainer<T>::CMemoryPage::Capacity() const
 	return m_nCapacity;
 }
 
-#endif // _CRY_THREAD_SAFE_RENDERER_CONTAINER_H_
+#endif // _ANGELICA_THREAD_SAFE_RENDERER_CONTAINER_H_

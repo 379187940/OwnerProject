@@ -47,7 +47,7 @@ LONG CryInterlockedCompareExchange(volatile LONG* pDst, LONG exchange, LONG comp
 // Returns initial value prior exchange
 long long CryInterlockedCompareExchange64(volatile long long* pDst, long long exchange, long long comperand);
 
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 // Returns initial value prior exchange
 unsigned char CryInterlockedCompareExchange128(volatile long long* pDst, long long exchangeHigh, long long exchangeLow, long long* comparandResult);
 #endif
@@ -62,9 +62,9 @@ void* CryInterlockedCompareExchangePointer(void* volatile* pDst, void* pExchange
 // there are implemented in the platform specific CryThread_*.h files
 //NOTE: The sizes are verified at compile-time in the implementation functions, but this is still ugly
 
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 	#define LOCK_FREE_LINKED_LIST_DOUBLE_SIZE_PTR_ALIGN 16
-#elif CRY_PLATFORM_32BIT
+#elif ANGELICA_PLATFORM_32BIT
 	#define LOCK_FREE_LINKED_LIST_DOUBLE_SIZE_PTR_ALIGN 8
 #else
 	#error "Unsupported plaform"
@@ -113,11 +113,11 @@ struct SLockFreeSingleLinkedListHeader
 private:
 	_declspec(align(LOCK_FREE_LINKED_LIST_DOUBLE_SIZE_PTR_ALIGN)) SLockFreeSingleLinkedListEntry * volatile pNext;
 
-#if CRY_PLATFORM_ORBIS
+#if ANGELICA_PLATFORM_ORBIS
 	// Only need "salt" on platforms using CAS (ORBIS uses embedded salt)
-#elif CRY_PLATFORM_POSIX
+#elif ANGELICA_PLATFORM_POSIX
 	// If pointers 32bit, salt should be as well. Otherwise we get 4 bytes of padding between pNext and salt and CAS operations fail
-	#if CRY_PLATFORM_64BIT
+	#if ANGELICA_PLATFORM_64BIT
 	volatile unsigned long long salt;
 	#else
 	volatile unsigned int salt;

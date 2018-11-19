@@ -38,7 +38,7 @@ inline size_t CryInterlockedAdd(volatile size_t* pDst, size_t add)
 // Returns initial value prior exchange
 inline LONG CryInterlockedExchange(volatile LONG* pDst, LONG exchange)
 {
-#if !(_WIN64 || CRY_PLATFORM_X86)
+#if !(_WIN64 || ANGELICA_PLATFORM_X86)
 	__sync_synchronize(); // follow X64 standard and ensure full memory barrier (this also adds mfence)
 #endif
 	return __sync_lock_test_and_set(pDst, exchange); // only creates acquire memory barrier
@@ -95,17 +95,17 @@ inline long long CryInterlockedCompareExchange64(volatile long long* addr, long 
 	return __sync_val_compare_and_swap(addr, comperand, exchange);
 }
 
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 // Returns initial address prior exchange
 // Chipset needs to support cmpxchg16b which most do
 //https://blog.lse.epita.fr/articles/42-implementing-generic-double-word-compare-and-swap-.html
 inline unsigned char CryInterlockedCompareExchange128(volatile long long* pDst, long long exchangehigh, long long exchangelow, long long* pComparandResult)
 {
-	#if CRY_PLATFORM_IOS
+	#if ANGELICA_PLATFORM_IOS
 		#error Ensure CryInterlockedCompareExchange128 is working on IOS also
 	#endif
-	CRY_ASSERT_MESSAGE((((long long)pDst) & 15) == 0, "The destination data must be 16-byte aligned to avoid a general protection fault.");
-	#if _WIN64 || CRY_PLATFORM_X86
+	ANGELICA_ASSERT_MESSAGE((((long long)pDst) & 15) == 0, "The destination data must be 16-byte aligned to avoid a general protection fault.");
+	#if _WIN64 || ANGELICA_PLATFORM_X86
 		bool bEquals;
 		__asm__ __volatile__(
 		"lock cmpxchg16b %1\n\t"
@@ -142,7 +142,7 @@ inline void* CryInterlockedCompareExchangePointer(void* volatile* pDst, void* pE
 	return __sync_val_compare_and_swap(pDst, pComperand, pExchange);
 }
 
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 //////////////////////////////////////////////////////////////////////////
 // Linux 64-bit implementation of lockless single-linked list
 //////////////////////////////////////////////////////////////////////////
@@ -240,7 +240,7 @@ inline void* CryInterlockedFlushSList(SLockFreeSingleLinkedListHeader& list)
 	return (void*)curSetting[0];
 }
 //////////////////////////////////////////////////////////////////////////
-#elif CRY_PLATFORM_32BIT
+#elif ANGELICA_PLATFORM_32BIT
 //////////////////////////////////////////////////////////////////////////
 // Implementation for Linux32 with gcc using unsigned long long
 //////////////////////////////////////////////////////////////////////////
@@ -348,7 +348,7 @@ public:
 
 	void backoff()
 	{
-#if !CRY_PLATFORM_ANDROID
+#if !ANGELICA_PLATFORM_ANDROID
 		_mm_pause();
 #endif
 

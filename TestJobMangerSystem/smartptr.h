@@ -4,7 +4,7 @@
 #define _SMART_PTR_H_
 
 void CryFatalError(const char*, ...) PRINTF_PARAMS(1, 2);
-#if CRY_PLATFORM_APPLE
+#if ANGELICA_PLATFORM_APPLE
 #include <cstddef>
 #endif
 
@@ -118,7 +118,7 @@ public:
 	//! Assigns a pointer without increasing ref count.
 	void Assign_NoAddRef(_I* ptr)
 	{
-		CRY_ASSERT_MESSAGE(!p, "Assign_NoAddRef should only be used on a default-constructed, not-yet-assigned smart_ptr instance");
+		ANGELICA_ASSERT_MESSAGE(!p, "Assign_NoAddRef should only be used on a default-constructed, not-yet-assigned smart_ptr instance");
 		p = ptr;
 	}
 

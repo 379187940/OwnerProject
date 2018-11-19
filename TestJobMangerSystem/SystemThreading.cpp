@@ -167,7 +167,7 @@ unsigned __stdcall CThreadManager::RunThread(void* thisPtr)
 	const SThreadConfig* pThreadConfig = g_ThreadManager.GetThreadConfigManager()->GetDefaultThreadConfig();
 	ApplyThreadConfig(pThreadData->m_threadId , pThreadData->m_threadHandle, *pThreadConfig);
 
-	//CRY_PROFILE_THREADNAME(pThreadData->m_threadName.GetBuffer(0));
+	//ANGELICA_PROFILE_THREADNAME(pThreadData->m_threadName.GetBuffer(0));
 
 	// Config not found, append thread name with no config tag
 	
@@ -179,7 +179,7 @@ unsigned __stdcall CThreadManager::RunThread(void* thisPtr)
 
 	// Rename Thread
 	CryThreadUtil::CrySetThreadName(pThreadData->m_threadId, tmpString.GetBuffer(0));
-	//CRY_PROFILE_THREADNAME(tmpString.GetBuffer(0));
+	//ANGELICA_PROFILE_THREADNAME(tmpString.GetBuffer(0));
 	
 
 	// Enable FPEs

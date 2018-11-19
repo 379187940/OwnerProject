@@ -102,18 +102,18 @@ _True is_member_function(void (C::*)(T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10
 //! Template Helper to cast the serialized parameters back to their correct types.
 //! One variation for free-functions and a partial specialization for member function pointer.
 template<typename T>
-struct CRY_ALIGN(16) SParams0
+struct ANGELICA_ALIGN(16) SParams0
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 };
 
 template<>
-struct CRY_ALIGN(16) SParams0<SNullType>
+struct ANGELICA_ALIGN(16) SParams0<SNullType>
 {
 };
 
 template<typename T, typename T0>
-struct CRY_ALIGN(16) SParams1
+struct ANGELICA_ALIGN(16) SParams1
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -123,7 +123,7 @@ struct CRY_ALIGN(16) SParams1
 };
 
 template<typename T0>
-struct CRY_ALIGN(16) SParams1<SNullType, T0>
+struct ANGELICA_ALIGN(16) SParams1<SNullType, T0>
 {
 	T0 t0;
 	SParams1(T0 t0_) : t0(t0_)
@@ -132,7 +132,7 @@ struct CRY_ALIGN(16) SParams1<SNullType, T0>
 };
 
 template<typename T, typename T0, typename T1>
-struct CRY_ALIGN(16) SParams2
+struct ANGELICA_ALIGN(16) SParams2
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -143,7 +143,7 @@ struct CRY_ALIGN(16) SParams2
 };
 
 template<typename T0, typename T1>
-struct CRY_ALIGN(16) SParams2<SNullType, T0, T1>
+struct ANGELICA_ALIGN(16) SParams2<SNullType, T0, T1>
 {
 	T0 t0;
 	T1 t1;
@@ -153,7 +153,7 @@ struct CRY_ALIGN(16) SParams2<SNullType, T0, T1>
 };
 
 template<typename T, typename T0, typename T1, typename T2>
-struct CRY_ALIGN(16) SParams3
+struct ANGELICA_ALIGN(16) SParams3
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -165,7 +165,7 @@ struct CRY_ALIGN(16) SParams3
 };
 
 template<typename T0, typename T1, typename T2>
-struct CRY_ALIGN(16) SParams3<SNullType, T0, T1, T2>
+struct ANGELICA_ALIGN(16) SParams3<SNullType, T0, T1, T2>
 {
 	T0 t0;
 	T1 t1;
@@ -176,7 +176,7 @@ struct CRY_ALIGN(16) SParams3<SNullType, T0, T1, T2>
 };
 
 template<typename T, typename T0, typename T1, typename T2, typename T3>
-struct CRY_ALIGN(16) SParams4
+struct ANGELICA_ALIGN(16) SParams4
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -189,7 +189,7 @@ struct CRY_ALIGN(16) SParams4
 };
 
 template<typename T0, typename T1, typename T2, typename T3>
-struct CRY_ALIGN(16) SParams4<SNullType, T0, T1, T2, T3>
+struct ANGELICA_ALIGN(16) SParams4<SNullType, T0, T1, T2, T3>
 {
 	T0 t0;
 	T1 t1;
@@ -201,7 +201,7 @@ struct CRY_ALIGN(16) SParams4<SNullType, T0, T1, T2, T3>
 };
 
 template<typename T, typename T0, typename T1, typename T2, typename T3, typename T4>
-struct CRY_ALIGN(16) SParams5
+struct ANGELICA_ALIGN(16) SParams5
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -215,7 +215,7 @@ struct CRY_ALIGN(16) SParams5
 };
 
 template<typename T0, typename T1, typename T2, typename T3, typename T4>
-struct CRY_ALIGN(16) SParams5<SNullType, T0, T1, T2, T3, T4>
+struct ANGELICA_ALIGN(16) SParams5<SNullType, T0, T1, T2, T3, T4>
 {
 	T0 t0;
 	T1 t1;
@@ -228,7 +228,7 @@ struct CRY_ALIGN(16) SParams5<SNullType, T0, T1, T2, T3, T4>
 };
 
 template<typename T, typename T0, typename T1, typename T2, typename T3, typename T4, typename T5>
-struct CRY_ALIGN(16) SParams6
+struct ANGELICA_ALIGN(16) SParams6
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -243,7 +243,7 @@ struct CRY_ALIGN(16) SParams6
 };
 
 template<typename T0, typename T1, typename T2, typename T3, typename T4, typename T5>
-struct CRY_ALIGN(16) SParams6<SNullType, T0, T1, T2, T3, T4, T5>
+struct ANGELICA_ALIGN(16) SParams6<SNullType, T0, T1, T2, T3, T4, T5>
 {
 	T0 t0;
 	T1 t1;
@@ -257,7 +257,7 @@ struct CRY_ALIGN(16) SParams6<SNullType, T0, T1, T2, T3, T4, T5>
 };
 
 template<typename T, typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
-struct CRY_ALIGN(16) SParams7
+struct ANGELICA_ALIGN(16) SParams7
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -273,7 +273,7 @@ struct CRY_ALIGN(16) SParams7
 };
 
 template<typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
-struct CRY_ALIGN(16) SParams7<SNullType, T0, T1, T2, T3, T4, T5, T6>
+struct ANGELICA_ALIGN(16) SParams7<SNullType, T0, T1, T2, T3, T4, T5, T6>
 {
 	T0 t0;
 	T1 t1;
@@ -288,7 +288,7 @@ struct CRY_ALIGN(16) SParams7<SNullType, T0, T1, T2, T3, T4, T5, T6>
 };
 
 template<typename T, typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
-struct CRY_ALIGN(16) SParams8
+struct ANGELICA_ALIGN(16) SParams8
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -306,7 +306,7 @@ struct CRY_ALIGN(16) SParams8
 };
 
 template<typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
-struct CRY_ALIGN(16) SParams8<SNullType, T0, T1, T2, T3, T4, T5, T6, T7>
+struct ANGELICA_ALIGN(16) SParams8<SNullType, T0, T1, T2, T3, T4, T5, T6, T7>
 {
 	T0 t0;
 	T1 t1;
@@ -323,7 +323,7 @@ struct CRY_ALIGN(16) SParams8<SNullType, T0, T1, T2, T3, T4, T5, T6, T7>
 };
 
 template<typename T, typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
-struct CRY_ALIGN(16) SParams9
+struct ANGELICA_ALIGN(16) SParams9
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -342,7 +342,7 @@ struct CRY_ALIGN(16) SParams9
 };
 
 template<typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
-struct CRY_ALIGN(16) SParams9<SNullType, T0, T1, T2, T3, T4, T5, T6, T7, T8>
+struct ANGELICA_ALIGN(16) SParams9<SNullType, T0, T1, T2, T3, T4, T5, T6, T7, T8>
 {
 	T0 t0;
 	T1 t1;
@@ -360,7 +360,7 @@ struct CRY_ALIGN(16) SParams9<SNullType, T0, T1, T2, T3, T4, T5, T6, T7, T8>
 };
 
 template<typename T, typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
-struct CRY_ALIGN(16) SParams10
+struct ANGELICA_ALIGN(16) SParams10
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -380,7 +380,7 @@ struct CRY_ALIGN(16) SParams10
 };
 
 template<typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
-struct CRY_ALIGN(16) SParams10<SNullType, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>
+struct ANGELICA_ALIGN(16) SParams10<SNullType, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>
 {
 	T0 t0;
 	T1 t1;
@@ -399,7 +399,7 @@ struct CRY_ALIGN(16) SParams10<SNullType, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9
 };
 
 template<typename T, typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10>
-struct CRY_ALIGN(16) SParams11
+struct ANGELICA_ALIGN(16) SParams11
 {
 	typename SClassArg<T>::TClassTypePtr _pthis;
 	T0 t0;
@@ -420,7 +420,7 @@ struct CRY_ALIGN(16) SParams11
 };
 
 template<typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10>
-struct CRY_ALIGN(16) SParams11<SNullType, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>
+struct ANGELICA_ALIGN(16) SParams11<SNullType, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>
 {
 	T0 t0;
 	T1 t1;
@@ -1238,7 +1238,7 @@ void VerifyThisPtr(void (* func)(Params ...), const T&)
   namespace Detail {                                                                                                                                                     \
                                                                                                                                                                          \
   /* packet structure for the Producer/Consumer Queue */                                                                                                                 \
-  struct CRY_ALIGN(128) packet ## type                                                                                                                                   \
+  struct ANGELICA_ALIGN(128) packet ## type                                                                                                                                   \
   {                                                                                                                                                                      \
   public:                                                                                                                                                                \
     /* non parameter dependent functions */                                                                                                                              \
@@ -1377,7 +1377,7 @@ void VerifyThisPtr(void (* func)(Params ...), const T&)
   };  /* struct packet */                                                                                                                                                \
                                                                                                                                                                          \
                                                                                                                                                                          \
-  class CRY_ALIGN(128) SGenericJob ## type: public CJobBase                                                                                                              \
+  class ANGELICA_ALIGN(128) SGenericJob ## type: public CJobBase                                                                                                              \
   {                                                                                                                                                                      \
   public:                                                                                                                                                                \
     typedef JobManager::Detail::packet ## type packet;                                                                                                                   \
@@ -1602,7 +1602,7 @@ void VerifyThisPtr(void (* func)(Params ...), const T&)
                                                                                                                                                                          \
     /***************************************************************************/                                                                                        \
     /* class members */                                                                                                                                                  \
-    CRY_ALIGN(128) unsigned char m_ParameterStorage[JobManager::SInfoBlock::scAvailParamSize]; /* memory to store serialized parameters */                               \
+    ANGELICA_ALIGN(128) unsigned char m_ParameterStorage[JobManager::SInfoBlock::scAvailParamSize]; /* memory to store serialized parameters */                               \
     JobManager::Invoker m_Invoker;                                                             /* Invoker function to de-serialize the parameters*/                      \
                                                                                                                                                                          \
   };                                                                                                                                                                     \

@@ -43,7 +43,7 @@ bool JobManager::ThreadBackEnd::CThreadBackEnd::Init(unsigned int nSysMaxWorker)
 {
 
 	// find out how many workers to create
-#if CRY_PLATFORM_DURANGO || CRY_PLATFORM_ORBIS
+#if ANGELICA_PLATFORM_DURANGO || ANGELICA_PLATFORM_ORBIS
 	const unsigned int nNumCores = 4;
 #else
 	const unsigned int nNumCores = 8;
@@ -149,7 +149,7 @@ void JobManager::ThreadBackEnd::CThreadBackEnd::AddJob(JobManager::CJobDelegator
 	                                                            *pFallbackInfoBlock : m_JobQueue.jobInfoBlocks[nJobPriority][jobSlot]);
 
 	// since we will use the whole InfoBlock, and it is aligned to 128 bytes, clear the cacheline, this is faster than a cachemiss on write
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 	//STATIC_CHECK( sizeof(JobManager::SInfoBlock) == 512, ERROR_SIZE_OF_SINFOBLOCK_NOT_EQUALS_512 );
 #else
 	//STATIC_CHECK( sizeof(JobManager::SInfoBlock) == 384, ERROR_SIZE_OF_SINFOBLOCK_NOT_EQUALS_384 );
@@ -158,7 +158,7 @@ void JobManager::ThreadBackEnd::CThreadBackEnd::AddJob(JobManager::CJobDelegator
 	// first cache line needs to be persistent
 	ResetLine128(&rJobInfoBlock, 128);
 	ResetLine128(&rJobInfoBlock, 256);
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 	ResetLine128(&rJobInfoBlock, 384);
 #endif
 
@@ -188,7 +188,7 @@ void JobManager::ThreadBackEnd::CThreadBackEnd::AddJob(JobManager::CJobDelegator
 	// the producing thread won't need the info block anymore, flush it from the cache
 	FlushLine128(&rJobInfoBlock, 0);
 	FlushLine128(&rJobInfoBlock, 128);
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 	FlushLine128(&rJobInfoBlock, 256);
 	FlushLine128(&rJobInfoBlock, 384);
 #endif
@@ -286,7 +286,7 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::ThreadEntry()
 
 		IF (pFallbackInfoBlock, 0)
 		{
-			//CRY_PROFILE_REGION(PROFILE_SYSTEM, "JobWorkerThread: Fallback");
+			//ANGELICA_PROFILE_REGION(PROFILE_SYSTEM, "JobWorkerThread: Fallback");
 
 			// in case of a fallback job, just get it from the global per thread list
 			pFallbackInfoBlock->AssignMembersTo(&infoBlock);
@@ -306,7 +306,7 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::ThreadEntry()
 			// than fMinTimeInJobExecution ms, to prevent system calls when we
 			// execute a massive number of small jobs
 
-			//CRY_PROFILE_REGION_WAITING(PROFILE_SYSTEM, "Wait - JobWorkerThread");
+			//ANGELICA_PROFILE_REGION_WAITING(PROFILE_SYSTEM, "Wait - JobWorkerThread");
 
 			float fMSInJobExecution = static_cast<float>(nTicksInJobExecution * 1000.0f * frequency);
 			if (fMSInJobExecution > fMinTimeInJobExecution || !m_rSemaphore.TryGetJob())
@@ -333,7 +333,7 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::ThreadEntry()
 			do
 			{
 				// volatile load
-#if CRY_PLATFORM_WINDOWS || CRY_PLATFORM_APPLE || CRY_PLATFORM_LINUX || CRY_PLATFORM_ANDROID// emulate a 64bit atomic read on PC platfom
+#if ANGELICA_PLATFORM_WINDOWS || ANGELICA_PLATFORM_APPLE || ANGELICA_PLATFORM_LINUX || ANGELICA_PLATFORM_ANDROID// emulate a 64bit atomic read on PC platfom
 				currentPullIndex = CryInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.pull.index), 0, 0);
 				currentPushIndex = CryInterlockedCompareExchange64(alias_cast<volatile signed long long*>(&m_rJobQueue.push.index), 0, 0);
 #else
@@ -423,8 +423,8 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::ThreadEntry()
 //
 //				cry_sprintf(job_info, "%s (Prio %u)", jobName, nPriorityLevel);
 //
-//				CRYPROFILE_SCOPE_PROFILE_MARKER(job_info);
-//				CRYPROFILE_SCOPE_PLATFORM_MARKER(job_info);
+//				ANGELICAPROFILE_SCOPE_PROFILE_MARKER(job_info);
+//				ANGELICAPROFILE_SCOPE_PLATFORM_MARKER(job_info);
 //#endif
 
 				unsigned long long nJobStartTicks = GetRealTicks();
@@ -532,9 +532,9 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::DoWorkProducerConsum
 		{
 			// call delegator function to invoke job entry
 //#if !defined(_RELEASE) || defined(PERFORMANCE_BUILD)
-//			//CRY_PROFILE_REGION(PROFILE_SYSTEM, "Job");
-//			CRYPROFILE_SCOPE_PROFILE_MARKER(pJobManager->GetJobName(rInfoBlock.jobInvoker));
-//			CRYPROFILE_SCOPE_PLATFORM_MARKER(pJobManager->GetJobName(rInfoBlock.jobInvoker));
+//			//ANGELICA_PROFILE_REGION(PROFILE_SYSTEM, "Job");
+//			ANGELICAPROFILE_SCOPE_PROFILE_MARKER(pJobManager->GetJobName(rInfoBlock.jobInvoker));
+//			ANGELICAPROFILE_SCOPE_PLATFORM_MARKER(pJobManager->GetJobName(rInfoBlock.jobInvoker));
 //#endif
 			(*pInvoker)(pParamMem);
 		}
@@ -581,7 +581,7 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::DoWorkProducerConsum
 		runningSyncVar.SetRunning();
 		JobManager::SJobSyncVariable stoppedSyncVar;
 
-#if CRY_PLATFORM_64BIT // for 64 bit, we need to atomically swap 128 bit
+#if ANGELICA_PLATFORM_64BIT // for 64 bit, we need to atomically swap 128 bit
 		bool bStopLoop = false;
 		bool bUnlockQueueFullstate = false;
 		SJobSyncVariable queueStoppedSemaphore;

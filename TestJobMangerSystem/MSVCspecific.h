@@ -18,11 +18,11 @@
 #endif
 
 //! Compiler version
-#define CRY_COMPILER_MSVC    1
-#define CRY_COMPILER_VERSION (_MSC_VER)
-#if CRY_COMPILER_VERSION < 1700
+#define ANGELICA_COMPILER_MSVC    1
+#define ANGELICA_COMPILER_VERSION (_MSC_VER)
+#if ANGELICA_COMPILER_VERSION < 1700
 	#error This version of MSVC is not supported
-#elif CRY_COMPILER_VERSION < 1900
+#elif ANGELICA_COMPILER_VERSION < 1900
 // patch alignof and noexcept (VS2012 + VS2013 only)
 	#define _ALLOW_KEYWORD_MACROS
 	#define alignof  __alignof
@@ -31,15 +31,15 @@
 
 //! Compiler features
 #if defined(_CPPUNWIND)
-	#define CRY_COMPILER_EXCEPTIONS 1
+	#define ANGELICA_COMPILER_EXCEPTIONS 1
 #endif
 #if defined(_CPPRTTI)
-	#define CRY_COMPILER_RTTI 1
+	#define ANGELICA_COMPILER_RTTI 1
 #endif
 
 //! __FUNC__ is like __func__, but it has the class name
 #define __FUNC__               __FUNCTION__
-#define CRY_FUNC_HAS_SIGNATURE 0
+#define ANGELICA_FUNC_HAS_SIGNATURE 0
 
 //! PREfast heleprs
 #define PREFAST_SUPPRESS_WARNING(W) __pragma(warning(suppress: W))
@@ -50,11 +50,11 @@
 #endif
 
 //! Deprecation helper
-#define CRY_DEPRECATED(func) __declspec(deprecated) func
+#define ANGELICA_DEPRECATED(func) __declspec(deprecated) func
 
 //! Portable alignment helper, can be placed after the struct/class/union keyword, or before the type of a declaration.
-//! Example: struct CRY_ALIGN(16) { ... }; CRY_ALIGN(16) char myAlignedChar;
-#define CRY_ALIGN(bytes) __declspec(align(bytes))
+//! Example: struct ANGELICA_ALIGN(16) { ... }; ANGELICA_ALIGN(16) char myAlignedChar;
+#define ANGELICA_ALIGN(bytes) __declspec(align(bytes))
 
 //! Restricted reference (similar to restricted pointer), use like: SFoo& RESTRICT_REFERENCE myFoo = ...;
 #define RESTRICT_REFERENCE
@@ -75,13 +75,13 @@
 //! Inline helpers
 #define NO_INLINE        __declspec(noinline)
 #define NO_INLINE_WEAK   __declspec(noinline) inline
-#define CRY_FORCE_INLINE __forceinline
+#define ANGELICA_FORCE_INLINE __forceinline
 
 //! Packing helper, the preceding declaration will be tightly packed.
 #define __PACKED
 
 // Suppress undefined behavior sanitizer errors on a function.
-#define CRY_FUNCTION_CONTAINS_UNDEFINED_BEHAVIOR
+#define ANGELICA_FUNCTION_CONTAINS_UNDEFINED_BEHAVIOR
 
 //! Unreachable code marker for helping error handling and optimization
 #define UNREACHABLE() __assume(0)

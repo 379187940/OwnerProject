@@ -130,7 +130,7 @@ inline long long CryInterlockedCompareExchange64(volatile long long* pDst, long 
 	return _InterlockedCompareExchange64(pDst, exchange, compare);
 }
 
-#if CRY_PLATFORM_64BIT
+#if ANGELICA_PLATFORM_64BIT
 // Returns initial value prior exchange
 inline unsigned char CryInterlockedCompareExchange128(volatile long long* pDst, long long exchangeHigh, long long exchangeLow, long long* pComparandResult)
 {
