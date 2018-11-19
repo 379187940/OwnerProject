@@ -18,7 +18,7 @@
 #include <algorithm>
 //#include "../../System.h"
 //#include "../../CPUDetect.h"
-#define PrefetchLine(ptr, off) cryPrefetchT0SSE((void*)((unsigned char*)(ptr) + off))
+#define PrefetchLine(ptr, off) angelicaPrefetchT0SSE((void*)((unsigned char*)(ptr) + off))
 #define ResetLine128(ptr, off) (void)(0)
 #define FlushLine128(ptr, off) (void)(0)
 ///////////////////////////////////////////////////////////////////////////////
@@ -421,7 +421,7 @@ void JobManager::ThreadBackEnd::CThreadBackEndWorkerThread::ThreadEntry()
 //				CFrameProfilerSection frameProfilerSection2(pProfiler, jobName, jobName, EProfileDescription::SECTION);
 //				BROFILER_SECTION(jobName)
 //
-//				cry_sprintf(job_info, "%s (Prio %u)", jobName, nPriorityLevel);
+//				angelica_sprintf(job_info, "%s (Prio %u)", jobName, nPriorityLevel);
 //
 //				ANGELICAPROFILE_SCOPE_PROFILE_MARKER(job_info);
 //				ANGELICAPROFILE_SCOPE_PLATFORM_MARKER(job_info);

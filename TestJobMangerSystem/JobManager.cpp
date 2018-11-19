@@ -1342,7 +1342,7 @@ void JobManager::CJobManager::Update(int nJobSystemProfiler)
 	{
 		// draw worker box and label
 		char workerThreadName[128];
-		cry_sprintf(workerThreadName, "Worker %d", i);
+		angelica_sprintf(workerThreadName, "Worker %d", i);
 		MyDraw2dLabel(fInfoBoxSize + fTextSideOffset, fGraphTopOffset, fTextSize, fTextColor, false, "%s", workerThreadName);
 		DrawUtils::Draw2DBoxOutLine(fInfoBoxSize + fGraphSideOffset, fGraphTopOffset, fGraphHeight, fGraphWidth, boxBorderColor, fScreenHeight, fScreenWidth, pAuxGeomRenderer);
 		DrawUtils::DrawGraph(arrWorkerThreadsRegions[i], nGraphSize, fInfoBoxSize + fGraphSideOffset, fGraphTopOffset, fGraphHeight, fScreenHeight, fScreenWidth, pAuxGeomRenderer);
@@ -1371,7 +1371,7 @@ void JobManager::CJobManager::Update(int nJobSystemProfiler)
 	for (int i = 0; i < nNumWorker; ++i)
 	{
 		float runTimePercent = 100.0f / (frameEndTime - frameStartTime).GetValue() * arrWorkerProfilingRenderData[i].runTime.GetValue();
-		cry_sprintf(tmpBuffer, "  Worker %d: %05.2f ms %04.1f p", i, arrWorkerProfilingRenderData[i].runTime.GetMilliSeconds(), runTimePercent);
+		angelica_sprintf(tmpBuffer, "  Worker %d: %05.2f ms %04.1f p", i, arrWorkerProfilingRenderData[i].runTime.GetMilliSeconds(), runTimePercent);
 		DrawUtils::WriteShortLabel(fTextSideOffset, fInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 27);
 		fInfoBoxTextOffset += fTextSizePixel;
 
@@ -1380,23 +1380,23 @@ void JobManager::CJobManager::Update(int nJobSystemProfiler)
 	}
 
 	// draw accumulated worker time and percentage
-	cry_sprintf(tmpBuffer, "-------------------------------");
+	angelica_sprintf(tmpBuffer, "-------------------------------");
 	DrawUtils::WriteShortLabel(fTextSideOffset, fInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 27);
 	fInfoBoxTextOffset += fTextSizePixel;
 	float accRunTimePercentage = 100.0f / ((frameEndTime - frameStartTime).GetValue() * nNumWorker) * accumulatedWorkerTime.GetValue();
-	cry_sprintf(tmpBuffer, "Sum: %05.2f ms %04.1f p", accumulatedWorkerTime.GetMilliSeconds(), accRunTimePercentage);
+	angelica_sprintf(tmpBuffer, "Sum: %05.2f ms %04.1f p", accumulatedWorkerTime.GetMilliSeconds(), accRunTimePercentage);
 	DrawUtils::WriteShortLabel(fTextSideOffset, fInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 27);
 	fInfoBoxTextOffset += fTextSizePixel;
 
 	// draw accumulated wait times of main and renderthread
 	fInfoBoxTextOffset += 2.0f * fTextSizePixel;
-	cry_sprintf(tmpBuffer, "MainThread Wait %05.2f ms", waitTimeMainThread.GetMilliSeconds());
+	angelica_sprintf(tmpBuffer, "MainThread Wait %05.2f ms", waitTimeMainThread.GetMilliSeconds());
 	DrawUtils::WriteShortLabel(fTextSideOffset, fInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 27);
 	fInfoBoxTextOffset += fTextSizePixel;
-	cry_sprintf(tmpBuffer, "RenderThread Wait %05.2f ms", waitTimeRenderThread.GetMilliSeconds());
+	angelica_sprintf(tmpBuffer, "RenderThread Wait %05.2f ms", waitTimeRenderThread.GetMilliSeconds());
 	DrawUtils::WriteShortLabel(fTextSideOffset, fInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 27);
 	fInfoBoxTextOffset += fTextSizePixel;
-	cry_sprintf(tmpBuffer, "MainThread %05.2f ms", (frameEndTime - frameStartTime).GetMilliSeconds());
+	angelica_sprintf(tmpBuffer, "MainThread %05.2f ms", (frameEndTime - frameStartTime).GetMilliSeconds());
 	DrawUtils::WriteShortLabel(fTextSideOffset, fInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 27);
 	fInfoBoxTextOffset += fTextSizePixel;
 	fInfoBoxTextOffset += fTextSizePixel;
@@ -1405,7 +1405,7 @@ void JobManager::CJobManager::Update(int nJobSystemProfiler)
 	std::sort(arrRegionProfilingData, arrRegionProfilingData + nNumRegions, SRegionLexicalSorter());
 
 	fTopOffset = fInfoBoxTextOffset += fTextSizePixel;
-	cry_sprintf(tmpBuffer, " Name                Time(MS)");
+	angelica_sprintf(tmpBuffer, " Name                Time(MS)");
 	DrawUtils::WriteShortLabel(fTextSideOffset, fInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 80);
 	fInfoBoxTextOffset += 1.4f * fTextSizePixel;
 	for (int i = 0; i < nNumRegions; ++i)
@@ -1418,12 +1418,12 @@ void JobManager::CJobManager::Update(int nJobSystemProfiler)
 		{
 			fInfoBoxTextOffset = fTopOffset;
 			fTextSideOffset += fTextSizePixel * 25; // keep a little space between the bars
-			cry_sprintf(tmpBuffer, " Name                Time(MS)");
+			angelica_sprintf(tmpBuffer, " Name                Time(MS)");
 			DrawUtils::WriteShortLabel(fTextSideOffset, fInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 80);
 			fInfoBoxTextOffset += 1.4f * fTextSizePixel;
 		}
 
-		cry_sprintf(tmpBuffer, " %-21.21s %05.2f ", arrRegionProfilingData[i].pName.GetBuffer(0), arrRegionProfilingData[i].executionTime.GetMilliSeconds());
+		angelica_sprintf(tmpBuffer, " %-21.21s %05.2f ", arrRegionProfilingData[i].pName.GetBuffer(0), arrRegionProfilingData[i].executionTime.GetMilliSeconds());
 		DrawUtils::WriteShortLabel(fTextSideOffset, fInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 28);
 		DrawUtils::Draw2DBox(fTextSideOffset, fInfoBoxTextOffset + 2.0f, fTextSizePixel * 1.25f, 30 * fTextCharWidth, arrRegionProfilingData[i].color, fScreenHeight, fScreenWidth, pAuxGeomRenderer);
 
@@ -1438,7 +1438,7 @@ void JobManager::CJobManager::Update(int nJobSystemProfiler)
 	// sort jobs by their name
 	std::sort(arrJobProfilingRenderData, arrJobProfilingRenderData + nNumJobs, SJobProfilingLexicalSort());
 
-	cry_sprintf(tmpBuffer, " JobName                  (Num Invocations) TimeExecuted(MS) TimeWait(MS) AvG(MS)");
+	angelica_sprintf(tmpBuffer, " JobName                  (Num Invocations) TimeExecuted(MS) TimeWait(MS) AvG(MS)");
 	DrawUtils::WriteShortLabel(fJobInfoBoxSideOffset, fJobInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 80);
 	fJobInfoBoxTextOffset += 1.4f * fTextSizePixel;
 
@@ -1449,13 +1449,13 @@ void JobManager::CJobManager::Update(int nJobSystemProfiler)
 		{
 			fJobInfoBoxTextOffset = fTopOffset;
 			fJobInfoBoxSideOffset += fTextCharWidth * 85; // keep a little space between the bars
-			cry_sprintf(tmpBuffer, " JobName                  (Num Invocations) TimeExecuted(MS) TimeWait(MS) AvG(MS)");
+			angelica_sprintf(tmpBuffer, " JobName                  (Num Invocations) TimeExecuted(MS) TimeWait(MS) AvG(MS)");
 			DrawUtils::WriteShortLabel(fJobInfoBoxSideOffset, fJobInfoBoxTextOffset, fTextSize, fTextColor, tmpBuffer, 80);
 			fJobInfoBoxTextOffset += 1.4f * fTextSizePixel;
 		}
 
 		SJobProflingRenderData& rJobProfilingData = arrJobProfilingRenderData[i];
-		cry_sprintf(tmpBuffer, " %-35.35s (%3d):      %5.2f      %5.2f         %5.2f", rJobProfilingData.pName, rJobProfilingData.invocations,
+		angelica_sprintf(tmpBuffer, " %-35.35s (%3d):      %5.2f      %5.2f         %5.2f", rJobProfilingData.pName, rJobProfilingData.invocations,
 		            rJobProfilingData.runTime.GetMilliSeconds(), rJobProfilingData.waitTime.GetMilliSeconds(),
 		            rJobProfilingData.invocations ? rJobProfilingData.runTime.GetMilliSeconds() / rJobProfilingData.invocations : 0.0f);
 
