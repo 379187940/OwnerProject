@@ -1,6 +1,7 @@
 // Copyright 2001-2017 Angelicatek GmbH / Angelicatek Group. All rights reserved. 
 
 #include "StdAfx.h"
+#include "AngelicaPlatformDefines.h"
 #include "ThreadConfigManager.h"
 
 namespace

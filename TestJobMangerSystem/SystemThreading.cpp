@@ -2,6 +2,7 @@
 
 #include "StdAfx.h"
 //#include "System.h"
+#include "AngelicaPlatformDefines.h"
 #include "ThreadConfigManager.h"
 #include "AngelicaAtomics.h"
 #include "Win32specific.h"

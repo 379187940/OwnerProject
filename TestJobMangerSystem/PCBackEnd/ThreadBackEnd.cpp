@@ -9,6 +9,7 @@
 //  History:
 ////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include "..\AngelicaPlatformDefines.h"
 #include"../Win32specific.h"
 #include "../MSVCspecific.h"
 //#include <minwindef.h>

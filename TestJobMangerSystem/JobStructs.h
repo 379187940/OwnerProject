@@ -119,7 +119,7 @@ inline JobManager::detail::EAddJobRes JobManager::SJobQueue<nMaxWorkQueueJobsHig
 	{
 		// fetch next to update field
 #if ANGELICA_PLATFORM_WINDOWS || ANGELICA_PLATFORM_APPLE || ANGELICA_PLATFORM_LINUX // emulate a 64bit atomic read on PC platfom
-		currentIndex = AngelicaInterlockedCompareExchange64(alias_cast<volatile int64*>(&curPushEntry.index), 0, 0);
+		currentIndex = AngelicaInterlockedCompareExchange64(alias_cast<volatile long long*>(&curPushEntry.index), 0, 0);
 #else
 		currentIndex = *const_cast<volatile unsigned long long*>(&curPushEntry.index);
 #endif

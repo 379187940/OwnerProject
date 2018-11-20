@@ -149,6 +149,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AngelicaPlatformDefines.h" />
     <ClInclude Include="BitFiddling.h" />
     <ClInclude Include="BlockingBackend\BlockingBackEnd.h" />
     <ClInclude Include="AngelicaAtomics.h" />

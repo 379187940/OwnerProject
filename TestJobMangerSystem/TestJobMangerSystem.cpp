@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include "AngelicaPlatformDefines.h"
 #include "TestJobMangerSystem.h"
 #include "MSVCspecific.h"
 #include "Win32specific.h"
@@ -22,75 +23,83 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 //CRITICAL_SECTION cs1;
 //CRITICAL_SECTION cs2;
-static JobManager::SJobState g_JobState;
-class CWindowsConsoleInputThread : public IThread
-{
-public:
-	CWindowsConsoleInputThread(){}
 
-	~CWindowsConsoleInputThread(){}
-
-	// Start accepting work on thread
-	void ThreadEntry()
-	{
-		GetJobManagerInterface()->WaitForJob(g_JobState);
-		OutputDebugStringA("CWindowsConsoleInputThread end!!!!\n");
-	}
-
-	// Signals the thread that it should not accept anymore work and exit
-	void SignalStopWork()
-	{
-
-	}
-
-	void Interrupt()
-	{
-
-	}
-
-};
-class CWindowsConsoleInputThread2 : public IThread
-{
-public:
-	CWindowsConsoleInputThread2() {}
-
-	~CWindowsConsoleInputThread2() {}
-
-	// Start accepting work on thread
-	void ThreadEntry()
-	{
-		GetJobManagerInterface()->WaitForJob(g_JobState);
-		OutputDebugStringA("CWindowsConsoleInputThread2 end!!!!\n");
-	}
-
-	// Signals the thread that it should not accept anymore work and exit
-	void SignalStopWork()
-	{
-
-	}
-
-	void Interrupt()
-	{
-
-	}
-
-};
+//class CWindowsConsoleInputThread : public IThread
+//{
+//public:
+//	CWindowsConsoleInputThread(){}
+//
+//	~CWindowsConsoleInputThread(){}
+//
+//	// Start accepting work on thread
+//	void ThreadEntry()
+//	{
+//		GetJobManagerInterface()->WaitForJob(g_JobState);
+//		OutputDebugStringA("CWindowsConsoleInputThread end!!!!\n");
+//	}
+//
+//	// Signals the thread that it should not accept anymore work and exit
+//	void SignalStopWork()
+//	{
+//
+//	}
+//
+//	void Interrupt()
+//	{
+//
+//	}
+//
+//};
+//class CWindowsConsoleInputThread2 : public IThread
+//{
+//public:
+//	CWindowsConsoleInputThread2() {}
+//
+//	~CWindowsConsoleInputThread2() {}
+//
+//	// Start accepting work on thread
+//	void ThreadEntry()
+//	{
+//		GetJobManagerInterface()->WaitForJob(g_JobState);
+//		OutputDebugStringA("CWindowsConsoleInputThread2 end!!!!\n");
+//	}
+//
+//	// Signals the thread that it should not accept anymore work and exit
+//	void SignalStopWork()
+//	{
+//
+//	}
+//
+//	void Interrupt()
+//	{
+//
+//	}
+//
+//};
 class CTest
 {
 public:
+	CTest(int a)
+	{
+		m_a = a;
+	}
 	void Print()
 	{
 		while (true)
 		{
 			Sleep(10);
-			OutputDebugStringA("perfect world!!!!\n"); 
+			char log[30];
+			sprintf_s(log, "%d  perfect world!!!!\n", m_a);
+			OutputDebugStringA(log); 
 			if (GetAsyncKeyState(VK_SPACE) && 0x8000)
 				break;
 		}
 	}
+private:
+	int m_a;
 	
 };
-
+static JobManager::SJobState g_JobState1, g_JobState2, g_JobState3, g_JobState4, g_JobState5;
 DECLARE_JOB("Test", TTestJob, CTest::Print);
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -98,15 +107,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow)
 {
 	GetJobManagerInterface()->Init(4);
-	CTest a;
-	TTestJob job;
-	job.SetClassInstance(&a);
-	job.RegisterJobState(&g_JobState);
-	job.Run();
-	CWindowsConsoleInputThread th1;
+	CTest a(1),b(2),c(3),d(4),e(5);
+	TTestJob job1,job2,job3,job4,job5;
+	job1.SetClassInstance(&a);
+	job1.RegisterJobState(&g_JobState1);
+	job1.Run();
+
+	job2.SetClassInstance(&b);
+	job2.RegisterJobState(&g_JobState2);
+	job2.Run();
+
+	job3.SetClassInstance(&c);
+	job3.RegisterJobState(&g_JobState3);
+	job3.Run();
+
+	job4.SetClassInstance(&d);
+	job4.RegisterJobState(&g_JobState4);
+	job4.Run();
+
+	job5.SetClassInstance(&e);
+	job5.RegisterJobState(&g_JobState5);
+	job5.Run();
+	/*CWindowsConsoleInputThread th1;
 	CWindowsConsoleInputThread2 th2;
 	GetGlobalThreadManager()->SpawnThread(&th1, "thread1");
-	GetGlobalThreadManager()->SpawnThread(&th2, "thread2");
+	GetGlobalThreadManager()->SpawnThread(&th2, "thread2");*/
 	//GetJobManagerInterface()->WaitForJob(g_JobState);
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);

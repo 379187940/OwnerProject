@@ -5,6 +5,7 @@
    DMA memory mappings can be issued in any order
  */
 #include "StdAfx.h"
+#include "AngelicaPlatformDefines.h"
 #include <type_traits>
 #include <functional>
 #include "Win32specific.h"
